@@ -88,11 +88,11 @@ const LandingPage = () => {
               <div className={`absolute w-5 h-1 top-2 border-2 border-green-600 ${height ? "hidden":"block"}`}></div>
               <div className={`absolute w-5 h-1 transition-all border-2 border-green-600 ${height ? "top-2 -rotate-45":"top-4"}`}></div>
            </button>
-           <div className={`transition-all border-t-2 justify-center items-center flex-col w-full absolute bg-white bottom-[-150px] ${height ? "h-[150px] flex":"h-0 hidden"} lg:hidden`}>
-              <a className=' w-[100px] font-medium'>Home</a>
-              <a className=' w-[100px] font-medium'>Services</a>
-              <a className=' w-[100px] font-medium'>Review</a>
-              <a className=' w-[100px] font-medium'>Contact</a>  
+           <div className={`transition-all border-t-2 flex justify-center items-center flex-col w-full absolute bg-white top-[50px] ${height ? "h-[150px] ":"h-0"} lg:hidden`}>
+              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Home</a>
+              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Services</a>
+              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Review</a>
+              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Contact</a>  
         </div>
         </header>
         
