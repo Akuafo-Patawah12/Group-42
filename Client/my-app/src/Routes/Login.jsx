@@ -38,13 +38,14 @@ const Login = () => {
             } 
         })
           .catch(err=>{
-            Swal.fire({
-                title:"Oops,system down",
-                icon:"error"
-             }); 
+            alert("invalid email")
             console.log(err)
         })
     }catch(e){
+        Swal.fire({
+            title:"Oops,system down",
+            icon:"error"
+         }); 
         console.log(e)
        } 
     }
