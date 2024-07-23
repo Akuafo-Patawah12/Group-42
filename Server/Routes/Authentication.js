@@ -1,6 +1,7 @@
 const bcrypt= require('bcrypt')
-const jwt=require('jsonwebtoken')
+const jwt=require ('jsonwebtoken')
 const data= require('../DatabaseSchemas/userSchema')
+
 
 //Login user
  async function login(req,res){
@@ -47,6 +48,23 @@ const data= require('../DatabaseSchemas/userSchema')
        res.status(404).json(err) //Console 404 error message if server crashes
     }}
 
+
+    const updatePassword= async(req,res)=>{
+        const {Password}=req.body
+        const {id}= req.params
+        try{
+           const encryptedPassword= await bcrypt.hash(Password,10)
+            const findPassword= await data.findByIdAndUpdate(id,{password:encryptedPassword},{new:true})
+            if(findPassword){
+               return res.json({message:"Password Updated"})
+            }else {
+               return res.status(404).json({ message: "User not found" });
+           }
+        }catch(err){
+           console.log(err);
+           res.status(500).json(err)
+        }
+   }
 
 
 
@@ -102,5 +120,5 @@ const SignUp =async(req,res)=>{
     };
     
 module.exports= {
-   login,SignUp,logout,sessionLogout
+   login,SignUp,logout,sessionLogout,updatePassword
 };

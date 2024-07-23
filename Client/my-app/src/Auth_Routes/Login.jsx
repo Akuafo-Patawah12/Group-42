@@ -2,13 +2,14 @@ import React,{useState} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import Warning_icon from '../icons/Warning_icon'
 
 const Login = () => {
     const [formData,setFormData]= useState({
         email:"",
         password:"",
        });
-
+    const[validation,seValidation] =useState("")
        const navigate= useNavigate()
        const handSubmit = async(e)=>{
         e.preventDefault();
@@ -20,25 +21,29 @@ const Login = () => {
                 navigate('/Login');
                 Swal.fire({
                     title:"Logged in successful",
-                    icon:"success"
+                    icon:"success",
+                    timer:2000
                 });
+                seValidation("")
                 break;
-                case "Logged in an individual":
+                case "Logged in as an individual":
                   navigate('/Login');
                   Swal.fire({
                     title:"Logged in successful",
-                    icon:"success"
+                    icon:"success",
+                    timer:2000
                 });
+                seValidation("")
                   break;
                 case "invalid password":
-                alert('Invalid password ');
+                    seValidation("Invalid password")
                 break; 
                 default:
                   break;
             } 
         })
           .catch(err=>{
-            alert("invalid email")
+            seValidation("Invalid email address")
             console.log(err)
         })
     }catch(e){
@@ -73,18 +78,18 @@ const Login = () => {
                         className='border-2 border-gray-400 rounded-sm w-[78%] mx-auto h-[40px]'
                         onChange={(e)=>setFormData({...formData,password: e.target.value})} 
                         ></input>
-                    <div className='flex w-[78%] justify-between mx-auto'>
-                          
+                    <div className='flex w-[78%] text-md font-medium text-red-400 items-center mx-auto'>
+                         {validation==="" ?"":<Warning_icon size={18}/>} {validation} 
                     </div>
                     <div className='flex mx-auto w-[78%] justify-between items-center'>
                     <section className='flex items-center'>
                         <input type='checkbox' />
                         <label className='font-medium text-sm'>Stay logged in</label>
                     </section>
-                        <a className='text-blue-500 font-medium text-sm'>Forget Password?</a>
+                        <Link to={"/forgetPassword"} className='text-blue-500 font-medium text-sm'>Forget Password?</Link>
                     </div>
                     
-                    <input type='button' value={"Login"} className="h-[40px] text-white font-medium bg-green-400 w-[78%] mx-auto "></input>
+                    <input type='submit' value={"Login"} className="h-[40px] text-white font-medium bg-green-400 w-[78%] mx-auto "></input>
                     
                     
                     <div className='w-[78%] mx-auto'><Link to={"/SignUp"} className='text-blue-500 font-medium hover:underline decoration-2'>Create Account</Link> instead.</div>

@@ -3,7 +3,7 @@ const tls = require('tls');
 const jwt= require('jsonwebtoken');
 const data=require('../DatabaseSchemas/userSchema');
 
-const mailer = async(req,res)=>{
+const forgetPassword = async(req,res)=>{
     const {email} =req.body
     try{
         const confirm= await data.findOne({email:email}); 
@@ -47,4 +47,4 @@ const mailer = async(req,res)=>{
     }
 }
 
-module.exports= mailer
+module.exports= forgetPassword
