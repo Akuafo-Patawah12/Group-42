@@ -4,49 +4,7 @@ const data= require('../DatabaseSchemas/userSchema')
 
 
 //Login user
- async function login(req,res){
-    const {email,password }= req.body.formData
-    try{
-        const email_Exist= await data.findOne({email:email}); //finding email from the database
-
-        let Encrypted_Password= email_Exist.password
-
-         const password_Is_Correct= await bcrypt.compare(password, Encrypted_Password);
-
-         const protected= email_Exist.account_type
-
-         const token= jwt.sign({id: email_Exist._id}, process.env.REFRESH_TOKEN_SECRET,{
-            expiresIn: '6d',   
-        })
-        if(email_Exist){ //checking if the email the user login with exist in the database
-            if(password_Is_Correct && protected==="Personal" ){
-                // Set the refresh token as a cookie and send it to the browser after login
-                   res.cookie('refreshToken', token, {
-                        httpOnly: true,   // Ensures that the cookie is only accessible via HTTP(S) requests
-                        path: '/',        // Specifies the path for which the cookie is valid
-                        secure: true,          // Indicates that the cookie should only be sent over HTTPS
-                        sameSite: 'none',      // Specifies same-site cookie attribute to prevent cross-site request forgery
-                        maxAge: 7 * 24 * 60 * 60 * 1000    // Sets the expiration time of the cookie (7 days in milliseconds)
-    });   
-                    res.json('Logged in as an individual'); //send a response from server to client if email & password exist 
-            }else if(password_Is_Correct && protected==="Business"){
-                res.cookie('refreshToken',token ,{ //Sending refresh cookies to the browser after login
-                    httpOnly:true,
-                    path:'/',
-                    secure:true,
-                    sameSite: 'none',
-                    maxAge: 7 * 24 * 60 * 60 * 1000
-                });  
-                    res.json("Logged in as a company")
-            }else if(!password_Is_Correct){
-                res.json('invalid password'); 
-            }
-        }else{
-            res.json("invalid email")
-        }
-    }catch(err){
-       res.status(404).json(err) //Console 404 error message if server crashes
-    }}
+ 
 
 
     const updatePassword= async(req,res)=>{
@@ -120,5 +78,5 @@ const SignUp =async(req,res)=>{
     };
     
 module.exports= {
-   login,SignUp,logout,sessionLogout,updatePassword
+   SignUp,logout,sessionLogout,updatePassword
 };

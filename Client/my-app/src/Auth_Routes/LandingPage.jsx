@@ -92,13 +92,14 @@ const LandingPage = () => {
               <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Home</a>
               <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Services</a>
               <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Review</a>
-              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Contact</a>  
+              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Contact</a>
+              <Link to={"/SignUp"} className={` `}><button className={`btn  w-[100px] font-medium ${height ? "block":"hidden"} overflow-hidden relative isolate border-2 border-green-600 rounded-xl px-4 py-2 mr-3 `}>Sign Up</button></Link>  
         </div>
         </header>
         
 
         <div className='image aspect-video w-full flex flex-col'>
-        <h1 className=' text-white text-3xl font-bold max-w-[350px] mt-[60px] mx-auto'>
+        <h1 className=' text-white text-3xl font-bold max-w-[350px] mt-[30px] mx-auto lg:mt-[60px]'>
            {text}
         </h1> 
         <p className={` text-white font-bold max-w-[400px] transition-all mt-[10px] mx-auto ${displayP ? "scale-1":"scale-0"}`}>Explore innovative solutions crafted to optimize your supply chain management and enhance overall efficiency.</p>
@@ -148,7 +149,7 @@ const LandingPage = () => {
             </div>
 
 
-            <h2 className='font-medium text-4xl max-w-[400px] mt-[100px] mx-auto'>Connect with Our Proficient Supply Chain Professionals. </h2>
+            <h2 className='font-medium text-4xl bg-blue-300 max-w-[360px] mt-[100px] mx-auto md:max-w-[400px] lg:max-w-[400px]'>Connect with Our Proficient Supply Chain Professionals. </h2>
 
             <img src='../images/connect.png' alt='connect' className='mx-auto mt-5'></img>
 
@@ -170,9 +171,9 @@ const LandingPage = () => {
                 </section>
             </div>
 
-            <footer className='mt-5 flex justify-around border-t-2 border-stone-400 h-[30px]'>
-                <h4 className='font-medium text-sm text-stone-600'>©Copyright ©2024 Supply Chain Solutions, Inc. All rights reserved. </h4>
-                <div className='font-medium text-sm text-stone-600'>Developed by Micheal Dei, David Nii Darko and Patawah Andrew.</div>
+            <footer className='mt-5 flex justify-around  bg-black  rounded-t-2xl '>
+                <h4 className='font-medium text-sm text-white ml-1 sm:ml-1'>©Copyright ©2024 Supply Chain Solutions, Inc. All rights reserved. </h4>
+                <div className='font-medium text-sm text-white mr-1 lg:mr-0'>Developed by Micheal Dei, David Nii Darko and Patawah Andrew.</div>
             </footer>
     </div>
   )

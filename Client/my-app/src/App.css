@@ -23,12 +23,14 @@
    color: black;
    transform: translate(-50%,-50%);
 }
-.btn:hover::before{
+.btn:hover::before,
+.btn:active::before{
    opacity: 1;
    width: 120px;
    height: 120px;
 }
-.btn:hover{
+.btn:hover,
+.btn:active{
   color: white;
 }
 input{
@@ -39,4 +41,26 @@ input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus{
   border: 2px solid rgb(22 163 74);
+}
+
+.loader {
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-inline: auto;
+  margin-top: 200px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.active{
+  background: #3498db;
+}
+.header{
+  box-shadow: #3498db;
 }

@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import Layout from './RoutesBundle/Layout';
+import LayoutBundle from './RoutesBundle/LayoutBundle';
 
 function App() {
   return (
     <div className="App">
-      <Layout />
+      <LayoutBundle />
     </div>
   );
 }

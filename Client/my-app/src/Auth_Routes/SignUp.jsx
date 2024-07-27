@@ -2,6 +2,8 @@ import React ,{useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from "axios"
 import Swal from "sweetalert2"
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+
 import Warning_icon from '../icons/Warning_icon'
 
 const SignUp = () => {
@@ -42,6 +44,10 @@ const SignUp = () => {
          console.log(e)
         } 
     }
+    const[togglePassword,setTogglePassword]= useState(false)
+    function pass_to_text(){
+         setTogglePassword(!togglePassword)
+    }
   return (
     <div>
         <div className='flex justify-center items-center h-screen bg-gray-100 '>
@@ -56,7 +62,7 @@ const SignUp = () => {
                     
                     <input type='text' 
                         placeholder='Company or Individual Name' 
-                        className='border-[1px] border-stone-400 rounded-sm w-[73%] mx-auto h-[35px]'
+                        className='border-[1px] border-stone-400 rounded-md w-[73%] mx-auto h-[35px]'
                         onChange={(e)=>setFormData({...formData,username: e.target.value})} 
                         required={true}
                         ></input>
@@ -64,41 +70,43 @@ const SignUp = () => {
 
                     <input type='email'
                         placeholder='Enter email' 
-                        className='border-2 border-gray-400 rounded-sm w-[73%] mx-auto h-[35px]'
+                        className='border-2 border-gray-400 rounded-md w-[73%] mx-auto h-[35px]'
                         onChange={(e)=>setFormData({...formData,email: e.target.value})} 
                         required={true}
                         ></input>
-                        
-                    <input type='password' 
+                     <div className='relative mx-auto w-[73%]'>   
+                    <input type={togglePassword? 'text':'password'}  
                         placeholder='Password' 
-                        className='border-2 border-gray-400 rounded-sm w-[73%] mx-auto h-[35px]'
+                        className='border-2 border-gray-400 rounded-md w-full  h-[35px]'
                         onChange={(e)=>setFormData({...formData,password: e.target.value})}
                         required={true} 
                         ></input>
+                        <div className='absolute right-2 top-[6px]' onClick={pass_to_text}>{togglePassword? <EyeInvisibleOutlined /> : <EyeOutlined />}</div>
+                        </div>
                         <div className='flex w-[73%] text-md font-small text-red-400 items-center mx-auto'>
                          {validation==="" ?"":<Warning_icon size={18}/>} {validation} 
                     </div>
                     <div className='flex w-[73%] justify-between mx-auto'>
-                        <section className="h-[35px] w-[47%] flex gap-1 pl-1 items-center border-2 border-gray-400 rounded-sm ">
+                        <section className="h-[35px] w-[47%] flex gap-1 pl-1 items-center border-2 border-gray-400 rounded-md ">
                         <input type='radio' 
                             name='select' 
                             id="Personal" 
-                            onChange={()=>setFormData({...formData,account_type:"Personal"})} 
+                            onChange={()=>setFormData({...formData,account_type:"Personal"})}
                             
                         ></input>
-                        <label for="Personal" className='font-medium text-gray-600'>Personal</label>
+                        <label htmlFor="Personal" className='font-medium text-gray-600'>Personal</label>
                         </section>
-                        <section className="h-[35px] w-[47%] flex gap-1 pl-1 items-center border-2 border-gray-400 rounded-sm ">
+                        <section className="h-[35px] w-[47%] flex gap-1 pl-1 items-center border-2 border-gray-400 rounded-md ">
                         <input type='radio' 
                             name='select' 
                             id="Bus" 
                             onChange={()=>setFormData({...formData,account_type:"Business"})} 
                         ></input>
-                        <label for="Bus" className='font-medium text-gray-600'>Business</label>
+                        <label htmlFor='Bus' className='font-medium text-gray-600'>Business</label>
                         </section>
                        
                     </div>
-                    <input type='submit' value={"Sign Up"} className="h-[35px] bg-green-400 w-[73%] text-white font-medium mx-auto"></input>
+                    <input type='submit' value={"Sign Up"} className="h-[35px] bg-green-400 w-[73%] rounded-md text-white font-medium mx-auto"></input>
                     <div className='w-[73%] mx-auto'>Already signed up? <Link to={"/Login"} className='text-blue-500 font-medium hover:underline decoration-2'>Login</Link></div>
                     </div>
                 </form>
