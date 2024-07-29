@@ -1,34 +1,31 @@
 
 import { Route, Routes } from 'react-router-dom'
-import ForgetPassword from '../Auth_Routes/ForgetPassword'
-import React,{lazy} from "react"
-const LandingPage= lazy(()=> import("../Auth_Routes/LandingPage"))
-const Login= lazy(()=> import('../Auth_Routes/Login'))
-const SignUp= lazy(()=> import('../Auth_Routes/SignUp'))
 
-const LazyTrends= lazy(() => import('../Routes/Trends'));
+import React,{lazy, Suspense} from "react"
+import PageNotFound from '../Routes/PageNotFound'
+
+import Loading from '../icons/Loading'
+import Header, { Sidebar } from '../Routes/HeaderAndSidebar';
+const LazyTrends= lazy(()=> import("../Routes/Trends"))
+const Notify = lazy(()=> import("../Routes/Notification"))
+
+
 
 const LayoutBundle = () => {
   
   
   return (
     <div>
-      
+      <Header />
+      <Sidebar />
       <Routes>
-      
-          <Route path='/' element={<React.Suspense fallback={"Loading"}>
-               <LandingPage/>
-            </React.Suspense>} />
-          <Route path='/SignUp' element={<React.Suspense fallback={"Loading"}>
-          <SignUp/>
-          </React.Suspense>}  />
-          <Route path='/Login' element={<React.Suspense fallback={"Loading"}>
-            <Login/>
-          </React.Suspense>} />
-          <Route path="/forgetPassword" element={<ForgetPassword />} />
-          <Route path='/Trends' element={<LazyTrends />} />
-          
-        
+      <Route path='*' element={<PageNotFound/>} />
+             <Route path='/Trends' element={<Suspense fallback={<Loading />}>
+             <LazyTrends />
+             </Suspense>}/>
+             <Route path='/Notification' element={<Suspense fallback={<Loading />}>
+                  <Notify /> 
+             </Suspense>} />
       </Routes>
         
     </div>

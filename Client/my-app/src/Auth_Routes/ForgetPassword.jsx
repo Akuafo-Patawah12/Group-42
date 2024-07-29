@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import axios from "axios"
 import Swal from "sweetalert2"
 
@@ -12,9 +11,10 @@ const ForgetPassword = () => {
       await axios.post("http://localhost:4000/forgetPassword",{email})
       .then(res=>{
         Swal.fire({
-          title:"SCM sent you an email.",
+          title:"SCM sent you a link.",
+          text:"check your email inbox",
           icon:"info",
-          timer:3000
+          timer:2000
         })
       })
       .catch(err=>{
@@ -39,7 +39,7 @@ const ForgetPassword = () => {
         onChange={(e)=>setEmail( e.target.value)} 
         required={true}
         ></input>
-        <input type='submit' value={"Reset Password"} className="h-[40px] bg-green-400 w-[78%] text-white font-medium mx-auto"></input>
+        <input type='submit' value={"Continue"} className="h-[40px] bg-green-400 w-[78%] text-white font-medium mx-auto"></input>
     </div>
     </form>
     </section>

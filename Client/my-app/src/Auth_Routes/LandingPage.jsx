@@ -70,7 +70,7 @@ const LandingPage = () => {
        function toggleHeight(){
           setHeight(!height)
        }
-
+    const links=[{innerText:"Home"},{innerText:"Service"},{innerText:"Review"},{innerText:"Contact"}]
 
   return (
     <div>
@@ -88,11 +88,9 @@ const LandingPage = () => {
               <div className={`absolute w-5 h-1 top-2 border-2 border-green-600 ${height ? "hidden":"block"}`}></div>
               <div className={`absolute w-5 h-1 transition-all border-2 border-green-600 ${height ? "top-2 -rotate-45":"top-4"}`}></div>
            </button>
-           <div className={`transition-all border-t-2 flex justify-center items-center flex-col w-full absolute bg-white top-[50px] ${height ? "h-[150px] ":"h-0"} lg:hidden`}>
-              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Home</a>
-              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Services</a>
-              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Review</a>
-              <a className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>Contact</a>
+           <div className={`transition-all border-t-2 flex justify-center items-center flex-col w-full absolute bg-white top-[50px] ${height ? "h-screen ":"h-0"} lg:hidden`}>
+              {links.map((item,index)=>(<a  key={index} className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>{item.innerText}</a>))}
+              
               <Link to={"/SignUp"} className={` `}><button className={`btn  w-[100px] font-medium ${height ? "block":"hidden"} overflow-hidden relative isolate border-2 border-green-600 rounded-xl px-4 py-2 mr-3 `}>Sign Up</button></Link>  
         </div>
         </header>

@@ -6,6 +6,7 @@ import axios from 'axios'
 import Warning_icon from '../icons/Warning_icon'
 
 const Login = () => {
+    axios.defaults.withCredentials = true;
     const [formData,setFormData]= useState({
         email:"",
         password:"",
@@ -17,9 +18,9 @@ const Login = () => {
         try{
           await axios.post("http://localhost:4000/login",{formData})
           .then(res=>{
-            switch (res.data){
+            switch (res.data.message ){
                 case "Logged in as a company":
-                
+                localStorage.setItem('accesstoken',res.data.accessToken)
                 Swal.fire({
                     title:"Logged in successful",
                     icon:"success",
@@ -29,6 +30,7 @@ const Login = () => {
                 navigate('/Trends');
                 break;
                 case "Logged in as an individual":
+                  localStorage.setItem('accesstoken',res.data.accessToken)
                   navigate('/Login');
                   Swal.fire({
                     title:"Logged in successful",

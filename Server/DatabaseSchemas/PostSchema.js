@@ -5,15 +5,11 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   user_id: {type:Schema.Types.ObjectId,ref:"User"},
   caption: {
-    type: String,
-    required: true,
-    unique: true,
-  
-    
+    type: String 
   },
-  imag_vid: {
+  img_vid: {
     type: String,
-    required: true
+    
   },
   createdAt: {
     type: Date,
