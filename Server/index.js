@@ -29,8 +29,8 @@ const server = http.createServer(app);
 const io = socketIo(server, {   //Creating connect between server and User Interface  "Realtime WebApp"
   cors: {
     origin:"http://localhost:3000",
-    methods: ['GET','POST',"PUT","DELETE"],
-    allowedHeaders : ['Content-Type'],
+    methods: ['GET','POST'],
+    allowedHeaders: ['Content-Type'],
     credentials: true
   }
 });
@@ -41,19 +41,16 @@ io.on('connection', (socket) => {
   console.log("connected 😊");
 
   socket.on('sendPost', async (data) => {
-    const { id, caption, img_vid } = data;
+    const { id, caption,urls } = data;
     try {
       // Create a new post and save it to the database
       const input = new Post({
         caption,
-        img_vid,
+        img_vid: urls,
         user_id: id
       });
       await input.save();
 
-      
-
-     
     } catch (err) {
       console.log(err, "sock error");
     }
@@ -63,21 +60,28 @@ io.on('connection', (socket) => {
   });
 });
 
-app.get('/posts', async (req, res) => {
+
+
+app.get('/emit-posts', async(req, res) => {
   try {
-    const posts = await Post.find({});
-    res.json(posts);
-  } catch (err) {
-    res.status(500).send(err);
-  }
+    const info = await Post.find({}).sort({createdAt: -1});
+    io.emit('receivePost', info)
+    res.json(info)
+    
+  } catch (error) { 
+    console.error('Error fetching posts:', error);
+    res.status(500).send('Internal Server Error');
+  } 
 });
+
+
 
  
   
 
 
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 async function startServer(){
   try{

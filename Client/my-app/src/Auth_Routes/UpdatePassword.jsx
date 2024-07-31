@@ -12,7 +12,7 @@ export default function UpdatePassword(){
     const handSubmit = async(e)=>{
         e.preventDefault();
         try{
-          await axios.put(`http://localhost:4000/updatePassword/${id}`,{password})
+          await axios.put(`http://localhost:5000/updatePassword/${id}`,{password})
           .then(res=>{
             if(res.data==="ok"){
             Swal.fire({

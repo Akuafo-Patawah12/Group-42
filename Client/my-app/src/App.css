@@ -53,6 +53,16 @@ input[type="email"]:focus{
   margin-inline: auto;
   margin-top: 200px;
 }
+.PostLoader {
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-inline: auto;
+  margin-top: 30px;
+}
 
 @keyframes spin {
   0% { transform: rotate(0deg); }

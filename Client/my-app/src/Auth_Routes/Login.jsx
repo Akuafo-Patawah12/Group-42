@@ -16,7 +16,7 @@ const Login = () => {
        const handSubmit = async(e)=>{
         e.preventDefault();
         try{
-          await axios.post("http://localhost:4000/login",{formData})
+          await axios.post("http://localhost:5000/login",{formData})
           .then(res=>{
             switch (res.data.message ){
                 case "Logged in as a company":
