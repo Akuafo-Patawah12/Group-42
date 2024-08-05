@@ -37,19 +37,19 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
 
     
 
-io.on('connection', (socket) => {
+io.on('connection', (socket) => {  // 
   console.log("connected 😊");
 
-  socket.on('sendPost', async (data) => {
-    const { id, caption,urls } = data;
+  socket.on('sendPost', async (data) => { //socket.on means receiving data or information from client side
+    const { id,caption,img_vid } = data; //get post from client side
     try {
       // Create a new post and save it to the database
       const input = new Post({
         caption,
-        img_vid: urls,
+        img_vid,
         user_id: id
       });
-      await input.save();
+      await input.save(); //insert post into database 
 
     } catch (err) {
       console.log(err, "sock error");
@@ -64,10 +64,30 @@ io.on('connection', (socket) => {
 
 app.get('/emit-posts', async(req, res) => {
   try {
-    const info = await Post.find({}).sort({createdAt: -1});
-    io.emit('receivePost', info)
-    res.json(info)
-    
+    const result = await Post.aggregate([  //joining an querying different tables
+      {
+        $lookup: {
+          from: 'users', // Name of the user collection
+          localField: 'user_id', // Field in the posts collection
+          foreignField: '_id', // Field in the users collection
+          as: 'userDetails' // Alias for the joined documents
+        }
+      },
+      {
+        $unwind: '$userDetails' // Deconstruct the array of userDetails
+      },
+      {
+        $project: {
+          _id: 1, // Include the _id of the post
+          user_id: 1, // Include the user_id
+          caption: 1, // Include the caption
+          img_vid: 1, // Include the img_vid
+          createdAt: 1, // Include the createdAt
+          username: '$userDetails.username' // Include the username from userDetails
+        }
+      }
+    ]).sort({createdAt:-1});
+    res.json(result)
   } catch (error) { 
     console.error('Error fetching posts:', error);
     res.status(500).send('Internal Server Error');
@@ -81,17 +101,18 @@ app.get('/emit-posts', async(req, res) => {
 
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;  //grabbing the port number from .env file 
 
 async function startServer(){
   try{
   //  await    //database connection
-    await connection()
+    await connection()  /*connection to database you can check DB_Connection file to have a 
+    view of how the connection was created */
     server.listen(PORT, () => {console.log(`Server is running on port ${PORT}`); });
     
   }catch(e){
     console.log("Server Crashed",e)    // when there's an error print Server Crashed
   }
 }
-startServer()
+startServer()  //this function execute if there's no error.
 

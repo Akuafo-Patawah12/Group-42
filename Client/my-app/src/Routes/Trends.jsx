@@ -8,17 +8,17 @@ const Trends = () => {
 
 
   return (
-    <div >
+    
       
          
-         <div className='w-[80%] float-none lg:float-right'>
-         <div className='w-3/5 bg-green-300 h-[40px] mx-auto mt-[80px] rounded-2xl'></div>
+         <div className='w-full bg-stone-100  lg:w-[80%] ml-auto'>
+
           
             <TrendsCompo />
        
          </div>
      
-    </div>
+    
   )
 }
 

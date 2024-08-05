@@ -63,7 +63,11 @@ input[type="email"]:focus{
   margin-inline: auto;
   margin-top: 30px;
 }
-
+.Button-loader{
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid rgb(73, 228, 127); /* Blue */
+  animation: spin 1s linear infinite;
+}
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -75,4 +79,58 @@ input[type="email"]:focus{
 }
 .header{
   box-shadow: #3498db;
+}
+.Css{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(5px);
+  z-index: 78;
+}
+.Authloader {
+  margin-inline: auto;
+  margin-top: 100px;
+  width: 50px;
+  aspect-ratio: 1;
+  border: 2px solid;
+  box-sizing: border-box;
+  border-radius: 50%;
+  display: grid;
+  animation: l11 1.5s infinite linear;
+  transform-origin: 50% 80%;
+}
+.Authloader:before,
+.Authloader:after {
+  content: "";
+  grid-area: 1/1;
+  border: inherit;
+  border-radius: 50%;
+  animation: inherit;
+  animation-duration: 1s;
+  transform-origin: inherit;
+}
+.Authloader:after {
+  --s:-1;
+}
+@keyframes l11 {
+   100% {transform:rotate(calc(var(--s,1)*1turn))}
+}
+
+
+
+.corner-only {
+  --s: 50px; /* size of the corners */
+  border: 8px solid #B38184; 
+  padding: 10px;
+  height: 150px;
+  width: 150px;
+  margin-inline: auto;
+  background: #f2f2f2 content-box;
+  mask: 
+    conic-gradient(#000 0 0) content-box,
+    conic-gradient(at var(--s) var(--s),#0000 75%,#000 0) 
+    0 0/calc(100% - var(--s)) calc(100% - var(--s));
 }

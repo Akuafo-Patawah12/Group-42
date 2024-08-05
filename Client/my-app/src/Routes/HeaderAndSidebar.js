@@ -44,10 +44,10 @@ export function Sidebar(){
   
     return(
       <aside className={`fixed left-0 top-[60px] w-[20%] bg-stone-100 hidden h-screen lg:block`}>
-         <ul className='translate-y-[30px]  flex flex-col gap-2 mx-auto w-[80%]'>
+         <ul className='translate-y-[40px]  flex flex-col gap-2 mx-auto w-[80%]'>
         {data.map((item,index)=>(
-           <NavLink to={"/Trends"}>
-            <li key={index} className='text-stone-500 pl-2 py-2 font-medium'>{item.icon}{item.name}</li>
+           <NavLink to={"/"}>
+            <li key={index} className='text-stone-500 pl-2 py-2 rounded-xl font-medium border-2 border-stone-300'>{item.icon}{item.name}</li>
             </NavLink>
 
         ))}

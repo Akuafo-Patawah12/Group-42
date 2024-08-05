@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import Correct from '../icons/Correct';
 import {Link} from 'react-router-dom'
-import Swal from 'sweetalert2';
 const LandingPage = () => {
     const [text,setText] = useState("")
     let display;
@@ -147,7 +146,7 @@ const LandingPage = () => {
             </div>
 
 
-            <h2 className='font-medium text-4xl bg-blue-300 max-w-[360px] mt-[100px] mx-auto md:max-w-[400px] lg:max-w-[400px]'>Connect with Our Proficient Supply Chain Professionals. </h2>
+            <h2 className='font-medium text-4xl  max-w-[360px] mt-[100px] mx-auto md:max-w-[400px] lg:max-w-[400px]'>Connect with Our Proficient Supply Chain Professionals. </h2>
 
             <img src='../images/connect.png' alt='connect' className='mx-auto mt-5'></img>
 

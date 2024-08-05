@@ -1,11 +1,10 @@
 import React from 'react'
-import Header, { Sidebar } from './HeaderAndSidebar'
 
 export default function Notification(){
     return(
         <div>
             
-            <div>holla</div>
+            <div className='w-[50%] bg-white rounded-xl mt-[120px] mx-auto'>Notication Page</div>
         </div>
     )
 }

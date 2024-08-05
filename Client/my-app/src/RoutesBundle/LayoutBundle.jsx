@@ -15,7 +15,7 @@ const LayoutBundle = () => {
   
   
   return (
-    <div>
+    <div >
       <Header />
       <Sidebar />
       <Routes>

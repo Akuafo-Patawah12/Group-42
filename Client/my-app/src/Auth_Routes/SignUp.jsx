@@ -5,6 +5,7 @@ import Swal from "sweetalert2"
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 
 import Warning_icon from '../icons/Warning_icon'
+import ButtonLoader from '../icons/ButtonLoader';
 
 const SignUp = () => {
     const [formData,setFormData]= useState({
@@ -15,14 +16,17 @@ const SignUp = () => {
        });
 
      const navigate= useNavigate()
+     const[loader,setLoader] =useState(false)
        const[validation,setValidation] =useState("")
        const handSubmit = async(e)=>{
         e.preventDefault();
         try{
+            setLoader(true)
           await axios.post("http://localhost:5000/SignUp",{formData})
           .then(res=>{
             if(res.data.message==="exist") {
                 setValidation("Email already exist") 
+                setLoader(false)
             }else{
                 setValidation("")
                  Swal.fire({
@@ -30,10 +34,12 @@ const SignUp = () => {
                     icon:"success",
                     timer:2000
                  });
+                 setLoader(false)
                 navigate('/Login');
             }
         })
           .catch(err=>{
+            setLoader(false)
             Swal.fire({
                 title:"Oops,system down",
                 icon:"error"
@@ -106,7 +112,7 @@ const SignUp = () => {
                         </section>
                        
                     </div>
-                    <input type='submit' value={"Sign Up"} className="h-[35px] bg-green-400 w-[73%] rounded-md text-white font-medium mx-auto"></input>
+                    <button type='submit' disabled={loader?true:false} className="h-[35px] flex justify-center items-center gap-2 bg-green-400 w-[73%] rounded-md text-white font-medium mx-auto"><p>Sign Up</p>{loader? <ButtonLoader/>:""}</button>
                     <div className='w-[73%] mx-auto'>Already signed up? <Link to={"/Login"} className='text-blue-500 font-medium hover:underline decoration-2'>Login</Link></div>
                     </div>
                 </form>
