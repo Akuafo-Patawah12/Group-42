@@ -17,8 +17,8 @@ const forgetPassword = async(req,res)=>{
             port: 465,
             secure: true,
             auth: {
-                user: process.env.EMAIL,
-                pass: process.env.PASSWORD
+                user: process.env.EMAIL,//email that will be sending messages from the server to the client
+                pass: process.env.PASSWORD  //generated password with good
             },
             tls: {
                 rejectUnauthorized: false, // do not reject self-signed certificates

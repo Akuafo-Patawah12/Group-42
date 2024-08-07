@@ -3,11 +3,11 @@ import { Link,useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import axios from 'axios'
-import Warning_icon from '../icons/Warning_icon'
+import WarningIcon from '../icons/Warning_icon'
 import ButtonLoader from '../icons/ButtonLoader';
 
 const Login = () => {
-    axios.defaults.withCredentials = true;
+    axios.defaults.withCredentials = true;   //this allow us to send token safely to the browser's cookies
     const [formData,setFormData]= useState({
         email:"",
         password:"",
@@ -19,27 +19,28 @@ const Login = () => {
         e.preventDefault();
         
         try{
-            setLoader(true)
-          await axios.post("http://localhost:5000/login",{formData})
+            setLoader(true)  //display button loader after clicking login button to submit form
+          await axios.post("http://localhost:5000/login",{formData})   //making an API request from web server
           .then(res=>{
             switch (res.data.message) {
                 case "Logged in as a company":
                     // Store the access token in local storage
-                    localStorage.setItem('accesstoken', res.data.accessToken);
+                    localStorage.setItem('accesstoken', res.data.accessToken);  /*receiving access token from server and 
+                    storing token into browsers local storage*/
             
                     // Show success message with SweetAlert2
                     Swal.fire({
                         title: "Logged in successful",
                         icon: "success",
-                        timer: 2000
+                        timer: 2000     //close popup alert after 2 seconds
                     });
             
                     // Clear validation message
                     seValidation("");
-                    setLoader(false)
+                    setLoader(false)  //After the API succeeds hidden login button loader
             
                     // Navigate to the Trends page
-                    navigate('/Trends');
+                    navigate('/Trends');//Navigate to this /Trends path after login succeeds
                     break;
             
                 case "Logged in as an individual":
@@ -52,7 +53,7 @@ const Login = () => {
             
                     // Clear validation message
                     seValidation("");
-                    setLoader(false)
+                    setLoader(false)  //hidden button loader
                     // Navigate to the Trends page
                     navigate('/Trends');
                     break;
@@ -126,7 +127,7 @@ const Login = () => {
                     </div>
 
              <div className='flex w-[78%] text-md font-small  text-red-400 items-center mx-auto'>
-                    {validation==="" ?"":<Warning_icon size={18}/>} {validation} 
+                    {validation==="" ?"":<WarningIcon size={18}/>} {validation} 
              </div>
 
                 <div className='flex mx-auto w-[78%] justify-between items-center'>
@@ -136,7 +137,7 @@ const Login = () => {
                     </section>
                         <Link to={"/forgetPassword"} className='text-blue-500 font-medium text-sm'>Forget Password?</Link>
                 </div>
-                    
+                                   {/*if the button loader is visible the login button will be disabled */}
                 <button type='submit' disabled={loader? true: false} className="h-[40px] flex justify-center items-center rounded-md text-white gap-2 font-medium bg-green-400 w-[78%] mx-auto "><p>Login</p>{loader? <ButtonLoader/>:""}</button>
                     
                     

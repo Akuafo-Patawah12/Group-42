@@ -47,7 +47,7 @@ const TrendsCompo = () => {
             socket.off('disconnect');
                   
         }
-    },[])
+    },[socket])
 
     const [loadingProgress, setLoadingProgress] = useState(false);
     axios.defaults.withCredentials = true;
@@ -82,7 +82,7 @@ const TrendsCompo = () => {
       let pic=useRef()
         const handleChange = e => {
           if (e.target.files[0]) { //allowing users to access file which can be images/pdf/video/audio from file explorer
-            setImage(e.target.files[0]);
+            setImage(e.target.files[0]);  //store the selected image in image variable
               pic.current.src= URL.createObjectURL(e.target.files[0]); 
           }
         }
@@ -90,7 +90,7 @@ const TrendsCompo = () => {
         let img_vid;
         const sendPost = (e) => {
             e.preventDefault()
-          if (!image) return;
+          if (!image) return;   /*if there's no image selected don't process with the rest of the functionalities */
       
           const storageRef = ref(storage, `images/${image.name + v4()}`); //setting the path for the chosen image
           
@@ -111,7 +111,7 @@ const TrendsCompo = () => {
           });
               
         setCaption("") //empty caption input field after making a post
-        pic.current.src=""
+        pic.current.src=""   
             } 
             
             const fetchPosts = async() => {
@@ -121,8 +121,7 @@ const TrendsCompo = () => {
               }catch(error){
                   console.error(error)
               }
-                };
-
+              };
                 const popRef= useRef(null)
                 useEffect(()=>{   //this function allows u to close the popup menu by clicking outside of it.
                   let closePop =(event)=>{
@@ -154,31 +153,30 @@ const TrendsCompo = () => {
           <div className='flex items-center justify-around h-[50px]'><LikeOutlined />
           <p className='text-sm'><CommentOutlined /> Comments</p></div>
           </div>
-          
         ))}
-        {loadingProgress ? (<PostLoader/>):""}
+        {loadingProgress ? (<PostLoader/>):""}  
       </div>
 
 
       {openDialog && <div  className='Css'>
         {/*pop up menu */}
-        <div  ref={popRef} className=' fixed w-[80%] h-[70%] translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] w-[80%] bg-white rounded-lg mg:w-[50%] lg:w-[30%]'>
+        <div  ref={popRef} className=' fixed w-[80%] h-[70%] translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] w-[80%] bg-white rounded-lg md:w-[50%] lg:w-[30%]'>
          <div className='border-b-2 h-[60px] font-bold text-xl '>Create Post.</div>
          <section className='h-[40%]'>
           <img ref={pic}  alt="select_image" className='corner-only'></img>
          </section>
-      <form onSubmit={sendPost} className='grid grid-cols-2'>
+      <form onSubmit={sendPost} className='form flex justify-around  '>
     
         
       <textarea 
         
         value={caption}
         onChange={(e) => setCaption(e.target.value)}
-        className='border-2 border-blue-400 rows-span-2'
+        className='border-2 border-blue-400 rows-span-2 max-h-[150px]'
       />
-      <label className='border-2 border-blue-400'>
+      <section> 
+      <label className='rounded-xl flex justify-center items-center bg-blue-400 h-[40px] w-[100px] pointer'>
       <input type="file"
-        
         onChange={handleChange}
         className=' hidden'
         />
@@ -186,11 +184,10 @@ const TrendsCompo = () => {
         </label>
       
        <button type='submit'
-         
-        className='border-2 border-green-300'>
+        className='rounded-xl bg-green-300 h-[40px] w-[100px]'>
           Post
         </button>
-      
+        </section>
       </form>
       </div>
       </div>}{/*ending of popup menu */}

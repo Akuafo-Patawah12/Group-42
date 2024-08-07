@@ -134,3 +134,10 @@ background: rgba(0,0,0,0.4);
     conic-gradient(at var(--s) var(--s),#0000 75%,#000 0) 
     0 0/calc(100% - var(--s)) calc(100% - var(--s));
 }
+
+.form{
+  outline: 2px dashed #15e148;
+  width: 80%;
+  margin-inline: auto;
+  box-shadow: 30px;
+}

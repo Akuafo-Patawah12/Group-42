@@ -118,11 +118,11 @@ const SignUp =async(req,res)=>{
 
        async function sessionLogout(req, res) {
         // Retrieve the refresh token from the request cookies
-        const refreshToken = req.cookies.refreshToken;
+        const cookie = req.cookies;
     
         try {
             // Check if the refresh token is missing
-            if (!refreshToken) {
+            if (!cookie.includes("refreshToken")) {
                 // If verification succeeds, delete the refresh token from cookies
                 res.clearCookie('refreshToken').json({ message: 'Successfully logged out' }); 
             }

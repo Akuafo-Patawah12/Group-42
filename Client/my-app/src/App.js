@@ -1,13 +1,13 @@
-import logo from './logo.svg';
+
 import React,{lazy} from 'react'
 import {Routes,Route} from 'react-router-dom'
 import './App.css';
 
 import ForgetPassword from './Auth_Routes/UpdatePassword'
 import UpdatePassword from './Auth_Routes/UpdatePassword'
-import Loading from "./icons/Loading"
 import LayoutBundle from './RoutesBundle/LayoutBundle';
 import AuthLoader from './icons/AuthLoader';
+import PageNotFound from './Routes/PageNotFound';
 const LandingPage= lazy(()=> import("./Auth_Routes/LandingPage"))
 const Login= lazy(()=> import('./Auth_Routes/Login'))
 const SignUp= lazy(()=> import('./Auth_Routes/SignUp'))
@@ -30,6 +30,7 @@ function App() {
           <Route path="/UpdatePassword/:id" element={<UpdatePassword/>} />
           <Route path="/*" element={<LayoutBundle/>} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
+          <Route path='*' element={<PageNotFound/>} />
          </Routes>
     </div>
   );
