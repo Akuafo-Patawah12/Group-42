@@ -38,6 +38,7 @@ export function Sidebar(){
         await axios.post("http://localhost:5000/logout")
         .then(res=>{
          if(res.data==="Success"){
+          localStorage.removeItem("accesstoken")
             navigate("/Login")
          }
         })

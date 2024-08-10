@@ -38,7 +38,6 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
     
 
 io.on('connection', (socket) => {  // 
-  console.log("connected 😊",socket.id);
 
   socket.on('sendPost', async (data) => { //socket.on means receiving data or information from client side
     const { id,caption,img_vid } = data; //get post from client side
@@ -50,25 +49,25 @@ io.on('connection', (socket) => {  //
         user_id:id
       });
       await input.save(); //insert post into database 
-      const post = await Post.findOne({ _id: input._id }).populate('user_id', 'username');
-      console.log({
-        id: post._id,
-        username: post.user_id.username,
-        user_id: post.user_id._id,
-        caption,
-        img_vid,
-        createdAt: post.createdAt
-      })
+      const post = await Post.findOne({ _id: input._id }).populate('user_id','username');
+      
+        console.log({
+          _id: post._id,
+            user_id: post.user_id._id,
+            caption,
+            img_vid,
+            createdAt: post.createdAt,
+            username: post.user_id.username
+        })
+        io.emit('receivePost', {
+            _id: post._id,
+            user_id: post.user_id._id,
+            caption,
+            img_vid,
+            createdAt: post.createdAt,
+            username: post.user_id.username
 
-      io.emit('receivePost', {
-        id: post._id,
-        username: post.user_id.username,
-        user_id: post.user_id._id,
-        caption,
-        img_vid,
-        createdAt: post.createdAt
-      })
-
+        });
     } catch (err) {
       console.log(err, "sock error");
     }

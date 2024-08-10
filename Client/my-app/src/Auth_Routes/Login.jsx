@@ -46,6 +46,7 @@ const Login = () => {
             
                 case "Logged in as an individual":
                     // Show success message with SweetAlert2
+                    localStorage.setItem('accesstoken', res.data.accessToken);
                     Swal.fire({
                         title: "Logged in successful",
                         icon: "success",

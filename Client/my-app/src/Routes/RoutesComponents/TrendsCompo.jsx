@@ -30,24 +30,14 @@ const TrendsCompo = () => {
     }
   }, []);
 
-  
-
     useEffect(()=>{
         socket.on('connect',()=>{
             console.log("Connected to server")
             
         });
-        socket.on('receivePost',(id,caption,img_vid,username,createdAt)=>{
-          const newPost = {
-            id,
-            caption,
-            img_vid,
-            username,
-            createdAt
-          };
-        
+        socket.on('receivePost',(data)=>{
           // Update the state by adding the new post to the existing posts
-          setPosts(prevPosts => [...prevPosts, newPost]);
+          setPosts(prevPosts => [data,...prevPosts,]);
         })
 
         socket.on('disconnect',(reasons)=>{
