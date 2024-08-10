@@ -51,6 +51,14 @@ io.on('connection', (socket) => {  //
       });
       await input.save(); //insert post into database 
       const post = await Post.findOne({ _id: input._id }).populate('user_id', 'username');
+      console.log({
+        id: post._id,
+        username: post.user_id.username,
+        user_id: post.user_id._id,
+        caption,
+        img_vid,
+        createdAt: post.createdAt
+      })
 
       io.emit('receivePost', {
         id: post._id,
