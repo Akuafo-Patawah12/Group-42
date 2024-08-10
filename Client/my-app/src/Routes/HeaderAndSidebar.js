@@ -31,10 +31,19 @@ export function Sidebar(){
     {name:"Settings",icon:<SettingOutlined />}
   ]
   const navigate= useNavigate()
+
+   axios.defaults.withCredentials=true
   const LogOut =async()=>{
      try{
-       await axios.delete("http://localhost:4000/logout")
-       navigate("/Login")
+        await axios.post("http://localhost:5000/logout")
+        .then(res=>{
+         if(res.data==="Success"){
+            navigate("/Login")
+         }
+        })
+        .catch(err=> console.log(err))
+       
+        
      }catch(e){
        console.error(e)
      }
@@ -49,7 +58,7 @@ export function Sidebar(){
             </NavLink>
 
         ))}
-           <li className='bg-red-300 py-2 rounded-xl font-medium' onClick={LogOut}><LogoutOutlined /> Log Out</li>
+           <li  ><button onClick={LogOut} className='bg-red-300 py-2 rounded-xl font-medium h-full w-full '><LogoutOutlined /> Log Out</button></li>
           
          </ul>
           

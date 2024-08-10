@@ -75,7 +75,7 @@ input[type="email"]:focus{
 .active{
   outline: 2px solid rgb(73, 228, 127);
   outline-offset: -2px;
-  border-radius: 5px;
+  border-radius: 11px;
 }
 .header{
   box-shadow: #3498db;

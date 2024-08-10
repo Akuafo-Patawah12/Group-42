@@ -11,6 +11,7 @@ const Login = () => {
     const [formData,setFormData]= useState({
         email:"",
         password:"",
+        rememberMe:false
        });
        const[loader,setLoader] =useState(false)
     const[validation,seValidation] =useState("")
@@ -132,7 +133,10 @@ const Login = () => {
 
                 <div className='flex mx-auto w-[78%] justify-between items-center'>
                     <section className='flex items-center'>
-                        <input type='checkbox' />
+                        <input type='checkbox'
+                           checked={formData.rememberMe}
+                           onChange={(e) => setFormData({...formData,rememberMe:e.target.checked})}
+                        />
                         <label className='font-medium text-sm'>Stay logged in</label>
                     </section>
                         <Link to={"/forgetPassword"} className='text-blue-500 font-medium text-sm'>Forget Password?</Link>

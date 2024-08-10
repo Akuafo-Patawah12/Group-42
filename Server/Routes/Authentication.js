@@ -7,7 +7,7 @@ const data= require('../DatabaseSchemas/userSchema')
 //Login user
  async function login(req,res){
     
-    const {email,password }= req.body.formData   //grabing user credentials from the client side.
+    const {email,password,rememberMe }= req.body.formData   //grabing user credentials from the client side.
     try{
         const email_Exist= await data.findOne({email:email}); /* check whether the email exist in the database 
        and store it in email exist variable */
@@ -25,7 +25,7 @@ const data= require('../DatabaseSchemas/userSchema')
         function sendCookie(){
             // create refresh token
             const refresh_token= jwt.sign({id: email_Exist._id}, process.env.REFRESH_TOKEN_SECRET,{
-                expiresIn: '6d',   
+                expiresIn: rememberMe ? '30d' : '1h' // 30 days if "Remember Me", else 1 hour  
             })
             /*send refresh token to browser cookies when ever the user logs in "this determine the 
             particular user who is logged in that's what res.cookie does"*/ 
@@ -35,7 +35,7 @@ const data= require('../DatabaseSchemas/userSchema')
                 path: '/',        // Specifies the path for which the cookie is valid
                 secure: true,          // Indicates that the cookie should only be sent over HTTPS
                 sameSite: 'none',      // Specifies same-site cookie attribute to prevent cross-site request forgery
-                maxAge: 7 * 24 * 60 * 60 * 1000    // Sets the expiration time of the cookie (7 days in milliseconds)
+                maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000 // 30 days or 1 hour
         });   
         }
         if(email_Exist){ //checking if the email the user login with exist in the database
@@ -124,7 +124,7 @@ const SignUp =async(req,res)=>{
             // Check if the refresh token is missing
             if (!cookie.includes("refreshToken")) {
                 // If verification succeeds, delete the refresh token from cookies
-                res.clearCookie('refreshToken').json({ message: 'Successfully logged out' }); 
+                res.json({ message: 'Successfully logged out' }); 
             }
         } catch (err) {
             // Handle token verification error

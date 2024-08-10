@@ -35,22 +35,20 @@ const LayoutBundle = () => {
              <Route path='/Logistics' element={<Suspense fallback={<Loading />}>
                   <Logistics /> 
              </Suspense>} />
+             
              <Route path='/Inventory' element={<Suspense fallback={<Loading />}>
                   <Inventory />
              </Suspense>} />
-             <Route path='/Inventory' element={<Suspense fallback={<Loading />}>
-                  <Inventory />
-             </Suspense>} />
-             <Route path='/Inventory' element={<Suspense fallback={<Loading />}>
+             <Route path='/Warehousing' element={<Suspense fallback={<Loading />}>
                   <Warehousing/>
              </Suspense>} />
-             <Route path='/Inventory' element={<Suspense fallback={<Loading />}>
+             <Route path='/Dashboard' element={<Suspense fallback={<Loading />}>
                   <Dashboard />
              </Suspense>} />
-             <Route path='/Inventory' element={<Suspense fallback={<Loading />}>
+             <Route path='/Sourcing' element={<Suspense fallback={<Loading />}>
                   <Sourcing />
              </Suspense>} />
-             <Route path='/Inventory' element={<Suspense fallback={<Loading />}>
+             <Route path='/Settings' element={<Suspense fallback={<Loading />}>
                   <Settings />
              </Suspense>} />
       </Routes>

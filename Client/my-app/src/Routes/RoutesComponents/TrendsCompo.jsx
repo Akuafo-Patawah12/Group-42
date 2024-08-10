@@ -37,12 +37,24 @@ const TrendsCompo = () => {
             console.log("Connected to server")
             
         });
-      
+        socket.on('receivePost',(id,caption,img_vid,username,createdAt)=>{
+          const newPost = {
+            id,
+            caption,
+            img_vid,
+            username,
+            createdAt
+          };
+        
+          // Update the state by adding the new post to the existing posts
+          setPosts(prevPosts => [...prevPosts, newPost]);
+        })
 
         socket.on('disconnect',(reasons)=>{
             console.log(reasons)
           })
         return()=>{
+            socket.off('receivePost')
             socket.off('connect');
             socket.off('disconnect');
                   
@@ -102,7 +114,7 @@ const TrendsCompo = () => {
               img_vid=url; //assigning url to img_vid
                 // Update state with the image URL
               socket.emit('sendPost',{id:userId,caption,img_vid}); //emit post including image url to the web server
-              setTimeout(fetchPosts,500) // wait for 500 milliseconds before calling this function to fetch posts after posting them
+              //setTimeout(fetchPosts,500) // wait for 500 milliseconds before calling this function to fetch posts after posting them
             }).catch((error) => {
               console.error('Error getting download URL', error);
             });
@@ -114,14 +126,14 @@ const TrendsCompo = () => {
         pic.current.src=""   
             } 
             
-            const fetchPosts = async() => {
+        /*    const fetchPosts = async() => {
               try{
               const response = await axios.get('http://localhost:5000/emit-posts');//fetching post from Api
               setPosts(response.data)
               }catch(error){
                   console.error(error)
               }
-              };
+              };   */
                 const popRef= useRef(null)
                 useEffect(()=>{   //this function allows u to close the popup menu by clicking outside of it.
                   let closePop =(event)=>{
@@ -144,7 +156,7 @@ const TrendsCompo = () => {
           {/*list the post one after the order using the map function*/}
         {posts.map((post, index) => (  
           <div key={index} className='border-[1px] bg-white border-stone-200 shadow-sm rounded-2xl w-[250px]'>
-            <p className='py-3'><div className='size-6 rounded-[50%] border-2 bg-gray-400 font-medium grid place-items-center ml-3 '>{post.username[0]}</div><div className='ml-3 text-sm'>{post.caption}</div></p>
+            <p className='py-3'><div className='size-6 rounded-[50%] border-2 bg-gray-400 font-medium grid place-items-center ml-3 '>{post?.username[0]}</div><div className='ml-3 text-sm'>{post.caption}</div></p>
             <section className='h-[300px] bg-stone-100 w-full'>
               
                   <img  src={post.img_vid} alt={`img_${index}`} className="h-full mx-auto"></img>

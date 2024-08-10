@@ -38,7 +38,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
     
 
 io.on('connection', (socket) => {  // 
-  console.log("connected 😊");
+  console.log("connected 😊",socket.id);
 
   socket.on('sendPost', async (data) => { //socket.on means receiving data or information from client side
     const { id,caption,img_vid } = data; //get post from client side
@@ -47,9 +47,19 @@ io.on('connection', (socket) => {  //
       const input = new Post({
         caption,
         img_vid,
-        user_id: id
+        user_id:id
       });
       await input.save(); //insert post into database 
+      const post = await Post.findOne({ _id: input._id }).populate('user_id', 'username');
+
+      io.emit('receivePost', {
+        id: post._id,
+        username: post.user_id.username,
+        user_id: post.user_id._id,
+        caption,
+        img_vid,
+        createdAt: post.createdAt
+      })
 
     } catch (err) {
       console.log(err, "sock error");
@@ -61,11 +71,10 @@ io.on('connection', (socket) => {  //
 });
 
 
-
 app.get('/emit-posts', async(req, res) => {
   try {
     const result = await Post.aggregate([  //joining an querying different tables
-      {
+      { 
         $lookup: {
           from: 'users', // Name of the user collection
           localField: 'user_id', // Field in the posts collection
@@ -93,13 +102,6 @@ app.get('/emit-posts', async(req, res) => {
     res.status(500).send('Internal Server Error');
   } 
 });
-
-
-
- 
-  
-
-
 
 const PORT = process.env.PORT || 5000;  //grabbing the port number from .env file 
 
