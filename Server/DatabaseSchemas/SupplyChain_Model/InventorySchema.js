@@ -5,13 +5,12 @@ const itemSchema= new Schema({
     name:String,
     description:String,
     quantity:Number,
-    price:Number
+    price:Number,
+    reorderlevel:Number,
+    warehouseLocation:String,
+    createdAt:Date.now()
 })
 
-const categoriesSchema= new Schema({
-    name:String
-})
-const categories= mongoose.model("Categories",categoriesSchema)
 const item= mongoose.model("Item", itemSchema)
 
-module.exports={ item,categories} 
+module.exports={ item} 

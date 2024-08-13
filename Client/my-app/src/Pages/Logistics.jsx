@@ -2,7 +2,14 @@ import React from 'react'
 
 const Logistics = () => {
   return (
-    <div>Logistics</div>
+    <div><form>
+           <input type="text" ></input>
+           <input type="text" ></input>
+           <input type="text" ></input>
+           <input type="text" ></input>
+           <input type="text" ></input>
+        </form>
+    </div>
   )
 }
 

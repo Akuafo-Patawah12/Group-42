@@ -1,5 +1,5 @@
-import { CommentOutlined, LikeOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import React,{useState,useEffect,useRef} from 'react'
+import { CommentOutlined, LikeFilled, LikeOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import React,{useState,useEffect,useRef,useMemo} from 'react'
 import {jwtDecode} from "jwt-decode"
 import axios from 'axios'
 import { storage } from "../../firebase"
@@ -10,12 +10,14 @@ import PostLoader from '../../icons/PostLoader';
 
 
 const TrendsCompo = () => {
-    const socket= io("http://localhost:5000");
+  const socket = useMemo(() =>io("http://localhost:5000"),[])
     
     const [caption, setCaption] = useState('');
     
   const [posts, setPosts] = useState([]);
   const [userId, setUserId] = useState(null);
+  const[likes,setLikes]= useState({})
+  const[like,setLike]=useState(false)
 
   useEffect(() => {
     const token =localStorage.getItem("accesstoken")
@@ -39,12 +41,19 @@ const TrendsCompo = () => {
           // Update the state by adding the new post to the existing posts
           setPosts(prevPosts => [data,...prevPosts,]);
         })
-
+        socket.on("getLikes",(data)=>{
+            setLikes(data)
+        })
+        socket.on("getDislikes",(data)=>{
+          setLikes(data)
+        })
         socket.on('disconnect',(reasons)=>{
             console.log(reasons)
           })
         return()=>{
             socket.off('receivePost')
+            socket.off("getlikes")
+            socket.off("getDilikes")
             socket.off('connect');
             socket.off('disconnect');
                   
@@ -52,7 +61,7 @@ const TrendsCompo = () => {
     },[socket])
 
     const [loadingProgress, setLoadingProgress] = useState(false);
-    axios.defaults.withCredentials = true;
+    axios.defaults.withCredentials =true;
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -116,6 +125,12 @@ const TrendsCompo = () => {
         pic.current.src=""   
             } 
             
+
+            function likePost(postId,userId){
+               
+               socket.emit(like?"like":"dislike",{post_id:postId,user_id:userId})
+               
+            }
         /*    const fetchPosts = async() => {
               try{
               const response = await axios.get('http://localhost:5000/emit-posts');//fetching post from Api
@@ -152,7 +167,7 @@ const TrendsCompo = () => {
                   <img  src={post.img_vid} alt={`img_${index}`} className="h-full mx-auto"></img>
               
             </section>
-          <div className='flex items-center justify-around h-[50px]'><LikeOutlined />
+          <div className='flex items-center justify-around h-[50px]'><span onClick={likePost(post._id,post.user_id)}><LikeOutlined onClick={()=>setLike(prev=>!prev)} /> {post.likesCount}</span>
           <p className='text-sm'><CommentOutlined /> Comments</p></div>
           </div>
         ))}

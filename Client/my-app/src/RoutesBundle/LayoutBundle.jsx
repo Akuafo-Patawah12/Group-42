@@ -5,7 +5,7 @@ import React,{lazy, Suspense} from "react"
 
 
 import Loading from '../icons/Loading'
-import Header, { Sidebar } from '../Routes/HeaderAndSidebar';
+import Header, { Sidebar } from '../Components/HeaderAndSidebar';
 const Sourcing= lazy(()=>import('../Pages/Sourcing')) 
 const Settings= lazy(()=>import('../Pages/Settings'));
 const Dashboard= lazy(()=> import('../Pages/Dashboard'));

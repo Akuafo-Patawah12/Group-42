@@ -57,7 +57,7 @@ const Login = () => {
                     seValidation("");
                     setLoader(false)  //hidden button loader
                     // Navigate to the Trends page
-                    navigate('/Trends');
+                    navigate('/Customer/Products');
                     break;
             
                 case "invalid password":

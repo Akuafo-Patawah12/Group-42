@@ -6,6 +6,7 @@ import './App.css';
 import ForgetPassword from './Auth_Routes/UpdatePassword'
 import UpdatePassword from './Auth_Routes/UpdatePassword'
 import LayoutBundle from './RoutesBundle/LayoutBundle';
+import CustomersLayout from './RoutesBundle/CustomersLayout';
 import AuthLoader from './icons/AuthLoader';
 import PageNotFound from './Routes/PageNotFound';
 const LandingPage= lazy(()=> import("./Auth_Routes/LandingPage"))
@@ -29,6 +30,7 @@ function App() {
           </React.Suspense>} />
           <Route path="/UpdatePassword/:id" element={<UpdatePassword/>} />
           <Route path="/*" element={<LayoutBundle/>} />
+          <Route path="/Customer/*" element={<CustomersLayout/>} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path='*' element={<PageNotFound/>} />
          </Routes>
