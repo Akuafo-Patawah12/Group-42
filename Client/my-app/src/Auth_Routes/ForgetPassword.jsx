@@ -14,7 +14,7 @@ const ForgetPassword = () => {
           title:"SCM sent you a link.",
           text:"check your email inbox",
           icon:"info",
-          timer:2000
+          timer:3000
         })
       })
       .catch(err=>{

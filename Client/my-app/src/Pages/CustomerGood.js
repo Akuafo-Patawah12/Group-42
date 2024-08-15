@@ -1,4 +1,5 @@
 import React,{useState,useEffect,useRef} from "react"
+import {motion } from "framer-motion"
 const CustomerGoods=()=>{
     const popRef= useRef(null)
                 useEffect(()=>{   //this function allows u to close the popup menu by clicking outside of it.
@@ -16,7 +17,11 @@ const CustomerGoods=()=>{
                 },[]);     
     const [openDialog,setOpenDialog]= useState(false)
     return(
-        <div className="mt-[70px] h-[300px] w-[50%]">
+        <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="mt-[70px] h-[300px] w-[50%]">
             <button onClick={()=>setOpenDialog(true)} className="flex bg-stone-400 rounded-lg">Make Order</button>
             {openDialog && <div  className='Css'>
         {/*pop up menu */}
@@ -37,7 +42,7 @@ const CustomerGoods=()=>{
       </form>
       </div>
       </div>}{/*ending of popup menu */}
-        </div>
+        </motion.div>
     )
 }
 export default CustomerGoods;

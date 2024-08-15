@@ -34,8 +34,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
     credentials: true
   }
 });
-
-    
+ 
 
 io.on('connection', (socket) => {  // 
      console.log("Connected to server")

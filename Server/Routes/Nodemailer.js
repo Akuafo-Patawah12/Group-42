@@ -21,14 +21,14 @@ const forgetPassword = async(req,res)=>{
                 pass: process.env.PASSWORD  //generated password form less secured apps from Google
             },
             tls: {
-                rejectUnauthorized: false, // do not reject self-signed certificates
+                rejectUnauthorized: false, //do not reject self-signed certificates  
               },
         });  
         let mailOptions = { //How the message will look like in Gmail
             from: '"Do Not Reply" <' + process.env.EMAIL + '>',
             to: email,
             subject: 'Reset your password',
-            html: `<a href="http://localhost:3000/ResetPassword/${confirm._id}">➡️ Click this link to reset password ⬅️</a>`
+            html: `<a href="http://localhost:3000/UpdatePassword/${confirm._id}">➡️ Click this link to reset password ⬅️</a>`
         }; 
         
        transporter.sendMail(mailOptions, function(error, info){ //S

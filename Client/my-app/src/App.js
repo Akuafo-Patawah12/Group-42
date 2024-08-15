@@ -3,7 +3,7 @@ import React,{lazy} from 'react'
 import {Routes,Route} from 'react-router-dom'
 import './App.css';
 
-import ForgetPassword from './Auth_Routes/UpdatePassword'
+import ForgetPassword from './Auth_Routes/ForgetPassword'
 import UpdatePassword from './Auth_Routes/UpdatePassword'
 import LayoutBundle from './RoutesBundle/LayoutBundle';
 import CustomersLayout from './RoutesBundle/CustomersLayout';
@@ -28,10 +28,11 @@ function App() {
           <Route path='/Login' element={<React.Suspense fallback={<AuthLoader/>}>
             <Login/>
           </React.Suspense>} />
+          <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/UpdatePassword/:id" element={<UpdatePassword/>} />
           <Route path="/*" element={<LayoutBundle/>} />
           <Route path="/Customer/*" element={<CustomersLayout/>} />
-          <Route path="/forgetPassword" element={<ForgetPassword />} />
+          
           <Route path='*' element={<PageNotFound/>} />
          </Routes>
     </div>

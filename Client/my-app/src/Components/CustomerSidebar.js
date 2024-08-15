@@ -42,7 +42,7 @@ const CustomerSidebar = () => {
            <li  ><button onClick={LogOut} className='bg-red-300 py-2 rounded-xl font-medium h-full w-full '><LogoutOutlined /> Log Out</button></li>
           
          </ul>
-          
+         
       </aside>
   );
 };

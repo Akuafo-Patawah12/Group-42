@@ -125,6 +125,8 @@ const LandingPage = () => {
            
         </div>
 
+       
+       
         <h1 className='max-w-[172px] mx-auto mt-[80px] font-medium text-3xl'>Blog Insight.</h1>
 
             <div className='grid  grid-col-1 place-items-center gap-y-[40px] mt-4 md:grid-cols-2 lg:grid-cols-3 gap-x-[50px]'>
@@ -146,6 +148,8 @@ const LandingPage = () => {
             </div>
 
 
+            
+            
             <h2 className='font-medium text-4xl  max-w-[360px] mt-[100px] mx-auto md:max-w-[400px] lg:max-w-[400px]'>Connect with Our Proficient Supply Chain Professionals. </h2>
 
             <img src='../images/connect.png' alt='connect' className='mx-auto mt-5'></img>
@@ -167,6 +171,7 @@ const LandingPage = () => {
                     <h3>Project Manager</h3>
                 </section>
             </div>
+
 
             <footer className='mt-5 flex justify-around  bg-black  rounded-t-2xl '>
                 <h4 className='font-medium text-sm text-white ml-1 sm:ml-1'>©Copyright ©2024 Supply Chain Solutions, Inc. All rights reserved. </h4>

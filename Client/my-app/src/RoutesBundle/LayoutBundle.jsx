@@ -1,10 +1,11 @@
 
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes,useLocation } from 'react-router-dom'
 
 import React,{lazy, Suspense} from "react"
 
 
 import Loading from '../icons/Loading'
+import {AnimatePresence} from "framer-motion"
 import Header, { Sidebar } from '../Components/HeaderAndSidebar';
 const Sourcing= lazy(()=>import('../Pages/Sourcing')) 
 const Settings= lazy(()=>import('../Pages/Settings'));
@@ -18,13 +19,14 @@ const Notify = lazy(()=> import("../Routes/Notification"))
 
 
 const LayoutBundle = () => {
-  
+  const location= useLocation()
   
   return (
     <div >
       <Header />
       <Sidebar />
-      <Routes>
+      <AnimatePresence>
+      <Routes location={location} key={location.pathname}>
       
              <Route path='/Trends' element={<Suspense fallback={<Loading />}>
              <LazyTrends />
@@ -52,7 +54,7 @@ const LayoutBundle = () => {
                   <Settings />
              </Suspense>} />
       </Routes>
-        
+      </AnimatePresence> 
     </div>
   )
 }

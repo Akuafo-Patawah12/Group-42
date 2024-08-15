@@ -14,7 +14,7 @@ export default function UpdatePassword(){
         try{
           await axios.put(`http://localhost:5000/updatePassword/${id}`,{password})
           .then(res=>{
-            if(res.data==="ok"){
+            if(res.data.message==="Password Updated"){
             Swal.fire({
               title:"Password updated.",
               icon:"success",

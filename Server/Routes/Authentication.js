@@ -64,10 +64,10 @@ const data= require('../DatabaseSchemas/userSchema')
 
 
     const updatePassword= async(req,res)=>{
-        const {Password}=req.body
+        const {password}=req.body
         const {id}= req.params
         try{
-           const encryptedPassword= await bcrypt.hash(Password,10)
+           const encryptedPassword= await bcrypt.hash(password,10)
             const findPassword= await data.findByIdAndUpdate(id,{password:encryptedPassword},{new:true})
             if(findPassword){
                return res.json({message:"Password Updated"})

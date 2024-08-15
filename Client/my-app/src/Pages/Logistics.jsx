@@ -1,15 +1,15 @@
 import React from 'react'
-
+import {motion} from "framer-motion"
 const Logistics = () => {
   return (
-    <div><form>
+    <motion.div><form>
            <input type="text" ></input>
            <input type="text" ></input>
            <input type="text" ></input>
            <input type="text" ></input>
            <input type="text" ></input>
         </form>
-    </div>
+    </motion.div>
   )
 }
 
