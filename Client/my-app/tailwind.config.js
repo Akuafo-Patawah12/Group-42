@@ -2,8 +2,14 @@
 module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
   theme: {
-    extend: {},
+    extend: {
+      backdropBlur: {
+        'custom': '5px',
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    
+  ],
 }
 

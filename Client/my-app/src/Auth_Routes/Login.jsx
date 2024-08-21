@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
+
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import WarningIcon from '../icons/Warning_icon'
@@ -23,6 +24,8 @@ const Login = () => {
             setLoader(true)  //display button loader after clicking login button to submit form
           await axios.post("http://localhost:5000/login",{formData})   //making an API request from web server
           .then(res=>{
+
+            
             switch (res.data.message) {
                 case "Logged in as a company":
                     // Store the access token in local storage
@@ -60,29 +63,42 @@ const Login = () => {
                     navigate('/Customer/Products');
                     break;
             
-                case "invalid password":
-                    // Set validation message for invalid password
-                    seValidation("Invalid password");
-                    setLoader(false)
-                    break;
-            
-                case "invalid email":
-                    // Set validation message for invalid email
-                    seValidation("Invalid email");
-                    setLoader(false)
-                    break;
-            
                 default:
-                    
+                      console.log("Oops,something when wrong")
                     break;
             }
             
         })
           .catch(err=>{
+            switch (err.response.status) {
+                case 429:
+                    seValidation("Too many attempts");
+                    setLoader(false);
+                    console.error('Response error:', err.response.data);
+                    break;
+                    
+                case 404:
+                    seValidation("Email does not exist");
+                    setLoader(false);
+                    console.log('Email not found:', err.response.data);
+                    break;
             
-            seValidation("Server Error")
-            setLoader(false)
-            console.log(err)
+                case 401:
+                    seValidation("Invalid credentials");
+                    setLoader(false);
+                    console.log('Invalid credentials:', err.response.data);
+                    break;
+            
+                case 500:
+                    seValidation("Server error");
+                    setLoader(false);
+                    console.log('Server error:', err.response.data);
+                    break;
+            
+                default:
+                    break;
+            }
+            
         })
     }catch(e){
         Swal.fire({
@@ -96,13 +112,15 @@ const Login = () => {
     function pass_to_text(){
          setTogglePassword(!togglePassword)
     }
+
+    
   return (
     
         <div className='flex justify-center items-center h-screen bg-gray-100 '>
 
-            <section className='border-[1px]  bg-white border-stone-300 shadow-2xl flex items-center flex-col h-[480px] lg:flex-row gap-2 h-[420px]'>
+            <section className='border-[1px]  rounded-xl overflow-hidden bg-white border-stone-300 shadow-2xl flex items-center flex-col h-[480px] lg:flex-row gap-2 h-[420px]'>
                 
-                <div className='w-[220px]  h-[130px]  lg:h-full'>
+                <div className='w-[220px]  h-[130px]  lg:h-full overflow-hidden'>
                     <img src='../images/welcome.jpg' className='h-full w-full object-cover object-center' alt='sign'></img>
                 </div>
 
@@ -156,3 +174,4 @@ const Login = () => {
 }
 
 export default Login
+

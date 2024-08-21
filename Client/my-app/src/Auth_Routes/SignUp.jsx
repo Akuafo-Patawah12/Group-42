@@ -57,7 +57,7 @@ const SignUp = () => {
   return (
     <div>
         <div className='flex justify-center items-center h-screen bg-gray-100 '>
-            <section className='border-[1px]  bg-white border-stone-300 shadow-2xl flex items-center flex-col h-[480px] lg:flex-row gap-2 h-[420px]'>
+            <section className='border-[1px] rounded-xl bg-white border-stone-300 shadow-2xl flex items-center flex-col h-\[480px] lg:flex-row gap-2 h-[420px]'>
                 <div className='w-[220px]  h-[60px]  lg:h-full'>
                     <img src='../images/welcome.jpg' className='h-full w-full object-cover object-center' alt='sign'></img>
                 </div>

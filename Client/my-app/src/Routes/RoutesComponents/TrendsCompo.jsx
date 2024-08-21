@@ -1,17 +1,22 @@
 import { CommentOutlined, LikeFilled, LikeOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import React,{useState,useEffect,useRef,useMemo} from 'react'
 import {jwtDecode} from "jwt-decode"
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios'
 import { storage } from "../../firebase"
 import { v4 } from "uuid"
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import io from "socket.io-client"
 import PostLoader from '../../icons/PostLoader';
+import TrendPostPopup from './TrendPostPopup';
+import TrendsPosts from './TrendsPosts';
 
 
 const TrendsCompo = () => {
-  const socket = useMemo(() =>io("http://localhost:5000"),[])
-    
+  const socket = useMemo(() =>io("http://localhost:5000",{
+    transports: ['websocket'],
+  }),[])
+    const navigate= useNavigate()
     const [caption, setCaption] = useState('');
     
   const [posts, setPosts] = useState([]);
@@ -30,7 +35,7 @@ const TrendsCompo = () => {
         console.error('Invalid token:', error);
       }
     }
-  }, []);
+  },[]);
 
     useEffect(()=>{
         socket.on('connect',()=>{
@@ -50,6 +55,12 @@ const TrendsCompo = () => {
         socket.on('disconnect',(reasons)=>{
             console.log(reasons)
           })
+          socket.on('connect_error', (err) => {
+            console.error('Socket connection error:', err);
+            localStorage.removeItem('accesstoken');
+            navigate('/Login');
+        });
+        
         return()=>{
             socket.off('receivePost')
             socket.off("getlikes")
@@ -58,7 +69,7 @@ const TrendsCompo = () => {
             socket.off('disconnect');
                   
         }
-    },[socket])
+    },[socket,navigate])
 
     const [loadingProgress, setLoadingProgress] = useState(false);
     axios.defaults.withCredentials =true;
@@ -97,12 +108,47 @@ const TrendsCompo = () => {
               pic.current.src= URL.createObjectURL(e.target.files[0]); 
           }
         }
+
+        useEffect(() => {
+          
+
+          
+          const handleDrop = (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+  
+              const files = event.dataTransfer.files;
+              if (files.length > 0) {
+                  const file = files[0];
+                  setImage(file);
+                  pic.current.src = URL.createObjectURL(file);
+              }
+          };
+  
+          const currentPic = pic.current;
+          if (currentPic) {
+              
+              currentPic.addEventListener('drop', handleDrop);
+          }
+  
+          // Clean up event listener on component unmount
+          return () => {
+              if (currentPic) {
+                  currentPic.removeEventListener('drop', handleDrop);
+                  
+              }
+          };
+      }, []);
+
+
+
+        
         
         let img_vid;
         const sendPost = (e) => {
             e.preventDefault()
-          if (!image) return;   /*if there's no image selected don't process with the rest of the functionalities */
-      
+            if(!image) return;  /*if there's no image selected don't process with the rest of the functionalities */
+          
           const storageRef = ref(storage, `images/${image.name + v4()}`); //setting the path for the chosen image
           
           uploadBytes(storageRef, image).then((snapshot) => { //upload image to file server and grab a snap shot
@@ -154,61 +200,27 @@ const TrendsCompo = () => {
                   }
                 },[]);     
     const [openDialog,setOpenDialog]= useState(false)
+              
   return (
-    <div className='pt-[20px] '>
-        <div className='w-4/5 border-2 border-green-300 h-[40px] mx-auto mt-[80px] overflow-hidden rounded-2xl lg:w-2/5'><button onClick={()=>setOpenDialog(true)} className='float-right'><button className='h-[38px] bg-green-300 block px-2 rounded-l-2xl '><PlusCircleOutlined /> Create Post</button> </button></div>
-        <div className='mt-5 place-items-center grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3'>
+    <main className='pt-[20px] '>
+        <div className='w-4/5 border-2 border-green-300 h-[40px] mx-auto mt-[80px] overflow-hidden rounded-2xl lg:w-2/5'><button onClick={()=>setOpenDialog(true)} className='float-right'><span className='h-[38px] bg-green-300 block px-2 rounded-l-2xl '><PlusCircleOutlined /> Create Post</span> </button></div>
+       
           {/*list the post one after the order using the map function*/}
-        {posts.map((post, index) => (  
-          <div key={index} className='border-[1px] bg-white border-stone-200 shadow-sm rounded-2xl w-[250px]'>
-            <p className='py-3'><div className='size-6 rounded-[50%] border-2 bg-gray-400 font-medium grid place-items-center ml-3 '>{post?.username[0]}</div><div className='ml-3 text-sm'>{post.caption}</div></p>
-            <section className='h-[300px] bg-stone-100 w-full'>
-              
-                  <img  src={post.img_vid} alt={`img_${index}`} className="h-full mx-auto"></img>
-              
-            </section>
-          <div className='flex items-center justify-around h-[50px]'><span onClick={likePost(post._id,post.user_id)}><LikeOutlined onClick={()=>setLike(prev=>!prev)} /> {post.likesCount}</span>
-          <p className='text-sm'><CommentOutlined /> Comments</p></div>
-          </div>
-        ))}
-        {loadingProgress ? (<PostLoader/>):""}  
-      </div>
-
-
-      {openDialog && <div  className='Css'>
-        {/*pop up menu */}
-        <div  ref={popRef} className=' fixed w-[80%] h-[70%] translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] w-[80%] bg-white rounded-lg md:w-[50%] lg:w-[30%]'>
-         <div className='border-b-2 h-[60px] font-bold text-xl '>Create Post.</div>
-         <section className='h-[40%]'>
-          <img ref={pic}  alt="select_image" className='corner-only'></img>
-         </section>
-      <form onSubmit={sendPost} className='form flex justify-around  '>
-    
-        
-      <textarea 
-        
-        value={caption}
-        onChange={(e) => setCaption(e.target.value)}
-        className='border-2 border-blue-400 rows-span-2 max-h-[150px]'
-      />
-      <section> 
-      <label className='rounded-xl flex justify-center items-center bg-blue-400 h-[40px] w-[100px] pointer'>
-      <input type="file"
-        onChange={handleChange}
-        className=' hidden'
-        />
-        Select Image
-        </label>
+        <TrendsPosts posts={[...posts]} setLike={setLike} likePost={likePost} loading={loadingProgress} />
       
-       <button type='submit'
-        className='rounded-xl bg-green-300 h-[40px] w-[100px]'>
-          Post
-        </button>
-        </section>
-      </form>
-      </div>
-      </div>}{/*ending of popup menu */}
-    </div>
+
+      {/* create a post popup menu*/}
+     <TrendPostPopup
+         reference={popRef}
+         send={sendPost}
+         picRef={pic}
+         cap={caption}
+        handleChange={handleChange}
+        popUp={openDialog}
+        setCaption={setCaption}
+          
+   /> 
+    </main>
   )
 }
 

@@ -1,6 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import Correct from '../icons/Correct';
 import {Link} from 'react-router-dom'
+import LandCompo from "./LandCompo"
+
 const LandingPage = () => {
     const [text,setText] = useState("")
     let display;
@@ -17,10 +19,12 @@ const LandingPage = () => {
                setText(prevText =>prevText + splitText[char])
           :
             setText(prevText => prevText);
-          if(char >= splitText.length ){
+
+            if(char >= splitText.length){
              clearInterval(intervalId);
              display=true;
           }
+          
 
         }, 50);
             // Cleanup function to clear the interval when component unmounts
@@ -72,7 +76,7 @@ const LandingPage = () => {
     const links=[{innerText:"Home"},{innerText:"Service"},{innerText:"Review"},{innerText:"Contact"}]
 
   return (
-    <div>
+    <main>
         <header className='w-full h-[60px] relative items-center flex justify-between'>
             <h4 className='ml-3 font-bold'>Supply Chain Solution</h4>
            <nav className=' hidden lg:flex gap-3'>
@@ -102,7 +106,7 @@ const LandingPage = () => {
         <p className={` text-white font-bold max-w-[400px] transition-all mt-[10px] mx-auto ${displayP ? "scale-1":"scale-0"}`}>Explore innovative solutions crafted to optimize your supply chain management and enhance overall efficiency.</p>
         </div> 
        
-        <div className='flex flex-col justify-center items-center mt-[50px] md:flex-row justify-around  lg:flex-row justify-around '>
+        <div className='flex flex-col bg-green-50 justify-center items-center py-[50px] md:flex-row justify-around  lg:flex-row justify-around '>
             <div >
                 <h1 className='font-medium  text-4xl'>We Offer</h1>
                 <ul className='mt-8'>
@@ -125,59 +129,9 @@ const LandingPage = () => {
            
         </div>
 
+       <LandCompo/>
        
-       
-        <h1 className='max-w-[172px] mx-auto mt-[80px] font-medium text-3xl'>Blog Insight.</h1>
-
-            <div className='grid  grid-col-1 place-items-center gap-y-[40px] mt-4 md:grid-cols-2 lg:grid-cols-3 gap-x-[50px]'>
-                <section className='max-w-[300px]'>
-                    <h3 className='font-bold text-stone-700 text-2xl mb-3'>Revolutionizing Supply Chain with Advanced Technologies. </h3>
-                    <p>Maximize profitability with strategic insights into inventory management and innovative warehouse solutions shared in this post. </p>
-                    <div className='flex gap-1 mt-4 font-bold'><div className='size-6 bg-gray-400 rounded-[50%]'><img src='../images/img_3.jpg' alt="three" className='w-full h-full rounded-[50%]'></img></div><p>Simon James</p></div>
-                </section>
-                <section className='max-w-[300px]'>
-                    <h3 className='font-bold text-stone-700 text-2xl mb-3'>Innovative Hardware for Seamless Logistics Management.</h3>
-                    <p>Explore hardware solutions tailored for seamless logistics and supply chain management. </p>
-                    <div className='flex gap-1 mt-4 font-bold'><div className='size-6 bg-gray-400 rounded-[50%]'><img src='../images/img_2.jpg' alt='2' className='w-full h-full rounded-[50%]'></img></div><p>Jonathan Olertey</p></div>
-                </section>
-                <section className='max-w-[300px]'>
-                   <h3 className='font-bold text-stone-700 text-2xl mb-3'>Maximizing Efficiency in Modern Supply Chain Strategies. </h3>
-                   <p>Discover logistics optimization tips and tools to enhance efficiency, reduce costs, and streamline your supply chain operations. </p>
-                   <div className='flex gap-1 mt-4 font-bold'><div className='size-6 bg-gray-400 rounded-[50%]'><img src='../images/img_1.jpg' alt='img' className='w-full h-full rounded-[50%]'></img></div><p>Nicholas Asamoah</p></div>
-                </section>
-            </div>
-
-
-            
-            
-            <h2 className='font-medium text-4xl  max-w-[360px] mt-[100px] mx-auto md:max-w-[400px] lg:max-w-[400px]'>Connect with Our Proficient Supply Chain Professionals. </h2>
-
-            <img src='../images/connect.png' alt='connect' className='mx-auto mt-5'></img>
-
-            <div className='flex gap-2 flex-wrap justify-around mt-8 '>
-                <section className='max-w-[300px]'>
-                    <img src='../images/img_1.jpg' alt='1' className='rounded-3xl w-full h-[300px]'></img>
-                    <h6 className='font-medium text-lg mt-2 mb-2'>Patawah Andrew</h6>
-                    <h3>Supply Chain Expert</h3>
-                </section>
-                <section  className='max-w-[300px]'>
-                    <img src='../images/img_2.jpg' alt='2' className='rounded-3xl w-full h-[300px]'></img>
-                    <h6 className='font-medium text-lg mt-2 mb-2'>David Darko</h6>
-                    <h3>Head of Logistics</h3>
-                </section>
-                <section  className='max-w-[300px]'>
-                    <img src='../images/img_3.jpg' alt='3' className='rounded-3xl -full h-[300px]'></img>
-                    <h6 className='font-medium text-lg mt-2 mb-2'>Micheal Dei</h6>
-                    <h3>Project Manager</h3>
-                </section>
-            </div>
-
-
-            <footer className='mt-5 flex justify-around  bg-black  rounded-t-2xl '>
-                <h4 className='font-medium text-sm text-white ml-1 sm:ml-1'>©Copyright ©2024 Supply Chain Solutions, Inc. All rights reserved. </h4>
-                <div className='font-medium text-sm text-white mr-1 lg:mr-0'>Developed by Micheal Dei, David Nii Darko and Patawah Andrew.</div>
-            </footer>
-    </div>
+    </main>
   )
 }
 

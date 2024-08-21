@@ -11,7 +11,11 @@ const orderSchema= new Schema({
         }
     ],
     totalAmount:Number,
-    Status:String,
+    Status:{
+        type:String,
+        default:"Pending..."
+    }
+    ,
     createdAt:Date.now()
 })
 

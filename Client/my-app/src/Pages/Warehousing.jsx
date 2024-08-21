@@ -6,6 +6,7 @@ const Warehousing = () => {
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
+    className='w-full bg-stone-100  lg:w-[80%] ml-auto'
     >Warehousing</motion.div>
   )
 }

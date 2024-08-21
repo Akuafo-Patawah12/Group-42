@@ -11,20 +11,25 @@ const data= require('../DatabaseSchemas/userSchema')
     try{
         const email_Exist= await data.findOne({email:email}); /* check whether the email exist in the database 
        and store it in email exist variable */
-        let Encrypted_Password= email_Exist.password  //if email exist get the user's password 
+        
 
-         const password_Is_Correct= await bcrypt.compare(password, Encrypted_Password); /*Here compare the password
-         the user type in the frontend and the one in the database if it's the same */
+        
+         
 
          const protected= email_Exist.account_type // find the user's account type "whether it's a personal or business account"
 
-         const access_token= jwt.sign({id: email_Exist._id}, process.env.ACCESS_TOKEN_SECRET,{
+         const payload = {
+            id: email_Exist._id, // Example user ID
+            iat: Math.floor(Date.now() / 1000) // Set issued at timestamp
+            // Other claims can be added here
+          };
+         const access_token= jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET,{
             expiresIn: '15m', // create an access cookie for authorization  
         })
 
         function sendCookie(){
             // create refresh token
-            const refresh_token= jwt.sign({id: email_Exist._id}, process.env.REFRESH_TOKEN_SECRET,{
+            const refresh_token= jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET,{
                 expiresIn: rememberMe ? '30d' : '1h' // 30 days if "Remember Me", else 1 hour  
             })
             /*send refresh token to browser cookies when ever the user logs in "this determine the 
@@ -34,32 +39,40 @@ const data= require('../DatabaseSchemas/userSchema')
                 httpOnly: true,   // Ensures that the cookie is only accessible via HTTP(S) requests
                 path: '/',        // Specifies the path for which the cookie is valid
                 secure: true,          // Indicates that the cookie should only be sent over HTTPS
-                sameSite: 'none',      // Specifies same-site cookie attribute to prevent cross-site request forgery
+                sameSite: 'Strict',      // Specifies same-site cookie attribute to prevent cross-site request forgery
                 maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000 // 30 days or 1 hour
         });   
         }
-        if(email_Exist){ //checking if the email the user login with exist in the database
-            if(password_Is_Correct && protected==="Personal" ){
-                // Set the refresh token as a cookie and send it to the browser after login
-                sendCookie()  // we called the function to send token to the browser   
-            res.json({
-              message: "Logged in as an individual", //Send this message to the client app if user logs in as a individual
-              accessToken: access_token
-      }); //send a response from server to client if email & password exist 
-            }else if(password_Is_Correct && protected==="Business"){
-                 sendCookie()
-                res.json({
+        if (!email_Exist || null) {
+            return res.status(404).json({ message: "invalid email" }); // Email not found
+        }
+
+        const password_Is_Correct = await bcrypt.compare(password, email_Exist.password);
+
+        if (!password_Is_Correct) {
+            return res.status(401).json({ message: 'invalid password' }); // Incorrect password
+        }
+
+        switch (protected) {
+            case "Personal":
+                sendCookie(); // Set the refresh token cookie
+                return res.json({
+                    message: "Logged in as an individual",
+                    accessToken: access_token
+                });
+
+            case "Business":
+                sendCookie(); // Set the refresh token cookie
+                return res.json({
                     message: "Logged in as a company",
                     accessToken: access_token
-                  });
-            }else{
-                res.json({message:'invalid password'}); 
-            }
-        }else{
-            res.json({message:"invalid email"})
+                });
+
+            default:
+                return res.status(400).json({ message: 'Invalid account type' }); // Unexpected account type
         }
     }catch(err){
-       res.status(404).json(err) //Console 404 error message if server crashes
+       return res.status(500).json(err) //Console 500 error message if server crashes
     }}
 
 
@@ -118,12 +131,10 @@ const SignUp =async(req,res)=>{
 
        async function sessionLogout(req, res) {
         // Retrieve the refresh token from the request cookies
-        const cookie = req.cookies;
+        const cookie = req.cookie;
     
         try {
-            // Check if the refresh token is missing
-            if (!cookie.includes("refreshToken")) {
-                // If verification succeeds, delete the refresh token from cookies
+            if(!cookie.includes("refreshToken")){
                 res.json({ message: 'Successfully logged out' }); 
             }
         } catch (err) {
