@@ -7,7 +7,7 @@ import React,{lazy, Suspense} from "react"
 import Loading from '../icons/Loading'
 import {AnimatePresence} from "framer-motion"
 import Header, { Sidebar } from '../Components/HeaderAndSidebar';
-const Sourcing= lazy(()=>import('../Pages/Sourcing')) 
+
 const Settings= lazy(()=>import('../Pages/Settings'));
 const Dashboard= lazy(()=> import('../Pages/Dashboard'));
 const Warehousing= lazy(()=>import('../Pages/Warehousing'));
@@ -46,9 +46,6 @@ const LayoutBundle = () => {
              </Suspense>} />
              <Route path='/Dashboard' element={<Suspense fallback={<Loading />}>
                   <Dashboard />
-             </Suspense>} />
-             <Route path='/Sourcing' element={<Suspense fallback={<Loading />}>
-                  <Sourcing />
              </Suspense>} />
              <Route path='/Settings' element={<Suspense fallback={<Loading />}>
                   <Settings />

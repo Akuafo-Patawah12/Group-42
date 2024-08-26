@@ -21,7 +21,7 @@ const data= require('../DatabaseSchemas/userSchema')
          const payload = {
             id: email_Exist._id, // Example user ID
             iat: Math.floor(Date.now() / 1000) // Set issued at timestamp
-            // Other claims can be added here
+            
           };
          const access_token= jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET,{
             expiresIn: '15m', // create an access cookie for authorization  
@@ -30,7 +30,7 @@ const data= require('../DatabaseSchemas/userSchema')
         function sendCookie(){
             // create refresh token
             const refresh_token= jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET,{
-                expiresIn: rememberMe ? '30d' : '1h' // 30 days if "Remember Me", else 1 hour  
+                expiresIn: rememberMe ? '30d' : '1h' // 30 days if "Remember Me" is checked, else 1 hour  
             })
             /*send refresh token to browser cookies when ever the user logs in "this determine the 
             particular user who is logged in that's what res.cookie does"*/ 

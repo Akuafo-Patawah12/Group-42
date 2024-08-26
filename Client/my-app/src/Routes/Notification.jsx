@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import io from 'socket.io-client'
 export default function Notification(){
-    const socket= io("http://localhost:5000");
+    const socket= io("http://localhost:5000/notify",{transports: ['websocket']});
 
     const[notification,setNotification]= useState([])
     useEffect(()=>{
@@ -9,7 +9,7 @@ export default function Notification(){
             console.log("Connected to server")
             
         });
-        socket.on("notification",(data)=>{
+        socket.on("notify",(data)=>{
             console.log(data)
             setNotification(prev=>[data,...prev])
         })
@@ -18,16 +18,16 @@ export default function Notification(){
             
         });
         return()=>{
-            socket.off("notification")
+            socket.off("notify")
             socket.off('connect')
             socket.off('disconnect')
         }
     },[socket])
     return(
-        <div>
+        <div className='mt-[120px] flex flex-col gap-3'>
             
             {notification.map((item,index)=>(
-                <div key={index} className='w-[50%] bg-white rounded-xl mt-[120px] mx-auto'>{item.message}</div>
+                <div key={index} className='w-[50%] bg-stone-100 h-9 flex rounded-xl items-center gap-1 mx-auto'><span className=' border-2 border-green-400 rounded-[50%] text-center size-[25px]'>{item.message[0]}</span><span>{item.message}</span></div>
                 
             ))}
         </div>

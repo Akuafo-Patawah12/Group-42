@@ -9,10 +9,10 @@ export default function Header() {
         <h3 className='text-green-500 flex item-center justify-center font-bold text-lg my-auto'>SCMS</h3>
         <nav className='flex gap-3 h-[40px] my-auto'>
           <NavLink to={"/Trends"} >
-             <button className='rounded-xl h-full flex justify-center px-1 items-center'><img src="../images/Trending.png" alt="trends"></img>  Trends</button>
+             <button className='rounded-xl h-full flex justify-center px-1 items-center font-medium'><img src="../images/Trending.png" alt="trends"></img>  Trends</button>
           </NavLink>
           <NavLink to={"/Notification"} className={"my-auto"} >
-             <button className="flex h-[40px]  items-center w-auto px-1 "><img src="../images/Bell.png" alt="Bell"></img>NewsFlash</button>
+             <button className="flex h-[40px]  items-center w-auto px-1 font-medium "><img src="../images/Bell.png" alt="Bell"></img>NewsFlash</button>
           </NavLink>
           
         </nav>
@@ -55,7 +55,7 @@ export function Sidebar(){
          <ul className='translate-y-[40px]  flex flex-col gap-2 mx-auto w-[80%]'>
         {data.map((item,index)=>(
            <NavLink to={`/${item.name}`}>
-            <li key={index} className='text-stone-500 pl-2 py-2 rounded-xl font-medium border-2 border-stone-300 hover:text-stone-600 hover:border-stone-400'>{item.icon}{item.name}</li>
+            <li key={index} className='text-stone-500 pl-2 py-2 rounded-xl font-medium border-2 border-stone-300 hover:text-stone-600 hover:border-stone-400 '>{item.icon}{item.name}</li>
             </NavLink>
 
         ))}

@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import axios from 'axios'
 import { storage } from "../../firebase"
 import { v4 } from "uuid"
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL,updateMetadata } from 'firebase/storage';
 import io from "socket.io-client"
 import PostLoader from '../../icons/PostLoader';
 import TrendPostPopup from './TrendPostPopup';
@@ -13,8 +13,10 @@ import TrendsPosts from './TrendsPosts';
 
 
 const TrendsCompo = () => {
+
+ 
   const socket = useMemo(() =>io("http://localhost:5000",{
-    transports: ['websocket'],
+    transports: ['websocket'],credentials: true
   }),[])
     const navigate= useNavigate()
     const [caption, setCaption] = useState('');
@@ -23,6 +25,7 @@ const TrendsCompo = () => {
   const [userId, setUserId] = useState(null);
   const[likes,setLikes]= useState({})
   const[like,setLike]=useState(false)
+
 
   useEffect(() => {
     const token =localStorage.getItem("accesstoken")
@@ -36,6 +39,38 @@ const TrendsCompo = () => {
       }
     }
   },[]);
+  
+  const [sendAlert,setSendAlert]=useState(false)
+  const sendPost = async(e) => {
+    e.preventDefault()
+    if(!image) return;  /*if there's no image selected don't process with the rest of the functionalities */
+    setSendAlert(true)
+    setCaption("") //empty caption input field after making a post
+    pic.current.src=""
+    try{
+  const storageRef = ref(storage, `images/${image.name + v4()}`); //setting the path for the chosen image
+ 
+ const snapshot= await uploadBytes(storageRef, image) //upload image to file server and grab a snap shot
+    console.log('Uploaded a blob!', snapshot);
+       
+  const url=await  getDownloadURL(snapshot.ref) //get image reference and download the url from file server(firebase)
+      console.log('File available at', url);
+    
+      socket.emit('sendPost',{id:userId,caption,img_vid:url}); //emit post including image url to the web server
+      setSendAlert(false)
+    
+ 
+}catch(e){
+  console.error(e)
+}   
+    } 
+    
+
+    function likePost(postId,userId){
+       
+       socket.emit(like?"like":"dislike",{post_id:postId,user_id:userId})
+       
+    }
 
     useEffect(()=>{
         socket.on('connect',()=>{
@@ -98,7 +133,7 @@ const TrendsCompo = () => {
   return () => {
     fetchData(); // or any other cleanup logic you need
   };
-    }, []);
+  }, []);
       
         const [image, setImage] = useState(null);
       let pic=useRef()
@@ -140,51 +175,6 @@ const TrendsCompo = () => {
           };
       }, []);
 
-
-
-        
-        
-        let img_vid;
-        const sendPost = (e) => {
-            e.preventDefault()
-            if(!image) return;  /*if there's no image selected don't process with the rest of the functionalities */
-          
-          const storageRef = ref(storage, `images/${image.name + v4()}`); //setting the path for the chosen image
-          
-          uploadBytes(storageRef, image).then((snapshot) => { //upload image to file server and grab a snap shot
-            console.log('Uploaded a blob or file!', snapshot);
-      
-            getDownloadURL(snapshot.ref).then((url) => { //get image reference and download the url from file server(firebase)
-              console.log('File available at', url);
-              img_vid=url; //assigning url to img_vid
-                // Update state with the image URL
-              socket.emit('sendPost',{id:userId,caption,img_vid}); //emit post including image url to the web server
-              //setTimeout(fetchPosts,500) // wait for 500 milliseconds before calling this function to fetch posts after posting them
-            }).catch((error) => {
-              console.error('Error getting download URL', error);
-            });
-          }).catch((error) => {
-            console.error('Error uploading file', error);
-          });
-              
-        setCaption("") //empty caption input field after making a post
-        pic.current.src=""   
-            } 
-            
-
-            function likePost(postId,userId){
-               
-               socket.emit(like?"like":"dislike",{post_id:postId,user_id:userId})
-               
-            }
-        /*    const fetchPosts = async() => {
-              try{
-              const response = await axios.get('http://localhost:5000/emit-posts');//fetching post from Api
-              setPosts(response.data)
-              }catch(error){
-                  console.error(error)
-              }
-              };   */
                 const popRef= useRef(null)
                 useEffect(()=>{   //this function allows u to close the popup menu by clicking outside of it.
                   let closePop =(event)=>{
@@ -202,7 +192,8 @@ const TrendsCompo = () => {
     const [openDialog,setOpenDialog]= useState(false)
               
   return (
-    <main className='pt-[20px] '>
+    <main className='pt-[20px] relative '>
+      {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg p-1 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
         <div className='w-4/5 border-2 border-green-300 h-[40px] mx-auto mt-[80px] overflow-hidden rounded-2xl lg:w-2/5'><button onClick={()=>setOpenDialog(true)} className='float-right'><span className='h-[38px] bg-green-300 block px-2 rounded-l-2xl '><PlusCircleOutlined /> Create Post</span> </button></div>
        
           {/*list the post one after the order using the map function*/}

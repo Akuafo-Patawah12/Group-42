@@ -1,14 +1,16 @@
 import React from 'react';
 import axios from 'axios'
-import {DatabaseOutlined,SettingOutlined,ProductOutlined,TruckOutlined,LogoutOutlined} from "@ant-design/icons"
+import {DatabaseOutlined,SettingOutlined,FileTextOutlined,BarChartOutlined,CompassOutlined,TruckOutlined,LogoutOutlined} from "@ant-design/icons"
 import {NavLink} from "react-router-dom"
 import { useNavigate } from 'react-router-dom';
 
 const CustomerSidebar = () => {
     const data=[
-        {name:"Inventory",icon:<DatabaseOutlined />},
-        {name:"Products", icon: <ProductOutlined />},
-        {name:"Make Order",icon:<TruckOutlined/>}, 
+        {name:"Overview",icon:<DatabaseOutlined />},
+        {name:"Shipping", icon: <TruckOutlined />},
+        {name:"Invoice",icon:<FileTextOutlined/>}, 
+        {name:"Analytics",icon:<BarChartOutlined />},
+        {name:"Tracking",icon:<CompassOutlined />},
         {name:"Settings",icon:<SettingOutlined />}
       ]
       const navigate= useNavigate()

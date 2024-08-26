@@ -4,7 +4,8 @@ import Header from '../Components/HeaderAndSidebar';
 import CustomerSidebar from '../Components/CustomerSidebar';
 import { Routes,Route } from 'react-router-dom';
 import Loading from "../icons/Loading"
-const CustomerGoods= lazy(()=>import('../Pages/CustomerGood'))  
+const Tracking= lazy(()=>import('../Pages/Tracking'))
+ 
  
 
 const CustomersLayout=()=>{
@@ -13,9 +14,10 @@ const CustomersLayout=()=>{
             <Header/>
             <CustomerSidebar />
             <Routes>
-             <Route path='/Products' element={<Suspense fallback={<Loading />}>
-                  <CustomerGoods />
+             <Route path='/Tracking' element={<Suspense fallback={<Loading />}>
+                  <Tracking />
              </Suspense>} />
+             
              
              </Routes>
              
