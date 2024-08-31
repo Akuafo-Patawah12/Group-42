@@ -13,9 +13,6 @@ const data= require('../DatabaseSchemas/userSchema')
        and store it in email exist variable */
         
 
-        
-         
-
          const protected= email_Exist.account_type // find the user's account type "whether it's a personal or business account"
 
          const payload = {
@@ -99,7 +96,7 @@ const data= require('../DatabaseSchemas/userSchema')
 
 // Register a new user 
 const SignUp =async(req,res)=>{
-    const {username,email,account_type,password }= req.body.formData
+    const {username,email,account_type,password }= req.body.formData //Extract credentials from the client
     const salt=  bcrypt.genSaltSync(10)
     try{
         const encryptedPassword= await bcrypt.hash(password,salt)  //hashing user password before inserting it into the database
@@ -116,8 +113,8 @@ const SignUp =async(req,res)=>{
                  password: encryptedPassword,              
             });
            return res.json({message:'not exist'}); 
-    }catch(err){
-        console.error(err);
+    }catch(error){
+        console.error(error);
         return res.status(500).json({ message: 'Internal Server Error', error: err.message });
     }
 }

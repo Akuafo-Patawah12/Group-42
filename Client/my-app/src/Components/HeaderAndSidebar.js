@@ -23,10 +23,10 @@ export default function Header() {
 export function Sidebar(){
   const data=[
     {name:"Dashboard",icon:<DashboardOutlined />},
-    {name:"Inventory",icon:<DatabaseOutlined />},
-    {name:"Product", icon: <ProductOutlined />},
-    {name:"Logistics",icon:<TruckOutlined/>}, 
-    {name:"Sourcing",icon:<PullRequestOutlined/>},
+    {name:"Clients",icon:<DatabaseOutlined />},
+    {name:"Shipments", icon: <ProductOutlined />},
+    {name:"Orders",icon:<TruckOutlined/>}, 
+    {name:"Reports",icon:<PullRequestOutlined/>},
     {name:"Warehousing",icon:<ContainerOutlined/>},
     {name:"Settings",icon:<SettingOutlined />}
   ]

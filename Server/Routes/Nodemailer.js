@@ -8,10 +8,7 @@ const forgetPassword = async(req,res)=>{
     try{
         const confirm= await data.findOne({email:email}); // find one user from the database with the name in the request
         if(confirm){ 
-        let token= jwt.sign({id:confirm._id}, process.env.FORGETPASSWORD_TOKEN_SECRET,{
-            expiresIn: '15m', 
-        });
-                         
+                    
         let transporter=nodemailer.createTransport({  //create transport allows to create communicating channel
             host: 'smtp.gmail.com',
             port: 465,
@@ -26,7 +23,7 @@ const forgetPassword = async(req,res)=>{
         });  
         let mailOptions = { //How the message will look like in Gmail
             from: '"Do Not Reply" <' + process.env.EMAIL + '>',
-            to: email,
+            to: email,  //Client email
             subject: 'Reset your password',
             html: `<a href="http://localhost:3000/UpdatePassword/${confirm._id}">➡️ Click this link to reset password ⬅️</a>`
         }; 

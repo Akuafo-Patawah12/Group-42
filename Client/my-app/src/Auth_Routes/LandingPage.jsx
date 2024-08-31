@@ -3,6 +3,7 @@ import Correct from '../icons/Correct';
 import {Link} from 'react-router-dom'
 import LandCompo from "./LandCompo"
 
+
 const LandingPage = () => {
     const [text,setText] = useState("")
     let display;

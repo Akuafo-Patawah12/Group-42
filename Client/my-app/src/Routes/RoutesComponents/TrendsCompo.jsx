@@ -1,11 +1,11 @@
-import { CommentOutlined, LikeFilled, LikeOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import {  PlusCircleOutlined } from '@ant-design/icons';
 import React,{useState,useEffect,useRef,useMemo} from 'react'
 import {jwtDecode} from "jwt-decode"
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios'
 import { storage } from "../../firebase"
 import { v4 } from "uuid"
-import { ref, uploadBytes, getDownloadURL,updateMetadata } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import io from "socket.io-client"
 import PostLoader from '../../icons/PostLoader';
 import TrendPostPopup from './TrendPostPopup';
@@ -197,7 +197,7 @@ const TrendsCompo = () => {
         <div className='w-4/5 border-2 border-green-300 h-[40px] mx-auto mt-[80px] overflow-hidden rounded-2xl lg:w-2/5'><button onClick={()=>setOpenDialog(true)} className='float-right'><span className='h-[38px] bg-green-300 block px-2 rounded-l-2xl '><PlusCircleOutlined /> Create Post</span> </button></div>
        
           {/*list the post one after the order using the map function*/}
-        <TrendsPosts posts={[...posts]} setLike={setLike} likePost={likePost} loading={loadingProgress} />
+        <TrendsPosts posts={[...posts]}  setLike={setLike} likePost={likePost} loading={loadingProgress} />
       
 
       {/* create a post popup menu*/}

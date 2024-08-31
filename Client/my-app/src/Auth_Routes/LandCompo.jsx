@@ -1,5 +1,6 @@
 import React from 'react'
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const LandCompo = () => {
   return (
     <div>
@@ -10,17 +11,45 @@ const LandCompo = () => {
                 <section className='max-w-[300px]'>
                     <h3 className='font-bold text-stone-400 text-2xl mb-3'>Revolutionizing Supply Chain with Advanced Technologies. </h3>
                     <p className='text-white'>Maximize profitability with strategic insights into inventory management and innovative warehouse solutions shared in this post. </p>
-                    <div className='flex gap-1 mt-4 text-white font-bold'><div className='size-6 bg-gray-400 rounded-[50%] border-2 border-green-500'><img src='../images/img_3.jpg' alt="three" className='w-full h-full rounded-[50%]'></img></div><p>Simon James</p></div>
+                    <div className='flex gap-1 mt-4 text-white font-bold'><div className='size-6 bg-gray-400 rounded-[50%] border-2 border-green-500'>
+                        <LazyLoadImage 
+                           src='../images/img_3.jpg' 
+                           effect="blur"
+                           height={24}
+                           style={{height:"100%"}}
+                           alt="three" className='w-full h-full rounded-[50%]'
+                           />
+                           </div>
+                           <p>Simon James</p>
+                           
+                           </div>
                 </section>
                 <section className='max-w-[300px]'>
                     <h3 className='font-bold text-stone-400 text-2xl mb-3'>Innovative Hardware for Seamless Logistics Management.</h3>
                     <p className='text-white'>Explore hardware solutions tailored for seamless logistics and supply chain management. </p>
-                    <div className='flex gap-1 mt-4 text-white font-bold'><div className='size-6 bg-gray-400 rounded-[50%] border-2 border-green-500'><img src='../images/img_2.jpg' alt='2' className='w-full h-full rounded-[50%]'></img></div><p>Jonathan Olertey</p></div>
+                    <div className='flex gap-1 mt-4 text-white font-bold'><div className='size-6 bg-gray-400 rounded-[50%] border-2 border-green-500'>
+                    <LazyLoadImage 
+                           src='../images/img_2.jpg' 
+                           effect="blur"
+                           height={24}
+                           style={{height:"100%"}}
+                           alt="three" className='w-full h-full rounded-[50%]'
+                           />
+                        </div><p>Jonathan Olertey</p></div>
                 </section>
                 <section className='max-w-[300px]'>
                    <h3 className='font-bold text-stone-400 text-2xl mb-3'>Maximizing Efficiency in Modern Supply Chain Strategies. </h3>
                    <p className='text-white'>Discover logistics optimization tips and tools to enhance efficiency, reduce costs, and streamline your supply chain operations. </p>
-                   <div className='flex gap-1 mt-4 text-white font-bold'><div className='size-6 bg-gray-400 rounded-[50%] border-2 border-green-500'><img src='../images/img_1.jpg' alt='img' className='w-full h-full rounded-[50%]'></img></div><p>Nicholas Asamoah</p></div>
+                   <div className='flex gap-1 mt-4 text-white font-bold'><div className='size-6 bg-gray-400 rounded-[50%] border-2 border-green-500'>
+                   <LazyLoadImage 
+                           src='../images/img_1.jpg' 
+                           effect="blur"
+                           height={24}
+                           style={{height:"100%"}}
+                           
+                           alt="three" className='w-full h-full rounded-[50%]'
+                           />
+                    </div><p>Nicholas Asamoah</p></div>
                 </section>
             </div>
             </div>

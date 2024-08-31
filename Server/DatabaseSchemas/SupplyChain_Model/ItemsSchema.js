@@ -11,6 +11,6 @@ const itemSchema= new Schema({
     createdAt:Date.now()
 })
 
-const item= mongoose.model("Item", itemSchema)
+const Item= mongoose.model("Item", itemSchema)
 
-module.exports={ item} 
+module.exports= Item

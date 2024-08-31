@@ -34,7 +34,7 @@ const Login = () => {
             
                     // Show success message with SweetAlert2
                     Swal.fire({
-                        title: "Logged in successful",
+                        title: "Logged in successful as Business account",
                         icon: "success",
                         timer: 2000     //close popup alert after 2 seconds
                     });
@@ -51,7 +51,7 @@ const Login = () => {
                     // Show success message with SweetAlert2
                     localStorage.setItem('accesstoken', res.data.accessToken);
                     Swal.fire({
-                        title: "Logged in successful",
+                        title: "Logged in successful as an Individual",
                         icon: "success",
                         timer: 2000
                     });

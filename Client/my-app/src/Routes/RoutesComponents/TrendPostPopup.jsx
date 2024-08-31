@@ -19,6 +19,7 @@ const TrendPostPopup = (props) => {
         value={props.cap}
         onChange={(e) => props.setCaption(e.target.value)}
         className='border-2 border-blue-400 rows-span-2 max-h-[150px]'
+        rows="3"
       />
       <section> 
       <label className='rounded-xl flex justify-center items-center bg-blue-400 h-[40px] w-[100px] pointer'>

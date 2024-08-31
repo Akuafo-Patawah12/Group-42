@@ -8,11 +8,14 @@ import Loading from '../icons/Loading'
 import {AnimatePresence} from "framer-motion"
 import Header, { Sidebar } from '../Components/HeaderAndSidebar';
 
+
 const Settings= lazy(()=>import('../Pages/Settings'));
 const Dashboard= lazy(()=> import('../Pages/Dashboard'));
 const Warehousing= lazy(()=>import('../Pages/Warehousing'));
-const Logistics= lazy(()=> import('../Pages/Logistics')) 
-const Inventory= lazy(()=>import('../Pages/Inventory'))  
+const Orders= lazy(()=> import('../Pages/Orders')) 
+ 
+const Reports= lazy(()=> import('../Pages/Reports')) 
+const Shipment= lazy(()=>import('../Pages/Shipment'))  
 const LazyTrends= lazy(()=> import("../Routes/Trends"))
 const Notify = lazy(()=> import("../Routes/Notification"))
 
@@ -34,12 +37,15 @@ const LayoutBundle = () => {
              <Route path='/Notification' element={<Suspense fallback={<Loading />}>
                   <Notify /> 
              </Suspense>} />
-             <Route path='/Logistics' element={<Suspense fallback={<Loading />}>
-                  <Logistics /> 
+             <Route path='/Reports' element={<Suspense fallback={<Loading />}>
+                  <Reports /> 
              </Suspense>} />
              
-             <Route path='/Inventory' element={<Suspense fallback={<Loading />}>
-                  <Inventory />
+             <Route path='/Shipments' element={<Suspense fallback={<Loading />}>
+                  <Shipment />
+             </Suspense>} />
+             <Route path='/Orders' element={<Suspense fallback={<Loading />}>
+                  <Orders />
              </Suspense>} />
              <Route path='/Warehousing' element={<Suspense fallback={<Loading />}>
                   <Warehousing/>

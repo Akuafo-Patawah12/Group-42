@@ -26,7 +26,7 @@ const TrackingSub = () => {
                 <th className='bg-slate-400 rounded-sm'>Product</th>
                 <th className='bg-slate-400 rounded-sm'>Quantity</th>
                 <th className='bg-slate-400 rounded-sm'>Price</th>
-                <th className='bg-slate-400 rounded-sm'>Company</th>
+                <th className='bg-slate-400 rounded-sm'>Status</th>
                 <th className='bg-slate-400 rounded-sm'>Arrival time</th>
             </tr>
         </thead>
