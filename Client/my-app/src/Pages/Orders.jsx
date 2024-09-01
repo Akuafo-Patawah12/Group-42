@@ -14,7 +14,7 @@ const Orders = () => {
 
   useEffect(()=>{
     socket.emit("joinRoom",{id:decode.id})
-  },[])
+  },[socket])
 
 
   useEffect(()=>{

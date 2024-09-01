@@ -1,7 +1,7 @@
 const socketIo = require('socket.io');
 const Post= require('../DatabaseSchemas/PostSchema')
 const Like= require('../DatabaseSchemas/likesSchema')
-
+const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
  const data= require("../DatabaseSchemas/userSchema")
 const jwt= require('jsonwebtoken')
 const cookie= require('cookie');
@@ -91,7 +91,7 @@ notificationsNamespace.on('connection', (socket) => {
 });
 
 trackingNamespace.on("connection", async (socket) => {
-    Tracking(socket)
+    Tracking(socket,orderListNamespace)
 });
 
 orderListNamespace.on("connection",(socket)=>{
