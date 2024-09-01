@@ -15,7 +15,7 @@ app.use(cookies())
 app.use(express.json());
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
-const initializeSocket = require('./Socket');
+const initializeSocket = require('./WebSockets/Socket');
 app.use(cors({
   origin:["http://localhost:3000"],
   credentials: true,

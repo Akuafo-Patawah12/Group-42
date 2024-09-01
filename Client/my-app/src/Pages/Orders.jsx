@@ -11,13 +11,22 @@ const Orders = () => {
     transports: ['websocket'],
   }),[])
   const navigate= useNavigate()
+
+  useEffect(()=>{
+    socket.emit("joinRoom",{id:decode.id})
+  },[])
+
+
   useEffect(()=>{
     socket.on('connect',()=>{
         console.log("Connected to server")
         
     });
     
-    socket.emit("joinRoom",{room:"/orderRoom",id:decode.id})
+   socket.on("joined",(data)=>{
+       console.log(data)
+   }) 
+
     socket.on('receivedOrder',(data)=>{
       console.log("order data",data)
     })
@@ -30,6 +39,7 @@ const Orders = () => {
     return()=>{
         socket.off('connect');
         socket.off("receivedOrder")
+        
         socket.off('disconnect');
               
     }
