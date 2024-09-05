@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TrackingSub = () => {
+const TrackingSub = (props) => {
   return (
     <>
       <div className='flex gap-2 justify-between mt-4 w-[95%] ml-auto'>
@@ -31,15 +31,16 @@ const TrackingSub = () => {
             </tr>
         </thead>
         <tbody>
-            <tr>
-                
+          {props.orders.map((order,index)=>(
+            <tr key={index}>
+              <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize:"14px",lineHeight:"20px"}}>{order._id}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td className='text-sm'>{order.Status}</td>
             </tr>
-            <tr>
-                
-            </tr>
-            <tr>
-                
-            </tr>
+          ))}
+            
         </tbody>
     </table>
       </>

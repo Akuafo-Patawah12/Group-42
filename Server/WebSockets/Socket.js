@@ -53,7 +53,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
   const trackingNamespace =    io.of('/Tracking');
   io.on('connection', (socket) => {  //
       PostFunction(socket,users,io,notificationsNamespace)
-
+   
  socket.on("like",async(data)=>{
      const{user_id,post_id}= data;
      try{
@@ -77,6 +77,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
  
 
  socket.on('disconnect', () => {
+  delete users[socket.user.id];
    console.log('user disconnected');
  });
 });
@@ -86,16 +87,17 @@ notificationsNamespace.on('connection', (socket) => {
 
 
   socket.on('disconnect', () => {
+    delete users[socket.user.id]
       console.log('User disconnected from the notifications namespace');
   });
 });
 
 trackingNamespace.on("connection", async (socket) => {
-    Tracking(socket,orderListNamespace)
+    Tracking(socket,orderListNamespace,notificationsNamespace,users)
 });
 
 orderListNamespace.on("connection",(socket)=>{
-      orderList(socket)
+      orderList(socket,users)
 })
 
 io.of("/like").on("connection", (socket) => {
@@ -114,6 +116,7 @@ io.of("/like").on("connection", (socket) => {
       console.log("likes error",err)
     }
     socket.on('disconnect', () => {
+      delete users[socket.user.id];
       console.log('user disconnected');
     });
  

@@ -1,10 +1,6 @@
 const express = require('express');
 const http = require('http');
 const connection = require('./DB_connection');
-const Post= require('./DatabaseSchemas/PostSchema')
-const Reply= require('./DatabaseSchemas/ReplyComments')
-const Like= require('./DatabaseSchemas/likesSchema')
-const Comment= require('./DatabaseSchemas/CommentSchema')
 const router = require('./Router_connector');
 require('dotenv').config();
 const cookies= require("cookie-parser")
@@ -48,39 +44,7 @@ if (cluster.isMaster) {
 
   
 
-app.get('/emit-posts', async(req, res) => {
-  try {
-    const result = await Post.aggregate([  //joining an querying different tables
-      { 
-        $lookup: {
-          from: 'users', // Name of the user collection
-          localField: 'user_id', // Field in the posts collection
-          foreignField: '_id', // Field in the users collection
-          as: 'userDetails' // Alias for the joined documents
-         }
-      },
-      {
-        $unwind: '$userDetails' // Deconstruct the array of userDetails
-      },
-      
-    
-      {
-        $project: {
-          _id: 1, // Include the _id of the post
-          user_id: 1, // Include the user_id
-          caption: 1, // Include the caption
-          img_vid: 1, // Include the img_vid
-          createdAt: 1, //Include the createdAt
-          username: '$userDetails.username' // Include the username from userDetails
-        }
-      }
-    ]).sort({createdAt:-1});
-    res.json(result)
-  } catch (error) { 
-    console.error('Error fetching posts:', error);
-    res.status(500).send('Internal Server Error');
-  } 
-});
+
 
 const PORT = process.env.PORT || 5000;  //grabbing the port number from .env file 
 

@@ -9,6 +9,10 @@ export default function Notification(){
             console.log("Connected to server")
             
         });
+        socket.on("orderNotification",(data)=>{
+            console.log(data)
+            setNotification(prev=>[data,...prev])
+        })
         socket.on("notify",(data)=>{
             console.log(data)
             setNotification(prev=>[data,...prev])
@@ -18,6 +22,7 @@ export default function Notification(){
             
         });
         return()=>{
+            socket.off("orderNotification")
             socket.off("notify")
             socket.off('connect')
             socket.off('disconnect')

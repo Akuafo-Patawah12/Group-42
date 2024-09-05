@@ -11,12 +11,15 @@ const Orders = () => {
     transports: ['websocket'],
   }),[])
   const navigate= useNavigate()
-
+ const[orders,setOrders]=useState([])
   useEffect(()=>{
     socket.emit("joinRoom",{id:decode.id})
   },[socket])
 
-
+  useEffect(()=>{
+     socket.emit("clientOrders")
+  },[])
+ 
   useEffect(()=>{
     socket.on('connect',()=>{
         console.log("Connected to server")
@@ -26,8 +29,12 @@ const Orders = () => {
    socket.on("joined",(data)=>{
        console.log(data)
    }) 
-
+   socket.on("getAllOrders",(data)=>{
+    console.log(data)
+      setOrders(data)
+   })
     socket.on('receivedOrder',(data)=>{
+      setOrders(prev => [data,...prev])
       console.log("order data",data)
     })
    
@@ -39,15 +46,15 @@ const Orders = () => {
     return()=>{
         socket.off('connect');
         socket.off("receivedOrder")
-        
         socket.off('disconnect');
-              
+        socket.off("getAllOrders")    
     }
-},[socket,navigate])
-const [inputValue, setInputValue] = useState('');
+},[socket,navigate,orders])
 
+
+const [inputValue, setInputValue] = useState('');
     // Predefined options for the datalist
-    const options = [
+    const Options = [
         "All",
         "Delivered",
         "In Transit",
@@ -88,9 +95,9 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
                     color: '#333'
                 }}
             />
-            <datalist id="activities">
-                {options.map((option, index) => (
-                    <option key={index} value={option} />
+            <datalist id="activities" className='bg-[#333]'>
+                {Options.map((Option, index) => (
+                    <option key={index} value={Option} />
                 ))}
             </datalist>
      </section>
@@ -106,15 +113,19 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
             </tr>
         </thead>
         <tbody>
-            <tr>
-                
+            {orders.map((order,index)=>(
+              <tr key={index} className='border-b-[1px] border-stone-300 py-[4px]'>
+                <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize: '15px', color:"#57534e"}}>
+                  {order._id}
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style={{fontSize: '15px',color:"#57534e"}}>
+                  {order.Status}  
+                </td> 
             </tr>
-            <tr>
-                
-            </tr>
-            <tr>
-                
-            </tr>
+            ))}
         </tbody>
     </table>
     </motion.div>

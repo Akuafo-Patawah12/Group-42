@@ -71,12 +71,18 @@ const TrendsCompo = () => {
        socket.emit(like?"like":"dislike",{post_id:postId,user_id:userId})
        
     }
+    useEffect(()=>{
+      socket.emit("refreshPost","call refresh")
+    },[])
 
+    const[postData,setPostData]=useState()
     useEffect(()=>{
         socket.on('connect',()=>{
             console.log("Connected to server")
             
         });
+        
+
         socket.on('receivePost',(data)=>{
           // Update the state by adding the new post to the existing posts
           setPosts(prevPosts => [data,...prevPosts,]);
@@ -87,6 +93,7 @@ const TrendsCompo = () => {
         socket.on("getDislikes",(data)=>{
           setLikes(data)
         })
+        
         socket.on('disconnect',(reasons)=>{
             console.log(reasons)
           })
@@ -102,38 +109,58 @@ const TrendsCompo = () => {
             socket.off("getDilikes")
             socket.off('connect');
             socket.off('disconnect');
-                  
+                 
         }
     },[socket,navigate])
 
+
+    useEffect(() => {
+        // Listen for 'getPost' event from the server
+        
+        const handlePostData = (data) => {
+          fetchData(data);
+      };
+
+      // Attach event listener for 'getPost'
+      socket.on('getPost', handlePostData);
+
+      // Cleanup function to remove the event listener
+      return () => {
+          socket.off('getPost', handlePostData);
+      };
+    },[])
+
     const [loadingProgress, setLoadingProgress] = useState(false);
     axios.defaults.withCredentials =true;
-    useEffect(() => {
-      const fetchData = async () => {
+    
+    const [hasFetched, setHasFetched] = useState(false);
+      const fetchData = async (postData) => {
         try {
-            const response = await axios.get('http://localhost:5000/emit-posts');
-            const totalData = response.data.length;
-          
+           
+            const totalData = postData.length;
+          if(!hasFetched){
           // Fetch data sequentially
           for (let i = 0; i < totalData; i++) {
             // Update the state to add the new item
-            setPosts(prevData => [...prevData, response.data[i]]);
+            setPosts(prevData => [...prevData, postData[i]]);
             // Update the loading progress
             setLoadingProgress(true);
             // Simulate delay for sequential loading
             await new Promise(resolve => setTimeout(resolve, 500));
           }
+          setHasFetched(true);
           setLoadingProgress(false)
+        }
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
+    
+      
+      
+
+    
   
-       // Cleanup function to prevent memory leaks and handle double invocations
-  return () => {
-    fetchData(); // or any other cleanup logic you need
-  };
-  }, []);
       
         const [image, setImage] = useState(null);
       let pic=useRef()

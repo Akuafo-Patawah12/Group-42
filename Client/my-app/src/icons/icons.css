@@ -22,6 +22,7 @@
   }
   .Authloader:after {
     --s:-1;
+    
   }
   @keyframes l11 {
      100% {transform:rotate(calc(var(--s,1)*1turn))}

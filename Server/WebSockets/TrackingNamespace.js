@@ -1,32 +1,42 @@
 
-const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
+const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment");
 
 
-function Tracking(Socket,orderListNamespace){
+
+function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
     console.log("Tracking route connected");
 
     Socket.on("createOrder", async(data) => {
-        console.log("Order data received:", data);
+        
      
         try {
-            const order = new Order({ items: data, totalAmount: data.length });
+            const order = new Order({customer_id:data.Id, items: data, totalAmount: data.length });
             await order.save();
   
              const sendOrder = {
-                id: order._id,
-                status: order.Status, 
+                _id: order._id,
+                Status: order.Status, 
             };
-  
+            
             
             Socket.emit("receive",sendOrder)
             orderListNamespace.in("orderRoom").emit("receivedOrder", sendOrder); // Emit to all in "/order" room
-            console.log("Order emitted to /order room:", sendOrder);
+            
         } catch (err) {
             console.error("Error saving order or emitting event:", err);
         }
         
             
     });
+    Socket.on("allOrders",async(id)=>{
+        try{
+             const orders= await Order.find({customer_id:id})
+            
+             Socket.emit("getOrders",orders)
+        }catch(error){
+          console.log(error)
+        }
+  })
   
     // Log the users currently in the /order room for debugging
     

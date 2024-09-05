@@ -1,23 +1,45 @@
 import React,{useState,useMemo,useEffect} from 'react'
 import {motion} from "framer-motion"
 import {useNavigate} from "react-router-dom"
+import {jwtDecode} from "jwt-decode"
 import io from "socket.io-client"
 import { CarOutlined, DatabaseOutlined,  ProductOutlined, ShoppingCartOutlined, WarningOutlined } from '@ant-design/icons'
 import TrackingSub from './TrackingSub'
 const Tracking = () => {
+  const[orders,setOrders]=useState([])
   const socket = useMemo(() =>io("http://localhost:5000/Tracking",{
     transports: ['websocket'],
   }),[])
   const navigate= useNavigate()
+ const[Id,setId]= useState("")
+  useEffect(() => {
+    const token =localStorage.getItem("accesstoken")
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setId(decodedToken.id); 
+        socket.emit("allOrders",decodedToken.id)
+       
+      } catch (error) {
+        console.error('Invalid token:', error);
+      }
+    }
+  },[]);
+  
+
   useEffect(()=>{
     socket.on('connect',()=>{
         console.log("Connected to server")
         
     });
     socket.on("receive",(data)=>{
+      setOrders(prev=>[data,...prev])
       console.log("order data",data)
     })
-
+    socket.on("getOrders",(data)=>{
+      setOrders(data)
+      console.log("order data",data)
+   })
     socket.on('disconnect',(reasons)=>{
         console.log(reasons)
       })
@@ -26,6 +48,7 @@ const Tracking = () => {
     return()=>{
         socket.off('connect');
         socket.off("receive")
+        socket.off("getOrders")
         socket.off('disconnect');
               
     }
@@ -54,7 +77,7 @@ const removeItem = (index) => {
 
 const handleSubmit = (e) => {
   e.preventDefault()
-  socket.emit("createOrder",items)
+  socket.emit("createOrder",{...items,Id})
   e.preventDefault();
  
 
@@ -158,7 +181,7 @@ const handleSubmit = (e) => {
         </div>
       )}
       </div>
-      <TrackingSub />
+      <TrackingSub orders={[...orders]} />
     </motion.div>
   )
 }

@@ -6,6 +6,41 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
     console.log(users)
     
     console.log("Connected to server")
+
+ Socket.on("refreshPost",async(data)=>{
+  console.log(data)
+  try {
+    const result = await Post.aggregate([  //joining an querying different tables
+      { 
+        $lookup: {
+          from: 'users', // Name of the user collection
+          localField: 'user_id', // Field in the posts collection
+          foreignField: '_id', // Field in the users collection
+          as: 'userDetails' // Alias for the joined documents
+         }
+      },
+      {
+        $unwind: '$userDetails' // Deconstruct the array of userDetails
+      },
+      
+    
+      {
+        $project: {
+          _id: 1, // Include the _id of the post
+          user_id: 1, // Include the user_id
+          caption: 1, // Include the caption
+          img_vid: 1, // Include the img_vid
+          createdAt: 1, //Include the createdAt
+          username: '$userDetails.username' // Include the username from userDetails
+        }
+      }
+    ]).sort({createdAt:-1});
+    Socket.emit("getPost",result)
+  } catch (error) { 
+    console.error('Error fetching posts:', error);
+   
+  } 
+ })   
  Socket.on('sendPost', async (data) => { //socket.on means receiving data or information from client side
    const { id,caption,img_vid } = data; //get post from client side
    try {
