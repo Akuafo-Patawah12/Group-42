@@ -1,7 +1,7 @@
 
 const { Order } = require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
 const data= require("../DatabaseSchemas/userSchema")
-const  orderList=(Socket,users)=>{
+const  orderList=(Socket,orderListNamespace)=>{
     console.log("connected to orderList")
     Socket.on("joinRoom",async(info)=>{
          
@@ -16,6 +16,15 @@ const  orderList=(Socket,users)=>{
           }catch(error){
             console.log(error)
           }
+    })
+    Socket.on("deleteOrder",async({data,client_id})=>{
+        try{
+           await Order.findByIdAndDelete(data)
+           orderListNamespace.emit("orderDeleted",data)
+           trackingNamespace.to(client_id).emit("orderDeleted",{id:data,client_id:client_id})
+        }catch(error){
+            console.log(error)
+        }
     })
     
     Socket.on('disconnect', () => {  

@@ -97,7 +97,7 @@ trackingNamespace.on("connection", async (socket) => {
 });
 
 orderListNamespace.on("connection",(socket)=>{
-      orderList(socket,users)
+      orderList(socket,orderListNamespace)
 })
 
 io.of("/like").on("connection", (socket) => {

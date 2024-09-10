@@ -5,8 +5,10 @@ import {jwtDecode} from "jwt-decode"
 import io from "socket.io-client"
 import { CarOutlined, DatabaseOutlined,  ProductOutlined, ShoppingCartOutlined, WarningOutlined } from '@ant-design/icons'
 import TrackingSub from './TrackingSub'
+
+
 const Tracking = () => {
-  const[orders,setOrders]=useState([])
+  const[orders,setOrders]=useState([]) //the array that stores alll the specific clients orders
   const socket = useMemo(() =>io("http://localhost:5000/Tracking",{
     transports: ['websocket'],
   }),[])
@@ -18,6 +20,7 @@ const Tracking = () => {
       try {
         const decodedToken = jwtDecode(token);
         setId(decodedToken.id); 
+
         socket.emit("allOrders",decodedToken.id)
        
       } catch (error) {
@@ -40,6 +43,7 @@ const Tracking = () => {
       setOrders(data)
       console.log("order data",data)
    })
+   
     socket.on('disconnect',(reasons)=>{
         console.log(reasons)
       })
@@ -47,6 +51,7 @@ const Tracking = () => {
     
     return()=>{
         socket.off('connect');
+        socket.off('orderDeleted')
         socket.off("receive")
         socket.off("getOrders")
         socket.off('disconnect');

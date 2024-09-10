@@ -22,6 +22,7 @@ const TrackingSub = (props) => {
         <table className="w-[95%] mt-3 ml-auto">
         <thead>
             <tr>
+              <th><input type='checkbox'></input></th>
                 <th className='bg-slate-400 rounded-sm'>Order ID</th>
                 <th className='bg-slate-400 rounded-sm'>Product</th>
                 <th className='bg-slate-400 rounded-sm'>Quantity</th>
@@ -33,6 +34,7 @@ const TrackingSub = (props) => {
         <tbody>
           {props.orders.map((order,index)=>(
             <tr key={index}>
+              <td><input type="checkbox"></input></td>
               <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize:"14px",lineHeight:"20px"}}>{order._id}</td>
               <td></td>
               <td></td>

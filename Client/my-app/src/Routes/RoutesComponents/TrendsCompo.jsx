@@ -1,4 +1,4 @@
-import {  PlusCircleOutlined } from '@ant-design/icons';
+import {  PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import React,{useState,useEffect,useRef,useMemo} from 'react'
 import {jwtDecode} from "jwt-decode"
 import {useNavigate} from 'react-router-dom';
@@ -217,11 +217,58 @@ const TrendsCompo = () => {
                   }
                 },[]);     
     const [openDialog,setOpenDialog]= useState(false)
+
+    const [inputValue, setInputValue] = useState('');
+    // Predefined options for the datalist
+    const Options = [
+        "#All",
+        "#Clothings",
+        "#Electricals",
+        "#Machinery"
+    ];
+
+    // Handle input change
+    const handleInputChange = (event) => {
+        setInputValue(event.target.value);
+    };
               
   return (
-    <main className='pt-[20px] relative '>
+    <main className='pt-[20px]  '>
       {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg p-1 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
-        <div className='w-4/5 border-2 border-green-300 h-[40px] mx-auto mt-[80px] overflow-hidden rounded-2xl lg:w-2/5'><button onClick={()=>setOpenDialog(true)} className='float-right'><span className='h-[38px] bg-green-300 block px-2 rounded-l-2xl '><PlusCircleOutlined /> Create Post</span> </button></div>
+        <div className='flex w-4/5 justify-between gap-3 h-[40px] mx-auto mt-[80px] overflow-hidden rounded-2xl lg:w-4/5'>
+        <input
+                id="activity"
+                list="activities"
+                value={inputValue}
+                onChange={handleInputChange}
+                placeholder="Filter by activity"
+                style={{
+                    width: '110px',
+                    padding: '6px',
+                    border: '2px solid  #a8a29e',
+                    borderRadius: '16px',
+                    fontSize: '16px',
+                    color: '#333',
+                    
+                }}
+            />
+            <datalist id="activities" className='bg-stone-400'>
+                {Options.map((Option, index) => (
+                    <option key={index} value={Option} />
+                ))}
+            </datalist>
+            <div className='relative max-w-[500px]'>
+            <input type='text'
+             placeholder='Search..'
+            className='w-full h-full px-3 rounded-2xl border-2 border-stone-400' ></input>
+            <span className='absolute top-[50%] text-center leading-8 -translate-x-[20%] -translate-y-[50%] right-0 bg-green-300 size-8 rounded-[50%]'>
+              <SearchOutlined />
+              </span>
+            </div>
+          <button onClick={()=>setOpenDialog(true)} className='float-right'>
+            <span className='h-[38px] bg-green-300 block px-2 rounded-l-2xl '><PlusCircleOutlined />Add items</span> 
+          </button>
+        </div>
        
           {/*list the post one after the order using the map function*/}
         <TrendsPosts posts={[...posts]}  setLike={setLike} likePost={likePost} loading={loadingProgress} />

@@ -36,7 +36,7 @@ const shipmentSchema= new Schema({
     shipmentDate: Date,
     deliveryDate: Date,
     status:String,
-    destination: {
+    origin: {
        street: String,
        city: String,
        state: String,
