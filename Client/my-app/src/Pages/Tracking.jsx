@@ -47,7 +47,7 @@ const Tracking = () => {
       setOrders(data)
       console.log("order data",data)
    })
-   socket.on("orderDeleted",(data)=>{
+   socket.on("Deleted",(data)=>{
         console.log(data)
         setOrders(prevOrders=>{
 
@@ -57,7 +57,30 @@ const Tracking = () => {
           return orderReturned
          })
    })
+   socket.on("orderDeleted",(data)=>{
+    console.log(data)
+    setOrders(prevOrders=>{
+
+      // remove the deleted order from the orders array
+      const orderReturned= prevOrders.filter(order=> order._id !==data )
+
+      return orderReturned
+     })
+})
    
+  socket.on("StatusUpdate",(data)=>{
+    console.log(data)
+    setOrders(prevOrders=>{
+
+      const orderReturned = prevOrders.map(order => 
+        order._id === data._id 
+            ? { ...order, Status: data.status }  // Update the matching object
+            : order                          // Keep other objects unchanged
+    );
+    
+    return orderReturned;
+     })
+  })
 
     socket.on('disconnect',(reasons)=>{
         console.log(reasons)
@@ -66,7 +89,9 @@ const Tracking = () => {
     
     return()=>{
         socket.off('connect');
+        socket.off("Deleted")
         socket.off("orderDeleted")
+        socket.off("StatusUpdate")
         socket.off("receive")
         socket.off("getOrders")
         socket.off('disconnect');
@@ -75,15 +100,19 @@ const Tracking = () => {
 },[socket,orders])
 
 const [activeOrders, setActiveOrders]= useState([])
+const [pendingOrders, setPendingOrders]= useState([])
 useEffect(()=>{
    
      
         const activeOrder=orders.filter(order => order.Status==="in-transit")
         setActiveOrders(activeOrder)
 
-  
+        const pendingOrder=orders.filter(order => order.Status==="Pending...")
+        setPendingOrders(pendingOrder)
    
-},[activeOrders])
+},[activeOrders,pendingOrders])
+
+
 
 function deleteOrder(order_id,customer_id){  //function to delete an order
   socket.emit("deleteOrder",{order_id,customer_id})  
@@ -139,7 +168,7 @@ const handleSubmit = (e) => {
         <section className="font-medium  h-4/5 rounded-2xl leading-9 bg-slate-400 flex w-[110px] "><button  className='rounded-[50%] my-auto  bg-stone-300 size-[30px] '><DatabaseOutlined /></button> View Data</section>
         <span className='font-small'>
           <WarningOutlined color='red'/>
-          You have 5 pending shipment
+          You have {pendingOrders.length} pending shipment
         </span>
         <section className="flex items-center gap-2 h-full">
           <button className='bg-green-300 rounded-2xl h-4/5 font-medium px-2 '>Get Personal report</button>

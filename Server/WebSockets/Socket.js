@@ -128,12 +128,12 @@ trackingNamespace.on("connection", async (socket) => {
 });
 
 orderListNamespace.on("connection",(socket)=>{
-    
+
     orderList(socket,orderListNamespace,trackingNamespace,Users)
 })
 
 shippingNameSpace.on("connection",(socket)=>{
-    shipping(socket,trackingNamespace,orderListNamespace)
+    shipping(socket,trackingNamespace,orderListNamespace,Users)
     console.log(users)
 })
 

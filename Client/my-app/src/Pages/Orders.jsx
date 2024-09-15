@@ -51,13 +51,22 @@ const Orders = () => {
     })
     socket.on("Deleted",(data)=>{
       console.log(data)
+      const rowElement = document.getElementById(`row-${data}`);
+      if (rowElement) {
+        rowElement.classList.add("fade-out");
+        
+        // Wait for the transition to complete before updating state
+        setTimeout(() => {
       setOrders(prevOrders=>{
 
         // remove the deleted order from the orders array
         const orderReturned= prevOrders.filter(order=> order._id !==data )
 
         return orderReturned
-       })
+      })
+      }, 500); // Ensure it matches CSS transition duration
+    }
+       
  })
     socket.on("SendShippment",(data)=>{
        console.log(data)
@@ -169,9 +178,9 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
                 <th style={style}>Arrival time</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody className="transition-all">
             {orders.map((order,index)=>(
-              <tr key={index} className='border-b-[1px] border-stone-200 h-[35px] relative'>
+              <tr key={order._id} id={`row-${order._id}`} className='border-b-[1px] border-stone-200 h-[35px]  relative'>
                 <td className='flex justify-center item-center'>
                   <input 
                    type="checkbox"

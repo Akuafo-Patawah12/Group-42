@@ -2,9 +2,7 @@
 const { Order } = require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
 const data= require("../DatabaseSchemas/userSchema")
 const  orderList=(Socket,orderListNamespace,trackingNamespace,Users)=>{
-    const users={}
-    const userId=Socket.user.id  // Extracting users id from socket
-    users[userId]=Socket.id 
+     
     console.log("connected to orderList")
     Socket.on("joinRoom",async(info)=>{
         
