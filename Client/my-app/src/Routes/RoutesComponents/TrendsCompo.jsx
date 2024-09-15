@@ -235,7 +235,7 @@ const TrendsCompo = () => {
   return (
     <main className='pt-[20px]  '>
       {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg p-1 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
-        <div className='flex w-4/5 justify-between gap-3 h-[40px] mx-auto mt-[80px] overflow-hidden rounded-2xl lg:w-4/5'>
+        <div className='flex w-4/5 justify-between gap-3 h-[40px] ml-[5%] mt-[80px] overflow-hidden rounded-2xl lg:w-4/5'>
         <input
                 id="activity"
                 list="activities"
@@ -257,7 +257,7 @@ const TrendsCompo = () => {
                     <option key={index} value={Option} />
                 ))}
             </datalist>
-            <div className='relative max-w-[500px]'>
+            <div className='relative w-[400px]'>
             <input type='text'
              placeholder='Search..'
             className='w-full h-full px-3 rounded-2xl border-2 border-stone-400' ></input>

@@ -1,42 +1,64 @@
 
 const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment");
+const User= require("../DatabaseSchemas/userSchema")
 
 
 
 function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
     console.log("Tracking route connected");
 
-    Socket.on("createOrder", async(data) => {
+    Socket.on("createOrder", async(data) => { //receiving createOrders data from clientside
         
      
         try {
-            const order = new Order({customer_id:data.Id, items: data, totalAmount: data.length });
+            //Inserting new data received from clientside in to orders table
+            const order = new Order({customer_id:data.Id, items:data, totalAmount: data.length });
+
             await order.save();
-  
+            const user= await User.findById(data.Id) //select _id from the Users table where _id=data.id
+
              const sendOrder = {
                 _id: order._id,
+                customer_id: order.customer_id,
+                customerName:user.username,
                 Status: order.Status, 
             };
             
             
-            Socket.emit("receive",sendOrder)
+            Socket.emit("receive",sendOrder) //send this data the user connected to this namespace
             orderListNamespace.in("orderRoom").emit("receivedOrder", sendOrder); // Emit to all in "/order" room
+                orderListNamespace.in("orderRoom").emit("receiveOneOrder", sendOrder);
             
-        } catch (err) {
+        }catch(err) {
             console.error("Error saving order or emitting event:", err);
         }
-        
-            
-    });
+});
+
     Socket.on("allOrders",async(id)=>{
         try{
-             const orders= await Order.find({customer_id:id})
+            //find all Orders with this particular customer's id
+             const orders= await Order.find({customer_id:id}) 
             
-             Socket.emit("getOrders",orders)
+             Socket.emit("getOrders",orders) 
         }catch(error){
           console.log(error)
         }
   })
+
+  Socket.on("deleteOrder",async(data)=>{
+    try{
+        console.log(data)
+       await Order.findByIdAndDelete(data.order_id)  // find the order by the id and delele it
+       Socket.emit("orderDeleted",data.order_id)
+       // Check if the users object and the specific customer_id exist
+    
+        // Emit the event to the specific user
+        orderListNamespace.to("orderRoom").emit("Deleted", data.order_id);
+    
+    }catch(error){
+        console.log(error)
+    }
+})
   
     // Log the users currently in the /order room for debugging
     

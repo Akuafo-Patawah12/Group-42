@@ -1,6 +1,9 @@
+import { DeleteOutlined } from '@ant-design/icons'
 import React from 'react'
 
+
 const TrackingSub = (props) => {
+  
   return (
     <>
       <div className='flex gap-2 justify-between mt-4 w-[95%] ml-auto'>
@@ -38,7 +41,7 @@ const TrackingSub = (props) => {
               <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize:"14px",lineHeight:"20px"}}>{order._id}</td>
               <td></td>
               <td></td>
-              <td></td>
+              <td onClick={() => props.deleteOrder(order._id,order.customer_id)}><DeleteOutlined/></td>
               <td className='text-sm'>{order.Status}</td>
             </tr>
           ))}

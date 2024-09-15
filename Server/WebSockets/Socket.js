@@ -8,6 +8,7 @@ const cookie= require('cookie');
 const orderList = require('./OrderListNamespace');
 const Tracking = require('./TrackingNamespace');
 const PostFunction = require('./PostOrMainNamespace');
+const shipping= require("./ShippmentNamespace")
 
 
 function initializeSocket(server) {   
@@ -19,9 +20,15 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
       credentials: true
     }
   });
-   
   
-  io.use((socket, next) => {
+  
+  const orderListNamespace=  io.of("/orderList")
+  const notificationsNamespace = io.of('/notify');
+  const trackingNamespace =    io.of('/Tracking');
+  const shippingNameSpace= io.of("/Shipping")
+
+
+  function middleware(socket,next){
     const cookieHeader = socket.request.headers.cookie; //getting http only cookies from socket
     
     if (!cookieHeader) {  //checking of the cookie exist in the headers
@@ -43,19 +50,39 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
     } else {
       next(new Error('Authentication error'));
     }
+  }
+  io.use((socket, next) => {
+      middleware(socket,next)
   });
+
+  notificationsNamespace.use((socket,next)=>{
+      middleware(socket,next)
+  })
+
+  orderListNamespace.use((socket,next)=>{
+    middleware(socket,next)
+})
+
+trackingNamespace.use((socket,next)=>{
+  middleware(socket,next)
+})
   
   const users={}  // Object to store online users socket ID
-
+  
+  function setUser(socket){
+    const userId=socket.user.id  // Extracting users id from socket
+    users[userId]=socket.id 
+  }
   // List of namespace or path in socket.io
-  const orderListNamespace=  io.of("/orderList")
-  const notificationsNamespace = io.of('/notify');
-  const trackingNamespace =    io.of('/Tracking');
+  
   io.on('connection', (socket) => {  //
+      setUser(socket)
+      
       PostFunction(socket,users,io,notificationsNamespace)
    
  socket.on("like",async(data)=>{
      const{user_id,post_id}= data;
+
      try{
        const like= new Like({
          user_id,
@@ -77,27 +104,37 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
  
 
  socket.on('disconnect', () => {
-  delete users[socket.user.id];
+  
    console.log('user disconnected');
  });
 });
 
 notificationsNamespace.on('connection', (socket) => {
+  
   console.log('A user connected to the notifications namespace');
 
 
   socket.on('disconnect', () => {
-    delete users[socket.user.id]
+    
       console.log('User disconnected from the notifications namespace');
   });
 });
-
+   const Users={}
 trackingNamespace.on("connection", async (socket) => {
-    Tracking(socket,orderListNamespace,notificationsNamespace,users)
+  const userId=socket.user.id  // Extracting users id from socket
+  Users[userId]=socket.id 
+
+    Tracking(socket,orderListNamespace,notificationsNamespace,Users)
 });
 
 orderListNamespace.on("connection",(socket)=>{
-      orderList(socket,orderListNamespace)
+    
+    orderList(socket,orderListNamespace,trackingNamespace,Users)
+})
+
+shippingNameSpace.on("connection",(socket)=>{
+    shipping(socket,trackingNamespace,orderListNamespace)
+    console.log(users)
 })
 
 io.of("/like").on("connection", (socket) => {

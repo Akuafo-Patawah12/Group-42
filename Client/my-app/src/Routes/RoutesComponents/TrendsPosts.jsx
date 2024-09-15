@@ -33,7 +33,7 @@ const TrendsPosts = (props) => {
     <div className='mt-5 place-items-center grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3'> 
     {props.posts.map((post, index) => (  
         <div key={index} className='border-[1px] bg-white border-stone-200 shadow-sm rounded-2xl w-[250px]'>
-          <main className='py-3'><section className='size-6 rounded-[50%] border-2 bg-gray-400 font-medium grid place-items-center ml-3 '>{post?.username[0]}</section><section className='ml-3 text-sm'>{post.caption}</section></main>
+          <main className='py-3'><section className='size-6 rounded-[50%] border-2 border-green-400 bg-gray-400 font-medium grid place-items-center ml-3 '>{post?.username[0]}</section><section className='ml-3 text-sm'>{post.caption}</section></main>
           <section className='flex justify-center items-center h-[300px] bg-stone-100 w-full'>
                 {loader&& <div className='absolute'><ImageLoader /></div>}
                 {online?

@@ -1,8 +1,7 @@
 
 const Post=require("../DatabaseSchemas/PostSchema")
 const PostFunction=(Socket,users,io,notificationsNamespace)=>{
-    const userId=Socket.user.id  // Extracting users id from socket
-    users[userId]=Socket.id  //asigning the users id to the socket id and inserting into the users object
+     //asigning the users id to the socket id and inserting into the users object
     console.log(users)
     
     console.log("Connected to server")

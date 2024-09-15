@@ -4,7 +4,7 @@ import {motion} from 'framer-motion'
 import io from "socket.io-client"
 
 const Shipment = () => {
-  const socket = useMemo(() =>io("http://localhost:5000",{
+  const socket = useMemo(() =>io("http://localhost:5000/Shipping",{
     transports: ['websocket'],
   }),[])
 
@@ -14,6 +14,10 @@ const Shipment = () => {
         console.log("Connected to server")
         
     });
+
+    socket.on("SendShippment",(data)=>{
+      console.log(data)
+    })
    
     socket.on('disconnect',(reasons)=>{
         console.log(reasons)
@@ -31,6 +35,21 @@ const Shipment = () => {
     }
 },[socket,navigate])
 
+const[shippmentDetail,setShippmentDetails]= useState(
+  {
+    status:"",
+    shippingDate:"",
+    Tracking_id:"",
+    Courier:""
+  }
+)
+
+function submitShippmentDetails(e){
+  e.preventDefault()
+  console.log(shippmentDetail)
+  socket.emit("StartShippment",shippmentDetail)
+}
+
 const [isOpen, setIsOpen] = useState(false);
 
 const togglePopup = () => {
@@ -44,13 +63,16 @@ const togglePopup = () => {
       className='w-full bg-stone-100  lg:w-[80%] ml-auto'
     >
 
-<button
+      <button
         onClick={togglePopup}
         className="bg-blue-500 text-white px-4 py-2 mt-24 rounded hover:bg-blue-600"
       >
         Create Shipment
       </button>
-
+      <div className=" mx-auto flex w-[90%] gap-3 ">
+        <section className="w-[45%] border-2 border-stone-600"></section>
+        <section className="w-[45%] border-2 border-stone-600"></section>
+      </div>
       {isOpen && (
         <div className="fixed inset-0 flex items-center z-[70] justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg w-1/3">
@@ -62,7 +84,7 @@ const togglePopup = () => {
             </div>
 
             <div className="p-4">
-              <form>
+              <form onSubmit={(e)=>{submitShippmentDetails(e)}}>
                 <div className="mb-4">
                   <label className="block text-gray-700 font-bold mb-2" htmlFor="trackingNumber">
                     Tracking Number
@@ -71,6 +93,8 @@ const togglePopup = () => {
                     className="w-full px-3 py-2 border rounded"
                     type="text"
                     id="trackingNumber"
+                    value={shippmentDetail.Tracking_id}
+                    onChange={(e)=>{setShippmentDetails({...shippmentDetail,Tracking_id:e.target.value})}}
                     placeholder="Enter tracking number"
                   />
                 </div>
@@ -83,6 +107,8 @@ const togglePopup = () => {
                     className="w-full px-3 py-2 border rounded"
                     type="date"
                     id="shipmentDate"
+                    value={shippmentDetail.shippingDate}
+                    onChange={(e)=>{setShippmentDetails({...shippmentDetail,shippingDate:e.target.value})}}
                   />
                 </div>
 
@@ -94,6 +120,8 @@ const togglePopup = () => {
                     className="w-full px-3 py-2 border rounded"
                     type="text"
                     id="carrier"
+                    value={shippmentDetail.Courier}
+                    onChange={(e)=>{setShippmentDetails({...shippmentDetail,Courier:e.target.value})}}
                     placeholder="Enter carrier name"
                   />
                 </div>
@@ -102,7 +130,7 @@ const togglePopup = () => {
                   <label className="block text-gray-700 font-bold mb-2" htmlFor="status">
                     Status
                   </label>
-                  <select className="w-full px-3 py-2 border rounded" id="status">
+                  <select onChange={(e)=>{setShippmentDetails({...shippmentDetail,status:e.target.value})}} className="w-full px-3 py-2 border rounded" id="status">
                     <option value="shipped">Shipped</option>
                     <option value="in-transit">In Transit</option>
                     <option value="delivered">Delivered</option>
@@ -121,7 +149,7 @@ const togglePopup = () => {
                     type="submit"
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                   >
-                    Submit
+                    Start shipment
                   </button>
                 </div>
               </form>

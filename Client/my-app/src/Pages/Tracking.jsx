@@ -12,13 +12,16 @@ const Tracking = () => {
   const socket = useMemo(() =>io("http://localhost:5000/Tracking",{
     transports: ['websocket'],
   }),[])
-  const navigate= useNavigate()
- const[Id,setId]= useState("")
+
+
+  const navigate= useNavigate()   
+ const[Id,setId]= useState("") //id extracted from access token
+
   useEffect(() => {
-    const token =localStorage.getItem("accesstoken")
+    const token =localStorage.getItem("accesstoken")  // extracting token from local storage
     if (token) {
       try {
-        const decodedToken = jwtDecode(token);
+        const decodedToken = jwtDecode(token); //decoding the content of the token
         setId(decodedToken.id); 
 
         socket.emit("allOrders",decodedToken.id)
@@ -39,11 +42,23 @@ const Tracking = () => {
       setOrders(prev=>[data,...prev])
       console.log("order data",data)
     })
+
     socket.on("getOrders",(data)=>{
       setOrders(data)
       console.log("order data",data)
    })
+   socket.on("orderDeleted",(data)=>{
+        console.log(data)
+        setOrders(prevOrders=>{
+
+          // remove the deleted order from the orders array
+          const orderReturned= prevOrders.filter(order=> order._id !==data )
+
+          return orderReturned
+         })
+   })
    
+
     socket.on('disconnect',(reasons)=>{
         console.log(reasons)
       })
@@ -51,13 +66,28 @@ const Tracking = () => {
     
     return()=>{
         socket.off('connect');
-        socket.off('orderDeleted')
+        socket.off("orderDeleted")
         socket.off("receive")
         socket.off("getOrders")
         socket.off('disconnect');
               
     }
-},[socket,navigate])
+},[socket,orders])
+
+const [activeOrders, setActiveOrders]= useState([])
+useEffect(()=>{
+   
+     
+        const activeOrder=orders.filter(order => order.Status==="in-transit")
+        setActiveOrders(activeOrder)
+
+  
+   
+},[activeOrders])
+
+function deleteOrder(order_id,customer_id){  //function to delete an order
+  socket.emit("deleteOrder",{order_id,customer_id})  
+}
 
 const [isOpen, setIsOpen] = useState(false);
 const [items, setItems] = useState([{ itemName: '', quantity: 1 }]);
@@ -102,8 +132,8 @@ const handleSubmit = (e) => {
     >
       <div className='bg-blue-400 rounded-2xl mt-[100px] w-[95%] ml-auto flex gap-4 justify-around'>
         <span className="font-bold text-xl text-wrap w-10 ">Order Tracking</span>
-        <span className="bg-stone-300 rounded-lg  flex items-center"><ShoppingCartOutlined style={style} /> Active Orders</span>
-        <span className="bg-stone-300 rounded-lg flex items-center"><CarOutlined style={style}/> Total Shipments</span>
+        <span className="relative bg-stone-300 rounded-lg  flex items-center">< CarOutlined style={style} /> Active Orders <span className='absolute top-[-5px] right-[-5px] font-thin text-center leading-4 text-sm size-5 rounded-[50%] bg-red-400 text-white'>{activeOrders.length}</span></span>
+        <span className="relative bg-stone-300 rounded-lg flex items-center"><ShoppingCartOutlined style={style}/> Total Orders<span className='absolute top-[-5px] right-[-5px] font-thin text-center leading-4 text-sm size-5 rounded-[50%] bg-red-400 text-white'>{orders.length}</span></span>
         <span className='bg-stone-300 rounded-lg flex items-center'><ProductOutlined style={style}/> Delivered Items</span><span className="bg-stone-300 rounded-lg"></span></div>
       <div className='flex justify-between mt-2 bg-slate-200 w-[95%] ml-auto items-center h-12 rounded-l-2xl gap-2'>
         <section className="font-medium  h-4/5 rounded-2xl leading-9 bg-slate-400 flex w-[110px] "><button  className='rounded-[50%] my-auto  bg-stone-300 size-[30px] '><DatabaseOutlined /></button> View Data</section>
@@ -186,7 +216,7 @@ const handleSubmit = (e) => {
         </div>
       )}
       </div>
-      <TrackingSub orders={[...orders]} />
+      <TrackingSub orders={[...orders]} deleteOrder={deleteOrder}/>
     </motion.div>
   )
 }

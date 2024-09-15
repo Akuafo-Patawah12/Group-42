@@ -31,9 +31,8 @@ const orderSchema= new Schema({
 
 const shipmentSchema= new Schema({
     order_id:{type:Schema.Types.ObjectId,ref:"Order"},
-    vehicle_id:{type:Schema.Types.ObjectId,ref:"Transport"},
     trackingNumber: String,
-    shipmentDate: Date,
+    shippmentDate: Date,
     deliveryDate: Date,
     status:String,
     origin: {
