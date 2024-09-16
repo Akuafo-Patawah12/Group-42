@@ -1,7 +1,11 @@
 import { SendOutlined } from '@ant-design/icons'
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 
 const OrderMessagePopup = (props) => {
+   const[message,setMessage]= useState("")
+
+   
+    
   return (
     <>
     {props.msgPop&&
@@ -16,8 +20,13 @@ const OrderMessagePopup = (props) => {
 
         </section>
         <section className='flex h-[10%] bg-yellow-300 justify-around'>
-           <textarea className='w-[75%]'></textarea>
+            <form onSubmit={(e)=>{props.sendMessage(e,message)}}>
+           <textarea 
+              className='w-[75%]'
+              onChange={(e)=>{setMessage(e.target.value)}}
+            ></textarea>
            <button className='size-7 bg-orange-300 rounded-[50%]'><SendOutlined/></button>
+           </form>
         </section>
     </div>}
     </>

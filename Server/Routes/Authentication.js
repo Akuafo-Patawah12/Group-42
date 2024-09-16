@@ -74,15 +74,15 @@ const data= require('../DatabaseSchemas/userSchema')
 
 
     const updatePassword= async(req,res)=>{
-        const {password}=req.body
-        const {id}= req.params
+        const {password}=req.body  //getting the password from the clientside
+        const {id}= req.params  //getting id from url
         try{
-           const encryptedPassword= await bcrypt.hash(password,10)
-            const findPassword= await data.findByIdAndUpdate(id,{password:encryptedPassword},{new:true})
+           const encryptedPassword= await bcrypt.hash(password,10) // Hashing the password with bcrypt
+            const findPassword= await data.findByIdAndUpdate(id,{password:encryptedPassword},{new:true})// query to update password by finding user's data by id 
             if(findPassword){
-               return res.json({message:"Password Updated"})
+               return res.json({message:"Password Updated"}) //When findPassword is set to true send a response to the client
             }else {
-               return res.status(404).json({ message: "User not found" });
+               return res.status(404).json({ message: "User not found" }); // When the findPassword is set to false that means the particular user's data is not found so a 404 error message is sent to the client
            }
         }catch(err){
            console.log(err);
@@ -121,26 +121,13 @@ const SignUp =async(req,res)=>{
     
     //logging out user
     async function logout (req,res){
-        res.cookie("refreshToken","",{maxAge:1});
+        res.cookie("refreshToken","",{maxAge:1});  // set the expiring time of the token to 1 second
             res.json("Success")
        }
 
 
-       async function sessionLogout(req, res) {
-        // Retrieve the refresh token from the request cookies
-        const cookie = req.cookie;
-    
-        try {
-            if(!cookie.includes("refreshToken")){
-                res.json({ message: 'Successfully logged out' }); 
-            }
-        } catch (err) {
-            // Handle token verification error
-            console.log('Error verifying refresh token:', err);
-            res.status(401).json({ error: 'Failed to logout' });
-        }
-    };
+       
     
 module.exports= {
-   login,SignUp,logout,sessionLogout,updatePassword
+   login,SignUp,logout,updatePassword
 };

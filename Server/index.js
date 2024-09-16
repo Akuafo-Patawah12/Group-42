@@ -15,35 +15,30 @@ const initializeSocket = require('./WebSockets/Socket');
 app.use(cors({
   origin:["http://localhost:3000"],
   credentials: true,
-  methods:["POST,GET,PUT,DELETE"],
+  methods:["POST,GET,PUT,DELETE"], 
   allowedHeaders: ['Content-Type']
 }))
-app.use("/",router)  //A middleware the return all api for authentication
+app.use("/",router)  //A middleware that returns all API for authentication
 let server //creating a server instance
 
 if (cluster.isMaster) { //Load balancing
   console.log(`Master ${process.pid} is running`);
-
+  
   // Fork workers.
-  for (let i = 0; i < numCPUs; i++) { // dividing the cpu cores and restart the server
-      cluster.fork();
+  for (let i = 0; i < numCPUs; i++) { //getting the number of CPU cores and restart the server
+      cluster.fork();  // auto restart server
   }
 
-  cluster.on('exit', (worker, code, signal) => { //when a cpu worker dies restart the server
+  cluster.on('exit', (worker, code, signal) => { //when a cpu worker dies 
       console.log(`Worker ${worker.process.pid} died ,${worker.length}`);
       // Optionally restart the worker
       cluster.fork();
   });
 
 } else{
-   server = http.createServer(app);  
-   initializeSocket(server);  //this function returns socket from the Socket file
+   server = http.createServer(app);  //creating a server using Hyper Text Transfer Protocol
+   initializeSocket(server);  //this function returns io from the Socket file
 }
-
-
-
-  
-
 
 
 const PORT = process.env.PORT || 5000;  //grabbing the port number from .env file 
@@ -56,7 +51,7 @@ async function startServer(){
     server.listen(PORT, () => {console.log(`Server is running on port ${PORT}`); });
     
   }catch(e){
-    console.log("Server Crashed",e)    // when there's an error print Server Crashed
+    console.log("Server Crashed",e) // when there's an error print Server Crashed
   }
 }
 startServer()  //this function execute if there's no error.

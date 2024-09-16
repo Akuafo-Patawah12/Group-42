@@ -2,6 +2,7 @@ import React,{useState,useMemo,useEffect} from 'react'
 import {motion} from "framer-motion"
 import {useNavigate} from "react-router-dom"
 import {jwtDecode} from "jwt-decode"
+import "./Pages.css"
 import io from "socket.io-client"
 import { CarOutlined, DatabaseOutlined,  ProductOutlined, ShoppingCartOutlined, WarningOutlined } from '@ant-design/icons'
 import TrackingSub from './TrackingSub'
@@ -16,6 +17,7 @@ const Tracking = () => {
 
   const navigate= useNavigate()   
  const[Id,setId]= useState("") //id extracted from access token
+ const [creatingOrder,setCreatingOrder]= useState(false);
 
   useEffect(() => {
     const token =localStorage.getItem("accesstoken")  // extracting token from local storage
@@ -39,6 +41,7 @@ const Tracking = () => {
         
     });
     socket.on("receive",(data)=>{
+      setCreatingOrder(false)
       setOrders(prev=>[data,...prev])
       console.log("order data",data)
     })
@@ -49,6 +52,12 @@ const Tracking = () => {
    })
    socket.on("Deleted",(data)=>{
         console.log(data)
+        const rowElement = document.getElementById(`row-${data}`);
+      if (rowElement) {
+        rowElement.classList.add("fade-out");
+        
+        // Wait for the transition to complete before updating state
+        setTimeout(() => {
         setOrders(prevOrders=>{
 
           // remove the deleted order from the orders array
@@ -56,6 +65,8 @@ const Tracking = () => {
 
           return orderReturned
          })
+        },500)
+      }
    })
    socket.on("orderDeleted",(data)=>{
     console.log(data)
@@ -115,7 +126,12 @@ useEffect(()=>{
 
 
 function deleteOrder(order_id,customer_id){  //function to delete an order
-  socket.emit("deleteOrder",{order_id,customer_id})  
+ 
+  setTimeout(()=>{
+    socket.emit("deleteOrder",{order_id,customer_id})
+
+  },5000)
+    
 }
 
 const [isOpen, setIsOpen] = useState(false);
@@ -141,15 +157,18 @@ const removeItem = (index) => {
 
 const handleSubmit = (e) => {
   e.preventDefault()
-  socket.emit("createOrder",{...items,Id})
-  e.preventDefault();
- 
-
+  setCreatingOrder(true)
+  setTimeout(()=>{
+    socket.emit("createOrder",{...items,Id})
+  },1000)
+  
   // Reset form
   
   setItems([{ itemName: '', quantity: 1 }]);
   togglePopup();
 };
+
+
 
  const style={ fontSize: '30px',color:"#555" }
   return (
@@ -159,6 +178,7 @@ const handleSubmit = (e) => {
     exit={{ opacity: 0 }}
     className='w-full bg-stone-100  lg:w-[80%] ml-auto'
     >
+      {creatingOrder&&<span className='absolute top-[70px] -translate-x-[50%] -translate-y-[50%] left-[50%] bg-orange-200'>Creating Order...</span>}
       <div className='bg-blue-400 rounded-2xl mt-[100px] w-[95%] ml-auto flex gap-4 justify-around'>
         <span className="font-bold text-xl text-wrap w-10 ">Order Tracking</span>
         <span className="relative bg-stone-300 rounded-lg  flex items-center">< CarOutlined style={style} /> Active Orders <span className='absolute top-[-5px] right-[-5px] font-thin text-center leading-4 text-sm size-5 rounded-[50%] bg-red-400 text-white'>{activeOrders.length}</span></span>

@@ -12,9 +12,9 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
      
         try {
             //Inserting new data received from clientside in to orders table
-            const order = new Order({customer_id:data.Id, items:data, totalAmount: data.length });
+            const order = new Order({customer_id:data.Id, items:data, totalAmount: data.length });// creating new order
 
-            await order.save();
+            await order.save();  // saving new order the database
             const user= await User.findById(data.Id) //select _id from the Users table where _id=data.id
 
              const sendOrder = {
@@ -39,13 +39,13 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
             //find all Orders with this particular customer's id
              const orders= await Order.find({customer_id:id}) 
             
-             Socket.emit("getOrders",orders) 
+             Socket.emit("getOrders",orders) // sending orders of all user to myself
         }catch(error){
           console.log(error)
         }
   })
 
-  Socket.on("deleteOrder",async(data)=>{
+  Socket.on("deleteOrder",async(data)=>{ // deleting order
     try{
         console.log(data)
        await Order.findByIdAndDelete(data.order_id)  // find the order by the id and delele it
@@ -66,7 +66,7 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
         console.log('User disconnected from the tracking namespace');
     });
 
-    return Socket
+    return Socket  //return Socket where ever the tracking function is called
 }
 
-module.exports= Tracking
+module.exports= Tracking  //exporting the tracking function

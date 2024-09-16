@@ -1,8 +1,8 @@
 const socketIo = require('socket.io');
 const Post= require('../DatabaseSchemas/PostSchema')
-const Like= require('../DatabaseSchemas/likesSchema')
 const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
  const data= require("../DatabaseSchemas/userSchema")
+ const Message=  require("./MessageNamespace")
 const jwt= require('jsonwebtoken')
 const cookie= require('cookie');
 const orderList = require('./OrderListNamespace');
@@ -26,6 +26,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
   const notificationsNamespace = io.of('/notify');
   const trackingNamespace =    io.of('/Tracking');
   const shippingNameSpace= io.of("/Shipping")
+  const messageNamespace= io.of("/message")
 
 
   function middleware(socket,next){
@@ -79,30 +80,8 @@ trackingNamespace.use((socket,next)=>{
       setUser(socket)
       
       PostFunction(socket,users,io,notificationsNamespace)
-   
- socket.on("like",async(data)=>{
-     const{user_id,post_id}= data;
 
-     try{
-       const like= new Like({
-         user_id,
-         post_id
-       })
-       await like.save()   
-
-       const likesCount= await Like.countDocuments({post_id})
-       console.log(likesCount)
-       io.emit("getLikes", {
-         postId: post_id,
-         like_count: likesCount,
-     })
-     }catch(err){
-       console.log("likes error",err)
-     }
-
- })
  
-
  socket.on('disconnect', () => {
   
    console.log('user disconnected');
@@ -137,28 +116,13 @@ shippingNameSpace.on("connection",(socket)=>{
     console.log(users)
 })
 
-io.of("/like").on("connection", (socket) => {
-  socket.on("dislike",async(data)=>{
-    const{user_id,post_id}= data;
-    try{
-       await Like.findOneAndDelete({post_id})
-      const likesCount= await Like.countDocuments({post_id})
- 
-      io.emit("getDislike",{
-        postId: post_id,
-        like_count: likesCount,
-        user_id
-    })
-    }catch(err){
-      console.log("likes error",err)
-    }
-    socket.on('disconnect', () => {
-      delete users[socket.user.id];
-      console.log('user disconnected');
-    });
- 
- })
-});
+
+messageNamespace.on("connection",async(socket)=>{
+  console.log("connected to message namespace")
+   Message(socket)
+
+})
+
 return io;
 }
 

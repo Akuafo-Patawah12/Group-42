@@ -36,7 +36,7 @@ const TrackingSub = (props) => {
         </thead>
         <tbody>
           {props.orders.map((order,index)=>(
-            <tr key={index}>
+            <tr key={order._id} id={`row-${order._id}`}>
               <td><input type="checkbox"></input></td>
               <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize:"14px",lineHeight:"20px"}}>{order._id}</td>
               <td></td>

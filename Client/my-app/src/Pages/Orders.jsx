@@ -14,6 +14,9 @@ const Orders = () => {
   const socket = useMemo(() =>io("http://localhost:5000/orderList",{
     transports: ['websocket'],
   }),[])
+  const messageSocket=  useMemo(() =>io("http://localhost:5000/message",{
+      transports: ["websocket"]
+  }),[])
   const navigate= useNavigate()
  const[orders,setOrders]=useState([])
   useEffect(()=>{
@@ -23,6 +26,17 @@ const Orders = () => {
   useEffect(()=>{
      socket.emit("clientOrders")
   },[])
+  useEffect(()=>{
+        messageSocket.on("connection",()=>{
+            console.log("connected to the message namespace")
+        })
+        messageSocket.on("disconnect",(reason)=>{
+            console.log(reason)
+        })
+        return()=>{
+            messageSocket.off("connection")
+        }
+    },[messageSocket])
  
   useEffect(()=>{
     socket.on('connect',()=>{
@@ -121,7 +135,16 @@ const [inputValue, setInputValue] = useState('');
     };
 
     const [msgPop, setMsgPop]= useState(false)
-
+   const [receipient,setReceipient]= useState("")
+    function sendMessage(e,message){
+      e.preventDefault()
+       messageSocket.emit("sendMessage",{Sender_id:decode.id,receipient_id:receipient,message:message})
+       console.log({Sender_id:decode.id,receipient_id:receipient,message:message})
+    }
+    function messagePop(receipient_id){
+      setMsgPop(!msgPop)
+      setReceipient(receipient_id)
+    }
     function copy(id){
       navigator.clipboard.writeText(id)
     }
@@ -134,6 +157,7 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
     exit={{ opacity: 0 }}
     className='w-full bg-stone-100 pt-24 lg:w-[80%] ml-auto'
     >
+      
       <button className="ml-[5%] font-medium">#Orders</button>
      <section className=" ml-[5%] pt-4 flex gap-3">
        <form >
@@ -179,7 +203,7 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
             </tr>
         </thead>
         <tbody className="transition-all">
-            {orders.map((order,index)=>(
+            {orders.map((order)=>(
               <tr key={order._id} id={`row-${order._id}`} className='border-b-[1px] border-stone-200 h-[35px]  relative'>
                 <td className='flex justify-center item-center'>
                   <input 
@@ -192,7 +216,7 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
                 <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize: '15px', color:"#57534e"}}>
                 <Link to={`/Orders/View_Order/${order.customer_id}`}>{order._id}</Link> {/* Adding the customer id into the URL*/}<span onClick={()=>copy(order._id)}  className='absolute bg-white left-[20%] z-1 top-1'><CopyOutlined /></span>
                 </td>
-                <td className="pl-2 text-stone-600">{order.customerName} <span onClick={()=>{setMsgPop(!msgPop)}}><MessageOutlined /></span></td>
+                <td className="pl-2 text-stone-600">{order.customerName} <span onClick={()=>{messagePop(order.customer_id)}}><MessageOutlined /></span></td>
                 <td></td>
                 <td onClick={() => deleteOrder(order._id,order.customer_id)}><span className='absolute right-2 top-2'><DeleteOutlined /></span> </td>
                 
@@ -204,7 +228,7 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
             ))}
         </tbody>
     </table>
-    <OrderMessagePopup msgPop={msgPop}/> 
+    <OrderMessagePopup msgPop={msgPop} sendMessage={sendMessage}/> 
     </div>
     </motion.div>
   )
