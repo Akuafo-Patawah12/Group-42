@@ -8,7 +8,8 @@ const cookie= require('cookie');
 const orderList = require('./OrderListNamespace');
 const Tracking = require('./TrackingNamespace');
 const PostFunction = require('./PostOrMainNamespace');
-const shipping= require("./ShippmentNamespace")
+const shipping= require("./ShippmentNamespace");
+const userFunc = require('./UsersNamespace');
 
 
 function initializeSocket(server) {   
@@ -27,6 +28,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
   const trackingNamespace =    io.of('/Tracking');
   const shippingNameSpace= io.of("/Shipping")
   const messageNamespace= io.of("/message")
+  const usersNamespace= io.of("/users")
 
 
   function middleware(socket,next){
@@ -55,6 +57,10 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
   io.use((socket, next) => {
       middleware(socket,next)
   });
+
+  usersNamespace.use((socket,next) =>{
+    middleware(socket,next)
+  })
 
   notificationsNamespace.use((socket,next)=>{
       middleware(socket,next)
@@ -87,6 +93,11 @@ trackingNamespace.use((socket,next)=>{
    console.log('user disconnected');
  });
 });
+
+usersNamespace.on("connection",(socket,callBack)=>{
+    console.log("connected to usersNamespace")
+    userFunc(socket,callBack)
+})
 
 notificationsNamespace.on('connection', (socket) => {
   

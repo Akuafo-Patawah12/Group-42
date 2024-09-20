@@ -6,7 +6,9 @@ import React,{lazy, Suspense} from "react"
 
 import Loading from '../icons/Loading'
 import {AnimatePresence} from "framer-motion"
-import Header, { Sidebar } from '../Components/HeaderAndSidebar';
+import Header from '../Components/HeaderAndSidebar';
+import Sidebar from '../Components/Sidebar';
+const Clients= lazy(()=> import('../Pages/Clients'));
 const ViewIndividualOrder= lazy(()=>import( '../Pages/ViewIndividualOrder'))
 
 
@@ -56,6 +58,10 @@ const LayoutBundle = () => {
              </Suspense>} />
              <Route path='/Dashboard' element={<Suspense fallback={<Loading />}>
                   <Dashboard />
+             </Suspense>} />
+
+             <Route path='/Clients' element={<Suspense fallback={<Loading />}>
+                  <Clients />
              </Suspense>} />
              <Route path='/Settings' element={<Suspense fallback={<Loading />}>
                   <Settings />

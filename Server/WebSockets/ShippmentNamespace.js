@@ -5,11 +5,13 @@ const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
       Socket.on("StartShippment",async(data)=>{
         try{
             console.log(data)
-            const Id=data.Tracking_id.replace(/\t/g, '')
+            const Id=data.Tracking_id.replace(/\t/g, '')  //removing whitespace from the id
             const order= await Order.findByIdAndUpdate({_id:Id},{Status:data.status},{new:true})
             const  shipment= new Shipment({
-                _id: data.Tracking_id,
+                order_id: data.Tracking_id,
                 shippmentDate: data.shippingDate,
+                origin:order.origin,
+                destination:order.destination,
                 status: data.status
             })
              console.log(order)
@@ -20,6 +22,20 @@ const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
         }catch(error){
             console.log(error)
         }
+      })
+
+      Socket.on("allShipment",async()=>{
+          try{
+             const allshipping= await Shipment.find({})
+
+             Socket.emit("getAllShipment", allshipping)
+          }catch(error){
+            console.log(error)
+          }
+      })
+
+      Socket.on("disconnect",()=>{
+        console.log("disconnect from shipment Namespace")
       })
    
     return Socket

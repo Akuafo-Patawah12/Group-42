@@ -37,6 +37,8 @@ const Orders = () => {
             messageSocket.off("connection")
         }
     },[messageSocket])
+
+    const[hasFetched,setHasFetched]= useState(false)
  
   useEffect(()=>{
     socket.on('connect',()=>{
@@ -47,21 +49,43 @@ const Orders = () => {
    socket.on("joined",(data)=>{
        console.log(data)
    }) 
-   socket.on("getAllOrders",(data)=>{
+   socket.on("getAllOrders",async(data)=>{
+    try{
     console.log(data)
-      setOrders(data)
+    const newData= data.length
+    if(!hasFetched)
+    for(let i =0;i< newData;i++){
+      setOrders(prevData=>[...prevData,data[i]])
+      await new Promise(resolve=> setTimeout(resolve,200))
+    }
+     setHasFetched(true)  
+
+    }catch(error){
+      console.error(error)
+    }
    })
     socket.on('receivedOrder',(data)=>{
+      
       setOrders(prev => [data,...prev])
       console.log("order data",data)
     })
+
+    
     socket.on("orderDeleted",(data)=>{
+      const rowElement = document.getElementById(`row-${data}`);
+      if (rowElement) {
+        rowElement.classList.add("fade-out");
+
+         // Wait for the transition to complete before updating state
+         setTimeout(() => {
       setOrders(prevOrders=>{
          const updatedOrders = prevOrders.filter(order => order._id !== data);
         
          // Return the updated array
          return updatedOrders;
      })
+    }, 500); // Ensure it matches CSS transition duration
+    }
     })
     socket.on("Deleted",(data)=>{
       console.log(data)
@@ -152,9 +176,9 @@ const [inputValue, setInputValue] = useState('');
 const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",border:"2px solid  #e7e5e4",paddingBock:"10px"}
   return (
     <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
+    initial={{ opacity: 0, perspective: 1000, rotateY: -90 ,y:100}}
+         animate={{ opacity: 1, perspective: 1000, rotateY: 0,y:0 }}
+         exit={{ opacity: 0,y:-100}}
     className='w-full bg-stone-100 pt-24 lg:w-[80%] ml-auto'
     >
       
@@ -203,7 +227,7 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
             </tr>
         </thead>
         <tbody className="transition-all">
-            {orders.map((order)=>(
+            {orders.map((order,index)=>(
               <tr key={order._id} id={`row-${order._id}`} className='border-b-[1px] border-stone-200 h-[35px]  relative'>
                 <td className='flex justify-center item-center'>
                   <input 

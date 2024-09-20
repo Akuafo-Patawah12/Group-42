@@ -136,8 +136,8 @@ const TrendsCompo = () => {
     const [hasFetched, setHasFetched] = useState(false);
       const fetchData = async (postData) => {
         try {
-           
-            const totalData = postData.length;
+              const data= shuffleArray(postData);
+            const totalData = data.length;
           if(!hasFetched){
           // Fetch data sequentially
           for (let i = 0; i < totalData; i++) {
@@ -157,7 +157,20 @@ const TrendsCompo = () => {
       };
     
       
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          // Generate a random index between 0 and i
+          const j = Math.floor(Math.random() * (i + 1));
       
+          // Swap elements at index i and j
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+      
+      // Example usage:
+      
+       
 
     
   
@@ -231,17 +244,43 @@ const TrendsCompo = () => {
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
     };
+
+    const[loader,setLoader]= React.useState(true)
+  const handleImageLoad = () => {
+    setLoader(false);
+  };
+  
+  const [online, setOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const onlineFunction = () => {
+      setOnline(true);
+    };
+    
+    const offlineFunction = () => {
+      setOnline(false);
+    };
+  
+    window.addEventListener("online", onlineFunction);
+    window.addEventListener("offline", offlineFunction);
+  
+    // Clean up event listeners on component unmount
+    return () => {
+      window.removeEventListener("online", onlineFunction);
+      window.removeEventListener("offline", offlineFunction);
+    };
+  }, []);
               
   return (
     <main className='pt-[20px]  '>
-      {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg p-1 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
-        <div className='flex w-4/5 justify-between gap-3 h-[40px] ml-[5%] mt-[80px] overflow-hidden rounded-2xl lg:w-4/5'>
+      {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg px-[40px] py-2 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
+        <div className='flex w-[90%] bg-blue-200 justify-between gap-3 h-[43px] mx-auto mt-[80px] overflow-hidden rounded-lg lg:w-[95%]'>
         <input
                 id="activity"
                 list="activities"
                 value={inputValue}
                 onChange={handleInputChange}
-                placeholder="Filter by activity"
+                placeholder=" Filter"
                 style={{
                     width: '110px',
                     padding: '6px',
@@ -269,9 +308,11 @@ const TrendsCompo = () => {
             <span className='h-[38px] bg-green-300 block px-2 rounded-l-2xl '><PlusCircleOutlined />Add items</span> 
           </button>
         </div>
+        
        
           {/*list the post one after the order using the map function*/}
-        <TrendsPosts posts={[...posts]}  setLike={setLike} likePost={likePost} loading={loadingProgress} />
+        <TrendsPosts posts={[...posts]}  setLike={setLike} 
+        likePost={likePost} loading={loadingProgress}  onLineProps={[online,setOnline]} loaders={[loader,setLoader,handleImageLoad]} />
       
 
       {/* create a post popup menu*/}

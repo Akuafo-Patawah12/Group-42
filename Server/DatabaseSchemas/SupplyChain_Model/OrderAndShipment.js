@@ -7,14 +7,16 @@ const orderSchema= new Schema({
         customer_id: {type:Schema.Types.ObjectId,ref:"User"},  
         items: [
           {
-            itemId: {type:Schema.Types.ObjectId,ref:"Item"},
+            itemName: String,
             quantity: Number,
-            price: Number
           }
         ],
         totalAmount: Number,
         shipmentId: {type:Schema.Types.ObjectId, ref:"Shipment"},
-      
+        origin: String,
+          
+        destination:String,
+            
       
     Status:{
        type:String,
@@ -36,12 +38,13 @@ const shipmentSchema= new Schema({
     deliveryDate: Date,
     status:String,
     origin: {
-       street: String,
-       city: String,
-       state: String,
-       postalCode: String,
-       country: String
-  },
+      type: String,
+      required: true,
+       },
+       destination: {
+        type: String,
+        required: true,
+        },
   createdAt: {
     type: Date,
     default: Date.now

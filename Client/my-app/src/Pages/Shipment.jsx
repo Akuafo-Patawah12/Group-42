@@ -2,22 +2,42 @@ import React,{useMemo,useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import {motion} from 'framer-motion'
 import io from "socket.io-client"
+import { CompassTwoTone } from '@ant-design/icons'
+import PostLoader from '../icons/PostLoader'
 
 const Shipment = () => {
   const socket = useMemo(() =>io("http://localhost:5000/Shipping",{
     transports: ['websocket'],
   }),[])
 
+  const [loadingProgress, setLoadingProgress] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
+ const [shipments,setShipment] = useState([])
+  useEffect(()=>{
+    socket.emit("allShipment")
+  },[])
   const navigate= useNavigate()
   useEffect(()=>{
     socket.on('connect',()=>{
         console.log("Connected to server")
         
     });
+    
 
     socket.on("SendShippment",(data)=>{
       console.log(data)
+      setShipment(prevShipment =>[data,...prevShipment])
     })
+
+
+    const handleFetchData = (data) => {
+      fetchData(data);
+      console.log(data)
+  };
+    socket.on("getAllShipment",handleFetchData)
+      
+      
+   
    
     socket.on('disconnect',(reasons)=>{
         console.log(reasons)
@@ -30,10 +50,31 @@ const Shipment = () => {
     
     return()=>{
         socket.off('connect');
+        socket.off("getAllShipment",handleFetchData)
         socket.off('disconnect');
               
     }
-},[socket,navigate])
+},[socket,navigate,shipments])
+
+const fetchData = async (newData)=>{
+  
+  try{
+    const Alldata= newData.length
+    if(!hasFetched){
+    for(let i = 0; i < Alldata;i++){
+      setShipment(prevData => [...prevData, newData[i]])
+      setLoadingProgress(true)
+    await new Promise(resolve=> setTimeout(resolve,500))
+    }
+    
+  
+  setHasFetched(true);
+  setLoadingProgress(false)
+  }
+}catch(error){
+   console.error('Error fetching data:', error)
+}
+}
 
 const[shippmentDetail,setShippmentDetails]= useState(
   {
@@ -57,9 +98,9 @@ const togglePopup = () => {
 };
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+    initial={{ opacity: 0, perspective: 1000, rotateY: -90 ,y:100}}
+    animate={{ opacity: 1, perspective: 1000, rotateY: 0 ,y:0}}
+    exit={{ opacity: 0, y:-100 }}
       className='w-full bg-stone-100  lg:w-[80%] ml-auto'
     >
 
@@ -69,12 +110,37 @@ const togglePopup = () => {
       >
         Create Shipment
       </button>
+
+      <main className='flex flex-wrap gap-3'>
+      
+          {shipments.map((shipment,index)=>(
+            
+            <div key={index} className='flex flex-col rounded-lg border-2 p-4 max-w-[350px] bg-gradient-to-r from-white via-gray-200 to-white'>
+            <section className=' flex justify-between'><span className="font-medium text-stone-700"><CompassTwoTone /> Live tracking</span><span><span className='font-medium text-stone-700'>Status:</span> {shipment?.status}</span> </section>
+             <section className="text-sm"><span className="font-medium  text-stone-600">Tracking ID:</span> {shipment?.order_id}</section>
+             <section className='flex justify-between w-full font-medium mt-2'>
+              <span className='text-sm bg-stone-300 relative p-1 rounded-lg'>Origin <span className="absolute -bottom-1 size-2 bg-stone-300 rotate-45 left-2"></span></span>
+              <span className='text-sm bg-stone-300 relative p-1 rounded-lg'>Destination <span className="absolute -bottom-1 size-2 bg-stone-300 rotate-45 right-2"></span></span>
+             </section>
+             <section className='bg-stone-300 relative mt-3 w-full h-[2px] '>
+              <span className='bg-stone-300 size-2 absolute -top-[3px] rounded-[50%] left-2'></span>
+              <span className='bg-stone-300 size-2 absolute -top-[3px] rounded-[50%] right-2'></span>
+             </section>
+             <section className='flex justify-between text-sm'>
+                <span>{shipment?.origin}</span><span>{shipment?.destination}</span>
+             </section>
+             <section>{shipment?.shipmentDate}</section>
+        </div> 
+      ))} {loadingProgress? <PostLoader/>:""}
+        </main>
+
+
       <div className=" mx-auto flex w-[90%] gap-3 ">
         <section className="w-[45%] border-2 border-stone-600"></section>
         <section className="w-[45%] border-2 border-stone-600"></section>
       </div>
       {isOpen && (
-        <div className="fixed inset-0 flex items-center z-[70] justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0   z-[70]  bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg w-1/3">
             <div className="p-4 border-b flex justify-between items-center">
               <h2 className="text-xl font-bold">Shipment Details</h2>
@@ -155,7 +221,10 @@ const togglePopup = () => {
               </form>
             </div>
           </div>
+
+          
         </div>
+        
       )}
     </motion.div>
   )

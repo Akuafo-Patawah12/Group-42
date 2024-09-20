@@ -73,3 +73,13 @@ input[type="email"]:focus{
 .container::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
+
+input::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+input {
+  -moz-appearance: textfield;
+}
+
+
