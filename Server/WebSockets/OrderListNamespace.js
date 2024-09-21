@@ -37,7 +37,7 @@ const  orderList=(Socket,orderListNamespace,trackingNamespace,Users)=>{
                 ]).sort({createdAt:-1});
                Socket.emit("getAllOrders",orders)  //emitting orders to the user that created the order
           }catch(error){
-            console.log(error)
+            console.log("Client order's error", error)
           }
     })
     Socket.on("deleteOrder",async(data)=>{
@@ -47,7 +47,7 @@ const  orderList=(Socket,orderListNamespace,trackingNamespace,Users)=>{
            orderListNamespace.emit("orderDeleted",data.order_id)
            // Check if the users object and the specific customer_id exist
         if (Users ) {
-            console.log("Customer socket ID: ", Users[data.customer_id]);
+            console.log("Customer's socket ID: ", Users[data.customer_id]);
 
             // Emit the event to the specific user
             trackingNamespace.to(Users[data.customer_id]).emit("Deleted", data.order_id);

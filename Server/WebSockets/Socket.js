@@ -46,7 +46,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
 
        //decoding the token to extract user information
       jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => { 
-        if (err) return next(new Error("Token can't be decoded error"));
+        if (err) return next(new Error("Token can't be decoded"));
         socket.user = user; // Attach user to the socket
         next(); //proceed if there's no error
       });
