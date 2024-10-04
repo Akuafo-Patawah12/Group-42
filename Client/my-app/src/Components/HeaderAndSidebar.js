@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom"
 export default function Header() {
  
   return (
-     <header className={`header fixed  h-[60px] w-full float-none top-0 z-[44] flex justify-between border-b-[1px] shadow-xl border-green-200 bg-stone-50  `}>
+     <header className={`header fixed  h-[70px] w-full float-none top-0 z-[44] flex justify-between border-b-[1px] shadow-xl border-green-200 bg-stone-50  `}>
         <h3 className='text-green-500 flex item-center justify-center font-bold mx-[2%] text-lg my-auto'>SCMS</h3>
         <nav className='flex gap-3 h-[40px] mx-[2%] my-auto'>
           <NavLink to={"/Trends"}>

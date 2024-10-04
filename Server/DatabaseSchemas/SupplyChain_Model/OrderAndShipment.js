@@ -33,10 +33,11 @@ const orderSchema= new Schema({
 
 const shipmentSchema= new Schema({
     order_id:{type:Schema.Types.ObjectId,ref:"Order"},
+    item_ids:[{type:Schema.Types.ObjectId,ref:"Order"}],
     trackingNumber: String,
     shippmentDate: Date,
     deliveryDate: Date,
-    status:String,
+    status:String, 
     origin: {
       type: String,
       required: true,

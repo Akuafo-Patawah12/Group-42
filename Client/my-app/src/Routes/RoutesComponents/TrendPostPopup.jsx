@@ -13,7 +13,12 @@ const TrendPostPopup = (props) => {
          </section>
       <form onSubmit={props.send} className='outline-[2px] outline-dashed outline-[#15e148] w-4/5 mx-auto shadow-[30px] flex justify-around  '>
     
-        
+       <select onChange={(e)=>props.setCategory(e.target.value)}>
+          <option value="Clothings">Clothings</option>
+          <option value="Instruments">Instruments</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Utensils">Utensils</option>
+       </select>
       <textarea 
         
         value={props.cap}

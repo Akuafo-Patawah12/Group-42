@@ -84,7 +84,7 @@ const Tracking = () => {
     setOrders(prevOrders=>{
 
       const orderReturned = prevOrders.map(order => 
-        order._id === data._id 
+        order._id === data.order_id 
             ? { ...order, Status: data.status }  // Update the matching object
             : order                          // Keep other objects unchanged
     );
@@ -221,6 +221,8 @@ let active=activeOrders.length
           <button className='bg-green-300 rounded-2xl h-4/5 font-medium px-2 '>Get Personal report</button>
           <button onClick={togglePopup} className='bg-green-300 rounded-2xl h-4/5 font-medium px-2'>Create Order</button>
         </section>
+
+        
         {isOpen && (
         <div className="fixed inset-0 flex items-center z-[70] justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg w-1/2">

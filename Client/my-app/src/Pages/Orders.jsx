@@ -54,7 +54,7 @@ const Orders = () => {
     console.log(data)
     const newData= data.length
     if(!hasFetched)
-    for(let i =0;i< newData;i++){
+    for(let i = 0;i < newData;i++){
       setOrders(prevData=>[...prevData,data[i]])
       await new Promise(resolve=> setTimeout(resolve,200))
     }

@@ -1,4 +1,4 @@
-import {  PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import {  EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import React,{useState,useEffect,useRef,useMemo} from 'react'
 import {jwtDecode} from "jwt-decode"
 import {useNavigate} from 'react-router-dom';
@@ -20,6 +20,7 @@ const TrendsCompo = () => {
   }),[])
     const navigate= useNavigate()
     const [caption, setCaption] = useState('');
+    const[category,setCategory] = useState("")
     
   const [posts, setPosts] = useState([]);
   const [userId, setUserId] = useState(null);
@@ -56,7 +57,7 @@ const TrendsCompo = () => {
   const url=await  getDownloadURL(snapshot.ref) //get image reference and download the url from file server(firebase)
       console.log('File available at', url);
     
-      socket.emit('sendPost',{id:userId,caption,img_vid:url}); //emit post including image url to the web server
+      socket.emit('sendPost',{id:userId,caption,category,img_vid:url}); //emit post including image url to the web server
       setSendAlert(false)
     
  
@@ -168,7 +169,7 @@ const TrendsCompo = () => {
         return array;
       }
       
-      // Example usage:
+      
       
        
 
@@ -305,13 +306,17 @@ const TrendsCompo = () => {
               </span>
             </div>
           <button onClick={()=>setOpenDialog(true)} className='float-right'>
-            <span className='h-[38px] bg-green-300 block px-2 rounded-l-2xl '><PlusCircleOutlined />Add items</span> 
+            <span className='h-[38px] bg-green-300 block px-2 rounded-2xl '><PlusCircleOutlined />Add items</span> 
+          </button>
+          <button className='h-[38px] bg-green-300 block px-2 rounded-2xl'>
+            <EyeOutlined />
+              View Cart
           </button>
         </div>
         
        
           {/*list the post one after the order using the map function*/}
-        <TrendsPosts posts={[...posts]}  setLike={setLike} 
+        <TrendsPosts posts={[...posts]}  setLike={setLike}  
         likePost={likePost} loading={loadingProgress}  onLineProps={[online,setOnline]} loaders={[loader,setLoader,handleImageLoad]} />
       
 
@@ -324,6 +329,7 @@ const TrendsCompo = () => {
         handleChange={handleChange}
         popUp={openDialog}
         setCaption={setCaption}
+        setCategory={setCategory}
           
    /> 
     </main>

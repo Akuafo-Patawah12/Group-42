@@ -7,6 +7,7 @@ import { ImageLoader } from '../../icons/ButtonLoader';
 const TrendsPosts = ({loading,loaders,setLike,likePost,onLineProps,posts}) => {
        const[online,setOnline]=onLineProps 
      const[loader,setLoader,handleImageLoad]=loaders 
+  
      
   return (
     

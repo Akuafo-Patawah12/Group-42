@@ -41,7 +41,7 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
   } 
  })   
  Socket.on('sendPost', async (data) => { //socket.on means receiving data or information from client side
-   const { id,caption,img_vid } = data; //get post from client side
+   const { id,caption,img_vid,category } = data; //get post from client side
    try {
      // Create a new post and save it to the database
      const input = new Post({
@@ -57,6 +57,7 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
          user_id: post.user_id._id,
          caption,
          img_vid,
+         category,
          createdAt: post.createdAt,
          username: post.user_id.username
      }

@@ -2,7 +2,7 @@ import React,{useMemo,useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import {motion} from 'framer-motion'
 import io from "socket.io-client"
-import { CompassTwoTone } from '@ant-design/icons'
+import { CompassTwoTone, CopyOutlined, DownOutlined, RightOutlined } from '@ant-design/icons'
 import PostLoader from '../icons/PostLoader'
 
 const Shipment = () => {
@@ -30,9 +30,9 @@ const Shipment = () => {
     })
 
 
-    const handleFetchData = (data) => {
-      fetchData(data);
-      console.log(data)
+    const handleFetchData = ({shipmentsWithItems}) => {
+      fetchData(shipmentsWithItems);
+      console.log(shipmentsWithItems)
   };
     socket.on("getAllShipment",handleFetchData)
       
@@ -60,6 +60,7 @@ const fetchData = async (newData)=>{
   
   try{
     const Alldata= newData.length
+    console.log(Alldata,"all shipment")
     if(!hasFetched){
     for(let i = 0; i < Alldata;i++){
       setShipment(prevData => [...prevData, newData[i]])
@@ -96,13 +97,23 @@ const [isOpen, setIsOpen] = useState(false);
 const togglePopup = () => {
   setIsOpen(!isOpen);
 };
+
+
+const [accordionIndex,setAccordionIndex]=useState([])
+function Product(index){
+  setAccordionIndex((prevState) => ({
+    ...prevState,
+    [index]: !prevState[index],  // Toggle the specific accordion's open/close state
+  }));
+}
   return (
     <motion.div
     initial={{ opacity: 0, perspective: 1000, rotateY: -90 ,y:100}}
     animate={{ opacity: 1, perspective: 1000, rotateY: 0 ,y:0}}
     exit={{ opacity: 0, y:-100 }}
-      className='w-full bg-stone-100  lg:w-[80%] ml-auto'
+      className='w-full bg-stone-100 lg:w-[80%] ml-auto'
     >
+      <div>
 
       <button
         onClick={togglePopup}
@@ -111,13 +122,33 @@ const togglePopup = () => {
         Create Shipment
       </button>
 
-      <main className='flex flex-wrap gap-3'>
+      <main className='flex flex-wrap gap-3 justify-center'>
       
           {shipments.map((shipment,index)=>(
             
-            <div key={index} className='flex flex-col rounded-lg border-2 p-4 max-w-[350px] bg-gradient-to-r from-white via-gray-200 to-white'>
-            <section className=' flex justify-between'><span className="font-medium text-stone-700"><CompassTwoTone /> Live tracking</span><span><span className='font-medium text-stone-700'>Status:</span> {shipment?.status}</span> </section>
-             <section className="text-sm"><span className="font-medium  text-stone-600">Tracking ID:</span> {shipment?.order_id}</section>
+            <div key={index} className='flex flex-col rounded-lg border-2 p-10 max-w-[400px] bg-gradient-to-r from-white via-gray-200 to-white'>
+            <section className=' flex gap-3 justify-between'><span className="font-medium text-stone-700"><CompassTwoTone /> Live tracking</span><span><span className='font-medium text-stone-700'>Status:</span> {shipment?.status}</span> </section>
+             <section className="text-sm"><span className="font-medium  text-stone-600">Tracking ID:</span> {shipment?.order_id} <button className='size-5 leading-5 rounded-[50%] text-center bg-slate-300'><CopyOutlined /></button> </section>
+             <button className="bg-blue-200 font-medium text-stone-700 text-sm w-[77px]" onClick={()=>{Product(index)}}>Products {accordionIndex[index] ?(<DownOutlined/>): (<RightOutlined />)}</button>
+
+             
+             {accordionIndex[index] && (
+                 shipment?.items?.length > 0 ? (
+              
+                      shipment.items.flatMap((item, itemIndex) =>(
+                        
+                        <div key={itemIndex} className={` transition-transform mt-2 text-sm bg-stone-200 w-[90%] ml-auto`}>
+                          
+                          <span className="text-stone-600 font-medium"> Items{itemIndex + 1}:</span>   {item.itemName}
+                          <span className="text-stone-600 font-medium"> Quantity:</span>   {item.quantity}
+                        </div>
+                       
+                      ))
+                    ) : (
+                      <div className={`text-stone-600 text-sm mt-2 w-[90%] ml-auto`}>No items available.</div>
+                    )
+                  )}
+                    
              <section className='flex justify-between w-full font-medium mt-2'>
               <span className='text-sm bg-stone-300 relative p-1 rounded-lg'>Origin <span className="absolute -bottom-1 size-2 bg-stone-300 rotate-45 left-2"></span></span>
               <span className='text-sm bg-stone-300 relative p-1 rounded-lg'>Destination <span className="absolute -bottom-1 size-2 bg-stone-300 rotate-45 right-2"></span></span>
@@ -133,14 +164,8 @@ const togglePopup = () => {
         </div> 
       ))} {loadingProgress? <PostLoader/>:""}
         </main>
-
-
-      <div className=" mx-auto flex w-[90%] gap-3 ">
-        <section className="w-[45%] border-2 border-stone-600"></section>
-        <section className="w-[45%] border-2 border-stone-600"></section>
-      </div>
       {isOpen && (
-        <div className="fixed inset-0   z-[70]  bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center z-[70] justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg w-1/3">
             <div className="p-4 border-b flex justify-between items-center">
               <h2 className="text-xl font-bold">Shipment Details</h2>
@@ -226,6 +251,7 @@ const togglePopup = () => {
         </div>
         
       )}
+      </div>
     </motion.div>
   )
 }

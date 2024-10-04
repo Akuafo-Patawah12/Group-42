@@ -113,6 +113,7 @@ notificationsNamespace.on('connection', (socket) => {
 trackingNamespace.on("connection", async (socket) => {
   const userId=socket.user.id  // Extracting users id from socket
   Users[userId]=socket.id 
+  console.log(Users)
 
     Tracking(socket,orderListNamespace,notificationsNamespace,Users)
 });

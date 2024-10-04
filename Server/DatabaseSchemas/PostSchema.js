@@ -11,6 +11,7 @@ const postSchema = new Schema({
     type: String,
     
   },
+  category:String,
   createdAt: {
     type: Date,
     default: Date.now

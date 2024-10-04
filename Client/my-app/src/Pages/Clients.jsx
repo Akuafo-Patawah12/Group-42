@@ -140,7 +140,7 @@ const Clients = () => {
                 <th style={style}>User_id</th>
                 <th style={style}>#Client</th>
                 <th style={style}>Email</th>
-                <th style={style}>Last Active</th>
+                <th style={style}>Last Active</th> 
                 <th style={style}>Permissions</th>
                 <th style={style}>Created At</th>
             </tr>
