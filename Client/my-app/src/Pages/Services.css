@@ -1,0 +1,60 @@
+.imag{
+    position: absolute;
+    object-fit: cover;
+}
+
+.imag_1{
+   top: 0;
+   left: 0;
+   width: 30%;
+   height: 40%;
+   background-color: red;
+   z-index: 2;
+   border-bottom: 7px solid #fff;
+   outline-right: 7px solid #fff;
+}
+
+.imag_2{
+   bottom: 0;
+   height: 80%;
+   width: 40%;
+  z-index: 1;
+   left: 0;
+   background-color: yellow;
+   border-top: 7px solid #fff;
+   border-right: 7px solid #fff;
+}
+
+.imag_3{
+  right: 0;
+  top: 0;
+  background-color: blue;
+  height: 49%;
+  width: 30%;
+
+}
+
+.imag_4{
+    right: 0;
+    bottom: 0;
+    background-color: brown;
+    height: 49%;
+    width: 30%;
+}
+
+.imag_5{
+  top: 30%;
+  width: 39%;
+  left: 50%;
+  height: 60%;
+  transform: translate(-50%,-50%);
+  background: purple;
+}
+
+.imag_6{
+   width: 29.5%;
+   height: 39%;
+   bottom: 0;
+   left: 40%;
+   background-color: orange;
+}

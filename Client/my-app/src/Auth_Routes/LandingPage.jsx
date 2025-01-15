@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import Correct from '../icons/Correct';
-import {Link} from 'react-router-dom'
+import {Link, NavLink} from 'react-router-dom'
 import LandCompo from "./LandCompo"
 
 
@@ -69,35 +69,12 @@ const LandingPage = () => {
             icon:"../images/icon_4.png"
         }
        ]
-        
-       const[height,setHeight]= useState(false)
-       function toggleHeight(){
-          setHeight(!height)
-       }
-    const links=[{innerText:"Home"},{innerText:"Service"},{innerText:"Review"},{innerText:"Contact"}]
+      
+    
 
   return (
     <main>
-        <header className='w-full h-[60px] relative items-center flex justify-between'>
-            <h4 className='ml-3 font-bold'>Supply Chain Solution</h4>
-           <nav className=' hidden lg:flex gap-3'>
-              <a >Home</a>
-              <a>Services</a>
-              <a>Review</a>
-              <a>Contact</a>
-           </nav>
-           <Link to={"/SignUp"}><button className='btn overflow-hidden relative isolate border-2 border-green-600 rounded-xl px-4 py-2 mr-3 hidden lg:block'>Sign Up</button></Link>
-           <button onClick={toggleHeight} className='block w-[40px] h-[22px] relative lg:hidden'>
-              <div className={`absolute w-5 h-1 transition-all border-2 border-green-600 ${height ? "top-2 rotate-45":"top-0"}`}></div>
-              <div className={`absolute w-5 h-1 top-2 border-2 border-green-600 ${height ? "hidden":"block"}`}></div>
-              <div className={`absolute w-5 h-1 transition-all border-2 border-green-600 ${height ? "top-2 -rotate-45":"top-4"}`}></div>
-           </button>
-           <div className={`transition-all border-t-2 flex justify-center items-center flex-col w-full absolute bg-white top-[50px] ${height ? "h-screen ":"h-0"} lg:hidden`}>
-              {links.map((item,index)=>(<a  key={index} className={` w-[100px] font-medium ${height ? "block":"hidden"}`}>{item.innerText}</a>))}
-              
-              <Link to={"/SignUp"} className={` `}><button className={`btn  w-[100px] font-medium ${height ? "block":"hidden"} overflow-hidden relative isolate border-2 border-green-600 rounded-xl px-4 py-2 mr-3 `}>Sign Up</button></Link>  
-        </div>
-        </header>
+        
         
 
         <div className='image aspect-video w-full flex flex-col'>

@@ -1,0 +1,74 @@
+
+
+  .click{
+    height: 30px;
+    padding-inline: 4px 0;
+    color: #111;
+  }
+  .click:hover .drop{
+    z-index: 99;
+    height: auto;
+    visibility: visible;
+    animation: hover 1s linear;
+  }
+
+  
+.open{
+    height: 33px;
+    width: 35px;
+    position: relative;
+    display: none;
+    border-radius: 5px;
+    background-color: transparent;
+    
+    
+  
+    & div{
+        background-color: #555;
+        width: 90%;
+        height: 3px;
+        border-radius: 5px;
+        position: absolute;
+        transition: all .3s;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        
+    }
+  }
+
+  .drop{
+   
+    overflow: hidden;
+    
+    visibility: hidden;
+    transform: translateY(5px);
+    height: 0;
+    border-radius: 7px;
+    z-index: 40;
+    box-shadow: 1px 2px 5px #bbb;
+  
+   
+  }
+  
+  .drop > p:hover{
+    background-color: rgba(0,0,0,0.1);
+  }
+  
+  .open:hover{
+    background: transparent;
+  }
+
+  .click:hover .drop{
+    z-index: 99;
+    height: auto;
+    visibility: visible;
+    animation: hover 0.4s linear;
+  }
+  
+  @keyframes hover{
+    from{ height:0;}
+    to{height: 100%}
+  }
+
+  
+  
