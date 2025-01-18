@@ -116,41 +116,44 @@ const Login = () => {
     
   return (
     
-        <div className='flex justify-center items-center h-screen bg-gray-100 '>
+        <div className='flex justify-center mt-[40px] w-full items-center h-screen bg-gray-100 '>
 
-            <section className='border-[1px]  rounded-xl overflow-hidden bg-white border-stone-300 shadow-2xl flex items-center flex-col h-[480px] lg:flex-row gap-2 h-[420px]'>
+            <section className=' relative border-[1px]  w-full  overflow-hidden bg-white border-stone-300 shadow-2xl flex items-center flex-col h-full lg:flex-row gap-2 '>
                 
-                <div className='w-[220px]  h-[130px]  lg:h-full overflow-hidden'>
+                <div className='w-full  h-[130px]  lg:h-full overflow-hidden'>
                     <img src='../images/welcome.jpg' className='h-full w-full object-cover object-center' alt='sign'></img>
                 </div>
 
-                <form onSubmit={handSubmit}>
-                    <div className=' flex  flex-col gap-2 w-[300px]'>
-                        <h4 className='mx-auto text-sm font-medium'>SCM SOLUTIONS.</h4>
-                        <div className='font-bold text-gray-600 w-[78%] mx-auto'>Welcome to our supply chain solutions.</div>
+                <form onSubmit={handSubmit} className="w-[40%] border-l-2 border-r-2 border-stone-300 items-center absolute h-full bg-white top-0 right-[5%] z-2">
+                    <div className=' flex flex-col gap-4 '>
+                        <h4 className='mx-auto mt-10 text-sm font-medium'>SCM SOLUTIONS.</h4>
+                        <div className='font-bold  text-gray-600 w-[73%] mx-auto'>Welcome to our supply chain solutions.</div>
                     
-                        <input type='email'
+                    
+
+                    <input type='email'
                         placeholder='Enter email' 
-                        className='border-2 border-gray-400 rounded-md w-[78%] mx-auto h-[40px]'
+                        className='border-2 border-gray-400 rounded-md px-2 py-6 text-lg w-[73%] mx-auto h-[35px]'
                         onChange={(e)=>setFormData({...formData,email: e.target.value})} 
                         required={true}
                         ></input>
                     
-                   <div className='relative mx-auto w-[78%]'>
-                    <input type={togglePassword? 'text':'password'} 
-                        placeholder='Password' 
-                        className='border-2 border-gray-400 rounded-md w-full  h-[40px]'
-                        onChange={(e)=>setFormData({...formData,password: e.target.value})}
-                        required={true} 
-                        ></input>
-                     <div className='absolute right-3 top-2' onClick={pass_to_text}>{togglePassword? <EyeInvisibleOutlined /> : <EyeOutlined />}</div>
-                    </div>
+                  
+                    <div className='relative mx-auto w-[73%]'>   
+                                        <input type={togglePassword? 'text':'password'}  
+                                            placeholder='Password' 
+                                            className='border-2 border-gray-400 rounded-md px-2 py-6 text-lg w-full  h-[35px]'
+                                            onChange={(e)=>setFormData({...formData,password: e.target.value})}
+                                            required={true} 
+                                            ></input>
+                                            <div className='absolute right-2 top-[6px]' onClick={pass_to_text}>{togglePassword? <EyeInvisibleOutlined /> : <EyeOutlined />}</div>
+                                            </div>
 
              <div className='flex w-[78%] text-md font-small  text-red-400 items-center mx-auto'>
                     {validation==="" ?"":<WarningIcon size={18}/>} {validation} 
              </div>
 
-                <div className='flex mx-auto w-[78%] justify-between items-center'>
+                <div className='flex mx-auto w-[73%] justify-between items-center'>
                     <section className='flex items-center'>
                         <input type='checkbox'
                            checked={formData.rememberMe}
@@ -161,10 +164,10 @@ const Login = () => {
                         <Link to={"/forgetPassword"} className='text-blue-500 font-medium text-sm'>Forget Password?</Link>
                 </div>
                                    {/*if the button loader is visible the login button will be disabled */}
-                <button type='submit' disabled={loader? true: false} className="h-[40px] flex justify-center items-center rounded-md text-white gap-2 font-medium bg-green-400 w-[78%] mx-auto "><p>Login</p>{loader? <ButtonLoader/>:""}</button>
+                <button type='submit' disabled={loader? true: false} className="h-[35px] flex py-6 text-lg justify-center items-center gap-2 bg-[var(--purple)] w-[73%] rounded-md text-white font-medium mx-auto"><p>Login</p>{loader? <ButtonLoader/>:""}</button>
                     
                     
-                    <div className='w-[78%] mx-auto'><Link to={"/SignUp"} className='text-blue-500 font-medium hover:underline decoration-2 active:underline decoration-2'>Create Account</Link> instead.</div>
+                    <div className='w-[78%] mx-auto'><Link to={"/SignUp"} className='text-blue-500 font-medium hover:underline decoration-2 active:underline '>Create Account</Link> instead.</div>
                 </div>
             </form>
             </section>

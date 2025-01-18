@@ -10,8 +10,16 @@ import CustomersLayout from './RoutesBundle/CustomersLayout';
 import AuthLoader from './icons/AuthLoader';
 import PageNotFound from './Routes/PageNotFound';
 import Header from './Components/Header';
+import Sidebar2 from './Components/Sidebar2';
 import Footer from './Components/Footer';
 import TrackShipmentPopup from './Components/TrackShipmentPopup';
+import More from './Pages/More';
+import AirFreight from './Pages/Service/Airfreight';
+import Groupage from './Pages/Service/Groupage';
+import SeaFreight from './Pages/Service/Seafreight';
+import Door2door from './Pages/Service/Door2door';
+import ThirdPartyMarketing from './Pages/Service/ThirdPartyMarketing';
+import Procurement from './Pages/Service/Procurement';
 const GalleryPage= lazy(()=> import('./Pages/Gallery'));
 const PrivacyPolicyPage= lazy(()=> import('./Pages/Privacy'));
 const FAQPage = lazy(()=> import("./Pages/FAQs"));
@@ -53,11 +61,18 @@ function App() {
             document.removeEventListener("mousedown",closePop)
             /**This function is executed when you click outside the sidebar to close it in ToggleSideBar.jsx */
           }
-        },[]); 
+        },[]);
+        
+        const[popUp2,setPopUp2]= useState(false)
+        function pop2(){
+        
+        setPopUp2(prev => !prev)
+        }
   return (
     <div className="App">
-    <Header popDetails={[pop1,popUp1,setPopUp1]} rotate={[isRotate,setIsRotate]} setIsOpen={setIsOpen}/>
+    <Header popDetails={[pop1,pop2,popUp1,setPopUp1,popUp2,setPopUp2]}  rotate={[isRotate,setIsRotate]} setIsOpen={setIsOpen}/>
     <TrackShipmentPopup open={[setIsOpen,isOpen]} trackRef={trackRef}/>
+    <Sidebar2 popUp2={popUp2} setPopUp1={setPopUp2}/>
          <Routes>
          <Route path='/' element={<React.Suspense fallback={<AuthLoader/>}>
                <LandingPage/>
@@ -67,8 +82,36 @@ function App() {
                <FAQPage/>
             </React.Suspense>} />
 
+            <Route path='/More' element={<React.Suspense fallback={<AuthLoader/>}>
+               <More/>
+            </React.Suspense>} />
+
             <Route path='/Services' element={<React.Suspense fallback={<AuthLoader/>}>
                <Services />
+            </React.Suspense>} />
+
+            <Route path='/Services/AirFreight' element={<React.Suspense fallback={<AuthLoader/>}>
+               <AirFreight />
+            </React.Suspense>} />
+
+            <Route path='/Services/Groupage' element={<React.Suspense fallback={<AuthLoader/>}>
+               <Groupage />
+            </React.Suspense>} />
+
+            <Route path='/Services/Procurement' element={<React.Suspense fallback={<AuthLoader/>}>
+               <Procurement />
+            </React.Suspense>} />
+
+            <Route path='/Services/Marketing' element={<React.Suspense fallback={<AuthLoader/>}>
+               <ThirdPartyMarketing />
+            </React.Suspense>} />
+
+            <Route path='/Services/Door2door' element={<React.Suspense fallback={<AuthLoader/>}>
+               <Door2door />
+            </React.Suspense>} />
+
+            <Route path='/Services/SeaFreight' element={<React.Suspense fallback={<AuthLoader/>}>
+               <SeaFreight />
             </React.Suspense>} />
 
             <Route path='/Contact_us' element={<React.Suspense fallback={<AuthLoader/>}>

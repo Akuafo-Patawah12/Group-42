@@ -10,7 +10,7 @@ const ContactPage = () => {
                 </section>
             </div>
 
-      <div className="container mx-auto my-5 p-6 max-w-4xl bg-white shadow-md rounded-lg">
+      <div className="container mx-auto my-5 p-6 max-w-3xl bg-white shadow-md rounded-lg">
         <h1 className="text-3xl font-bold text-center text-[var(--purple)] mb-6">
           Contact SFG Logistics
         </h1>

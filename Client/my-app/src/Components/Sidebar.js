@@ -3,7 +3,7 @@ import { SettingOutlined,DashboardOutlined , ProductOutlined, LogoutOutlined,Dat
 import { useNavigate,NavLink } from 'react-router-dom'
 import axios from 'axios'
 
-const Sidebar = () => {
+const Sidebar = ({}) => {
     const data=[
         {name:"Dashboard",icon:<DashboardOutlined />},
         {name:"Clients",icon:<DatabaseOutlined />},

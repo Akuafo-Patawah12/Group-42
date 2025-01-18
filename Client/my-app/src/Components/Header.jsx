@@ -6,7 +6,7 @@ import "./Header.css"
 
 const Header = ({popDetails,setIsOpen,rotate}) => {
 
-    const [pop1,popUp1,setPopUp1] = popDetails
+    const [pop1,pop2,popUp1,setPopUp1,popUp2,setPopUp2] = popDetails
     const [isRotate,setIsRotate]= rotate
     const[popNav,setPopNav]= useState(false) 
     const[height,setHeight]= useState(false)
@@ -17,9 +17,7 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
             const Link_text={textDecoration:"none", fontSize:"15px"}
       
 
-            const toggleMenu = () => {
-              setIsRotate(prev=> !prev);
-            };
+            
 
 
   return (
@@ -30,7 +28,7 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
     
     <nav   style={{transform:"translateY(10px)"}} className="hidden gap-4 text-lg font-semibold md:flex lg:flex">
          <NavLink to={"/"}><span className='header_links' style={{fontSize:"16px",fontWeight:"600",}}>Home</span> </NavLink>
-         <NavLink to={"/About_us"} style={{position:"relative"}} className="click" onClick={()=>{setPopNav(prev => !prev)}}><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>About  <Triangle style={{rotate:"180deg",transform:"translateY(-6px)"}}/></span> 
+         <NavLink to={"/About_us"} style={{position:"relative"}} className="click" onClick={()=>{setPopNav(prev => !prev)}}><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>About  <Triangle style={{rotate:"180deg",transform:"translateY(-8px)"}}/></span> 
               <div className="drop" style={{position:"absolute",background:"white",width:"200%",padding:"8px",zIndex:"40"}}>
                 <a href='#why_choose_us'><p ><Link className="block px-4 py-2 hover:bg-gray-100 transition"  to={"/"} style={{fontSize:"15px"}}>Why choose us</Link></p></a>
                 <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/About"} style={{fontSize:"15px"}}>About us</Link></p>
@@ -39,19 +37,20 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
          </NavLink>
 
          
-         <NavLink to={"/Services"} style={{position:"relative",}} className="click "><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>Services  <Triangle style={{rotate:"180deg",transform:"translateY(-6px)"}}/></span> 
+         <NavLink to={"/Services"} style={{position:"relative",}} className="click "><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>Services  <Triangle style={{rotate:"180deg",transform:"translateY(-10px)"}}/></span> 
               <div className="drop" style={{position:"absolute",background:"white",width:"170%",padding:"8px",isolation:"isolate",zIndex:"99"}}>
                 <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/Services/AirFreight"} style={Link_text}>Air freight</Link></p>
                 <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/Services/SeaFreight"} style={Link_text}>Sea freight</Link></p>
                 <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/Services/Procurement"} style={Link_text}>Procurement</Link></p>
                 <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/Services/Door2door"} style={Link_text}>Door to door delivery</Link></p>
                 <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/Services/Groupage"} style={Link_text}>Groupage</Link></p>
+                <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/Services/Marketing"} style={Link_text}>Shop with us</Link></p>
               </div>
          </NavLink>
          
          <NavLink to={"/Contact_us"} style={Link_text} className="header_links"><span style={{fontSize:"16px",fontWeight:"600"}} >Contact</span> </NavLink>
  
-         <NavLink to={"/More"} style={Link_text} className=" click"><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>More  <Triangle style={{rotate:"180deg",transform:"translateY(-6px)"}}/></span> 
+         <NavLink to={"/More"} style={Link_text} className=" click"><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>More  <Triangle style={{rotate:"180deg",transform:"translateY(-8px)"}}/></span> 
          <div className="drop" style={{position:"absolute",background:"white",width:"170%",padding:"8px",isolation:"isolate",zIndex:"99"}}>
               
                
@@ -76,25 +75,25 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
 
          <div className="flex items-center justify-center   md:hidden lg:hidden">
       <button
-        onClick={toggleMenu}
+        onClick={pop2}
         className="relative w-10 h-10 focus:outline-none"
       >
         {/* Top bar */}
         <div
-          className={`absolute top-2 left-0 w-full h-1 border-blue-600 border-2 rounded transition-transform duration-300 ${
-            isRotate ? "rotate-45 translate-y-3" : ""
+          className={`absolute top-1 left-0 w-full h-[5px] border-purple-600 border-2 rounded transition-transform duration-300 ${
+            popUp2 ? "rotate-45 translate-y-3 border-stone-600" : ""
           }`}
         ></div>
         {/* Middle bar */}
         <div
-          className={`absolute top-4 left-0 w-full h-1 bg-blue-600  rounded transition-opacity duration-300 ${
-            isRotate ? "opacity-0" : ""
+          className={`absolute top-4 left-0 w-full h-[5px] bg-stone-500  rounded transition-opacity duration-300 ${
+            popUp2 ? "opacity-0" : ""
           }`}
         ></div>
         {/* Bottom bar */}
         <div
-          className={`absolute top-6 left-0 w-full h-1 border-blue-600 border-2 rounded transition-transform duration-300 ${
-            isRotate ? "-rotate-45 -translate-y-3" : ""
+          className={`absolute top-7 left-0 w-full h-[5px] border-purple-600 border-2 rounded transition-transform duration-300 ${
+            popUp2 ? "-rotate-45 -translate-y-3 border-stone-600" : ""
           }`}
         ></div>
       </button>

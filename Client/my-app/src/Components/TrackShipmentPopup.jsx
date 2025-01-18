@@ -36,10 +36,10 @@ const TrackShipmentPopup = ({open,trackRef}) => {
               placeholder="Enter Tracking ID"
               value={trackingId}
               onChange={(e) => setTrackingId(e.target.value)}
-              className="w-full px-3 py-2 border rounded mb-4"
+              className="w-full px-3 py-3 border rounded mb-4"
             />
 
-<section className='border-2 border-purple-600 border-dashed rounded py-2 px-[2%]'>
+<section className='border-2 border-orange-400 border-dashed rounded py-2 px-[2%]'>
            <span style={{fontWeight:"600",fontSize:"16px",color:"black"}}>NB:</span> Your Consignment No. is the same as the Tracking number, which is sent to the email address you submitted for registration. 
 
 The tracking number is a 13-digit code which starts with the prefix “ILL” and ends with “-SHP”
@@ -48,7 +48,7 @@ If you cannot find the email in your inbox, please check your Spam. Kindly get i
         </section>
 
             <button
-              className="bg-purple-500 mt-4 text-white px-4 py-2 rounded hover:bg-purple-600 w-full"
+              className="bg-purple-500 mt-4 text-white px-4 py-3 rounded hover:bg-purple-600 w-full"
               onClick={handleTrackShipment}
             >
               Track
@@ -72,7 +72,7 @@ If you cannot find the email in your inbox, please check your Spam. Kindly get i
             )}
            
             <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full"
+              className="mt-4 bg-red-500 text-white px-4 py-3 rounded hover:bg-red-600 w-full"
               onClick={() => {
                 setIsOpen(false);
                 setTrackingId("");
