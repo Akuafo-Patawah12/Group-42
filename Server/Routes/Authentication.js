@@ -8,10 +8,12 @@ const data= require('../DatabaseSchemas/userSchema')
  async function login(req,res){
     
     const {email,password,rememberMe }= req.body.formData   //grabing user credentials from the client side.
+    
+    console.log(email,password,rememberMe )
     try{
         const email_Exist= await data.findOne({email:email}); /* check whether the email exist in the database 
        and store it in email exist variable */
-        
+        console.log(email_Exist)
 
          const protected= email_Exist.account_type // find the user's account type "whether it's a personal or business account"
 
@@ -98,6 +100,8 @@ const data= require('../DatabaseSchemas/userSchema')
 const SignUp =async(req,res)=>{
     const {username,email,account_type,password }= req.body.formData //Extract credentials from the client
     const salt=  bcrypt.genSaltSync(10)
+
+    console.log(username)
     try{
         const encryptedPassword= await bcrypt.hash(password,salt)  //hashing user password before inserting it into the database
         const emailExist= await data.findOne({email:email})  // Check if the email already exists in the database
@@ -115,7 +119,7 @@ const SignUp =async(req,res)=>{
            return res.json({message:'not exist'}); 
     }catch(error){
         console.error(error);
-        return res.status(500).json({ message: 'Internal Server Error', error: err.message });
+        return res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 }
     

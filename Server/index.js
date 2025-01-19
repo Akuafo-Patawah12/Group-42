@@ -13,7 +13,7 @@ const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 const initializeSocket = require('./WebSockets/Socket');
 app.use(cors({
-  origin:["http://localhost:3000"],
+  origin:["http://localhost:3001"],
   credentials: true,
   methods:["POST,GET,PUT,DELETE"], 
   allowedHeaders: ['Content-Type']

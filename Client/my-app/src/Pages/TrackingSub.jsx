@@ -6,15 +6,8 @@ const TrackingSub = (props) => {
   
   return (
     <>
-      <div className='flex gap-2 justify-between mt-4 w-[95%] ml-auto'>
-        <section className='w-[48%] bg-slate-400 h-[170px] rounded-2xl'></section>
-        <section className='w-[48%] h-[170px] rounded-2xl flex flex-col gap-2'>
-            <div className='w-full h-[78%] bg-slate-400  rounded-2xl'></div>
-            <div className='h-[22%] w-full  bg-black rounded-2xl  '></div>
-        </section>
-        
-      </div>
-      <section className='flex gap-4 w-[95%] mt-4 ml-auto'>
+      
+      <section className='flex gap-4 w-[95%] mt-4 mx-auto'>
             <p>Filter activities</p>
             <button className='bg-stone-400 rounded-2xl p-2'>All</button>
             <button className='bg-stone-400 rounded-2xl p-2'>Delivered</button>
@@ -22,32 +15,37 @@ const TrackingSub = (props) => {
             <button className='bg-stone-400 rounded-2xl p-2'>Pending</button>
             <button className='bg-stone-400 rounded-2xl p-2'>Cancelled</button>
         </section>
-        <table className="w-[95%] mt-3 ml-auto">
-        <thead>
-            <tr>
-              <th><input type='checkbox'></input></th>
-                <th className='bg-slate-400 rounded-sm'>Order ID</th>
-                <th className='bg-slate-400 rounded-sm'>Product</th>
-                <th className='bg-slate-400 rounded-sm'>Quantity</th>
-                <th className='bg-slate-400 rounded-sm'>Price</th>
-                <th className='bg-slate-400 rounded-sm'>Status</th>
-                <th className='bg-slate-400 rounded-sm'>Arrival time</th>
-            </tr>
-        </thead>
-        <tbody>
-          {props.orders.map((order,index)=>(
-            <tr key={order._id} id={`row-${order._id}`}>
-              <td><input type="checkbox"></input></td>
-              <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize:"14px",lineHeight:"20px"}}>{order._id}</td>
-              <td></td>
-              <td></td>
-              <td onClick={() => props.deleteOrder(order._id,order.customer_id)}><DeleteOutlined/></td>
-              <td className='text-sm'>{order.Status}</td>
-            </tr>
-          ))}
-            
-        </tbody>
-    </table>
+
+        <div className="bg-white w-{95%} shadow-md rounded-lg p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">Your Recent Orders</h3>
+          <table className="w-full border-collapse border border-gray-200 rounded">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border border-gray-300 px-4 py-2 text-left">Order ID</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Description</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {props.orders.map((order,index)=>(
+              <tr key={order._id} id={`row-${order._id}`}>
+                <td className="border border-gray-300 px-4 py-2">{order._id}</td>
+                <td className="border border-gray-300 px-4 py-2">Sea Freight - Electronics</td>
+                <td className="border border-gray-300 px-4 py-2 text-green-500">{order.Status}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                    View Details 
+                  </button>
+                  <button className="bg-red-500 px-4 py-2 rounded text-white" onClick={() => props.deleteOrder(order._id,order.customer_id)}><DeleteOutlined/></button>
+                </td>
+              </tr>
+            ))}
+              
+            </tbody>
+          </table>
+        </div>
+
       </>
     
   )

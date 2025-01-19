@@ -3,32 +3,16 @@ import React,{lazy,useState,useRef,useEffect} from 'react'
 import {Routes,Route} from 'react-router-dom'
 import './App.css';
 
-import ForgetPassword from './Auth_Routes/ForgetPassword'
-import UpdatePassword from './Auth_Routes/UpdatePassword'
+
 import LayoutBundle from './RoutesBundle/LayoutBundle';
 import CustomersLayout from './RoutesBundle/CustomersLayout';
-import AuthLoader from './icons/AuthLoader';
+
 import PageNotFound from './Routes/PageNotFound';
-import Header from './Components/Header';
-import Sidebar2 from './Components/Sidebar2';
+
 import Footer from './Components/Footer';
-import TrackShipmentPopup from './Components/TrackShipmentPopup';
-import More from './Pages/More';
-import AirFreight from './Pages/Service/Airfreight';
-import Groupage from './Pages/Service/Groupage';
-import SeaFreight from './Pages/Service/Seafreight';
-import Door2door from './Pages/Service/Door2door';
-import ThirdPartyMarketing from './Pages/Service/ThirdPartyMarketing';
-import Procurement from './Pages/Service/Procurement';
-const GalleryPage= lazy(()=> import('./Pages/Gallery'));
-const PrivacyPolicyPage= lazy(()=> import('./Pages/Privacy'));
-const FAQPage = lazy(()=> import("./Pages/FAQs"));
-const About= lazy(()=> import( './Pages/About'));
-const Contact= lazy(()=> import('./Pages/Contact'));
-const Services= lazy(()=> import('./Pages/Services'));
-const LandingPage= lazy(()=> import("./Auth_Routes/LandingPage"))
-const Login= lazy(()=> import('./Auth_Routes/Login'))
-const SignUp= lazy(()=> import('./Auth_Routes/SignUp'))
+
+import General from './RoutesBundle/General';
+
 
 
 
@@ -70,80 +54,19 @@ function App() {
         }
   return (
     <div className="App">
-    <Header popDetails={[pop1,pop2,popUp1,setPopUp1,popUp2,setPopUp2]}  rotate={[isRotate,setIsRotate]} setIsOpen={setIsOpen}/>
-    <TrackShipmentPopup open={[setIsOpen,isOpen]} trackRef={trackRef}/>
-    <Sidebar2 popUp2={popUp2} setPopUp1={setPopUp2}/>
+   
          <Routes>
-         <Route path='/' element={<React.Suspense fallback={<AuthLoader/>}>
-               <LandingPage/>
-            </React.Suspense>} />
+        
 
-            <Route path='/More/FAQs' element={<React.Suspense fallback={<AuthLoader/>}>
-               <FAQPage/>
-            </React.Suspense>} />
+            
 
-            <Route path='/More' element={<React.Suspense fallback={<AuthLoader/>}>
-               <More/>
-            </React.Suspense>} />
-
-            <Route path='/Services' element={<React.Suspense fallback={<AuthLoader/>}>
-               <Services />
-            </React.Suspense>} />
-
-            <Route path='/Services/AirFreight' element={<React.Suspense fallback={<AuthLoader/>}>
-               <AirFreight />
-            </React.Suspense>} />
-
-            <Route path='/Services/Groupage' element={<React.Suspense fallback={<AuthLoader/>}>
-               <Groupage />
-            </React.Suspense>} />
-
-            <Route path='/Services/Procurement' element={<React.Suspense fallback={<AuthLoader/>}>
-               <Procurement />
-            </React.Suspense>} />
-
-            <Route path='/Services/Marketing' element={<React.Suspense fallback={<AuthLoader/>}>
-               <ThirdPartyMarketing />
-            </React.Suspense>} />
-
-            <Route path='/Services/Door2door' element={<React.Suspense fallback={<AuthLoader/>}>
-               <Door2door />
-            </React.Suspense>} />
-
-            <Route path='/Services/SeaFreight' element={<React.Suspense fallback={<AuthLoader/>}>
-               <SeaFreight />
-            </React.Suspense>} />
-
-            <Route path='/Contact_us' element={<React.Suspense fallback={<AuthLoader/>}>
-               <Contact />
-            </React.Suspense>} />
-
-            <Route path='/More/Gallery' element={<React.Suspense fallback={<AuthLoader/>}>
-               <GalleryPage/>
-            </React.Suspense>} />
-
-            <Route path='/More/Privacy_&_Policy' element={<React.Suspense fallback={<AuthLoader/>}>
-               <PrivacyPolicyPage />
-            </React.Suspense>} />
-
-            <Route path='/About_us' element={<React.Suspense fallback={<AuthLoader/>}>
-               <About />
-            </React.Suspense>} />
-
-          <Route path='/SignUp' element={<React.Suspense fallback={<AuthLoader/>}>
-          <SignUp/>
-          </React.Suspense>}  />
-          <Route path='/Login' element={<React.Suspense fallback={<AuthLoader/>}>
-            <Login/>
-          </React.Suspense>} />
-          <Route path="/forgetPassword" element={<ForgetPassword />} />
-          <Route path="/UpdatePassword/:id" element={<UpdatePassword/>} />
-          <Route path="/*" element={<LayoutBundle/>} />
+            
+          <Route path="/*" element={<General/>} /> 
+          <Route path="/L/*" element={<LayoutBundle/>} />
           <Route path="/Customer/*" element={<CustomersLayout/>} />
-          
           <Route path='*' element={<PageNotFound/>} />
          </Routes>
-         <Footer />
+         
     </div>
   );
 }
