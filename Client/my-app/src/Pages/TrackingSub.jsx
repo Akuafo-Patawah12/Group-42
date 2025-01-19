@@ -9,10 +9,10 @@ const TrackingSub = (props) => {
       
       <section className='flex gap-4 w-[95%] mt-4 mx-auto'>
             <p>Filter activities</p>
-            <button className='bg-stone-400 rounded-2xl p-2'>All</button>
+            <button className='bg-stone-400 rounded-2xl p-2' >All</button>
             <button className='bg-stone-400 rounded-2xl p-2'>Delivered</button>
-            <button className='bg-stone-400 rounded-2xl p-2'>In tansit</button>
-            <button className='bg-stone-400 rounded-2xl p-2'>Pending</button>
+            <button className='bg-stone-400 rounded-2xl p-2' onClick={()=> props.transit()}>In tansit</button>
+            <button className='bg-stone-400 rounded-2xl p-2' onClick={()=> props.pending()}>Pending</button>
             <button className='bg-stone-400 rounded-2xl p-2'>Cancelled</button>
         </section>
 
@@ -34,7 +34,7 @@ const TrackingSub = (props) => {
                 <td className="border border-gray-300 px-4 py-2">Sea Freight - Electronics</td>
                 <td className="border border-gray-300 px-4 py-2 text-green-500">{order.Status}</td>
                 <td className="border border-gray-300 px-4 py-2">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                  <button className="bg-[var(--purple)] text-white px-4 py-2 rounded hover:bg-blue-600 transition">
                     View Details 
                   </button>
                   <button className="bg-red-500 px-4 py-2 rounded text-white" onClick={() => props.deleteOrder(order._id,order.customer_id)}><DeleteOutlined/></button>

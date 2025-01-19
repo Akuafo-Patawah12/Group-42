@@ -275,44 +275,47 @@ const TrendsCompo = () => {
   return (
     <main className='pt-[20px]  '>
       {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg px-[40px] py-2 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
-        <div className='flex w-[90%] bg-blue-200 justify-between gap-3 h-[43px] mx-auto mt-[80px] overflow-hidden rounded-lg lg:w-[95%]'>
+      <div className="bg-white rounded-lg mt-[70px] mx-auto w-[90%] shadow-md p-4 flex  sm:flex-row items-center justify-between gap-4">
+      {/* Filter Dropdown */}
+      <div className="flex items-center w-full sm:w-auto">
+        <label htmlFor="filter" className="text-gray-700 font-medium mr-2">
+          Filter:
+        </label>
         <input
-                id="activity"
-                list="activities"
-                value={inputValue}
-                onChange={handleInputChange}
-                placeholder=" Filter"
-                style={{
-                    width: '110px',
-                    padding: '6px',
-                    border: '2px solid  #a8a29e',
-                    borderRadius: '16px',
-                    fontSize: '16px',
-                    color: '#333',
-                    
-                }}
-            />
-            <datalist id="activities" className='bg-stone-400'>
-                {Options.map((Option, index) => (
-                    <option key={index} value={Option} />
-                ))}
-            </datalist>
-            <div className='relative w-[400px]'>
-            <input type='text'
-             placeholder='Search..'
-            className='w-full h-full px-3 rounded-2xl border-2 border-stone-400' ></input>
-            <span className='absolute top-[50%] text-center leading-8 -translate-x-[20%] -translate-y-[50%] right-0 bg-green-300 size-8 rounded-[50%]'>
-              <SearchOutlined />
-              </span>
-            </div>
-          <button onClick={()=>setOpenDialog(true)} className='float-right'>
-            <span className='h-[38px] bg-green-300 block px-2 rounded-2xl '><PlusCircleOutlined />Add items</span> 
-          </button>
-          <button className='h-[38px] bg-green-300 block px-2 rounded-2xl'>
-            <EyeOutlined />
-              View Cart
-          </button>
-        </div>
+          list="categories"
+          id="filter"
+          placeholder="Select category"
+          className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-48 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <datalist id="categories">
+          <option value="Electronics" />
+          <option value="Clothing" />
+          <option value="Shoes" />
+          <option value="Home Appliances" />
+          <option value="Books" />
+        </datalist>
+      </div>
+
+      {/* Search Bar */}
+      <div className="flex items-center w-full sm:w-auto flex-grow sm:flex-grow-0">
+        <input
+          type="text"
+          placeholder="Search for items..."
+          className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <button className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+          Search
+        </button>
+      </div>
+
+      {/* Add Items Button */}
+      <button onClick={()=>setOpenDialog(true)} className="bg-[var(--purple)] text-white px-4 py-2 rounded-lg hover:bg-green-600 w-full sm:w-auto">
+        Add Items
+      </button>
+    </div>
+
+
+        
         
        
           {/*list the post one after the order using the map function*/}

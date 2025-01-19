@@ -19,7 +19,7 @@ const Orders= lazy(()=> import('../Pages/Orders'))
  
 const Reports= lazy(()=> import('../Pages/Reports')) 
 const Shipment= lazy(()=>import('../Pages/Shipment'))  
-const LazyTrends= lazy(()=> import("../Routes/Trends"))
+
 const Notify = lazy(()=> import("../Routes/Notification"))
 
 
@@ -34,9 +34,6 @@ const LayoutBundle = () => {
       <AnimatePresence>
       <Routes location={location} key={location.pathname}>
       
-             <Route path='/Trends' element={<Suspense fallback={<Loading />}>
-             <LazyTrends />
-             </Suspense>}/>
              <Route path='/Notification' element={<Suspense fallback={<Loading />}>
                   <Notify /> 
              </Suspense>} />

@@ -131,6 +131,16 @@ useEffect(()=>{
 },[activeOrders,pendingOrders])
 
 
+function pending(){
+  const pendingOrders = orders.filter((order) => order.Status === "Pending...");
+    setOrders(pendingOrders);
+}
+
+function transit(){
+  const pendingOrders = orders.filter((order) => order.Status === "in-transit");
+    setOrders(pendingOrders);
+}
+
 
 function deleteOrder(order_id,customer_id){  //function to delete an order
  
@@ -389,18 +399,18 @@ let active=activeOrders.length
                   <section style={{border:"1px solid #ddd"}} className='hero'>
     <table className="details-table">
   <thead>
-    <tr>
-      <th>DESCRIPTION</th>
-      <th>TRACKING NO.</th>
-      <th>CTN NO.</th>
-      <th>CBM</th>
-      <th>Amount $</th>
+    <tr className="tr">
+      <th className="th">DESCRIPTION</th>
+      <th className="th">TRACKING NO.</th>
+      <th className="th">CTN NO.</th>
+      <th className="th">CBM</th>
+      <th className="th">Amount $</th>
     </tr>
   </thead>
   <tbody>
     {items.map((item, index) => (
-      <tr key={index} className="table-row">
-        <td>
+      <tr key={index} className="table-row tr">
+        <td className="td">
           <input
             type="text"
             name="description"
@@ -408,7 +418,7 @@ let active=activeOrders.length
             onChange={(e) => handleInputChange(index, e)}
           />
         </td>
-        <td>
+        <td className="td">
           <input
             type="text"
             name="trackingNo"
@@ -416,7 +426,7 @@ let active=activeOrders.length
             onChange={(e) => handleInputChange(index, e)}
           />
         </td>
-        <td>
+        <td className="td">
           <input
             type="text"
             name="ctnNo"
@@ -424,7 +434,7 @@ let active=activeOrders.length
             onChange={(e) => handleInputChange(index, e)}
           />
         </td>
-        <td style={{display:"flex",minWidth:"100px"}}>
+        <td style={{display:"flex",minWidth:"100px"}} className="td">
           <input
             type="text"
             name="cbm"
@@ -435,7 +445,7 @@ let active=activeOrders.length
           />
           <button>Add</button>
         </td>
-        <td>
+        <td className="td">
           <input
             type="text"
             name="amount"
@@ -444,7 +454,7 @@ let active=activeOrders.length
             disabled={true}
           />
         </td>
-        <td>
+        <td className="td">
           <button
             type="button"
             className="remove-item-button"
@@ -623,7 +633,7 @@ let active=activeOrders.length
         </div>
       )}
       </div>
-      <TrackingSub orders={[...orders]} deleteOrder={deleteOrder}/>
+      <TrackingSub orders={[...orders]} deleteOrder={deleteOrder} pending={pending} transit={transit}/>
     </motion.div>
   );
 };

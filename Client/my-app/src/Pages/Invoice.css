@@ -429,7 +429,7 @@ box-shadow: 0 0 5px rgba(145, 205, 132, 0.3); /* Blue shadow on focus */
     margin-bottom: 16px;
   }
 
-  tr:nth-child(even){
+  .tr:nth-child(even){
     background-color: #fefefe;
   }
 
@@ -440,7 +440,7 @@ box-shadow: 0 0 5px rgba(145, 205, 132, 0.3); /* Blue shadow on focus */
     border-bottom: 1px solid #ccc;
     
   }
-  tr{
+  .tr{
     border-left:"1px solid #ddd";
     min-width: min(22%,100px);
   }

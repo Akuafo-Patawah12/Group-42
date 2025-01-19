@@ -3,22 +3,33 @@ import Header from '../Components/HeaderAndSidebar';
 import Loading from "../icons/Loading"
 import CustomerSidebar from '../Components/CustomerSidebar';
 import { Routes,Route } from 'react-router-dom';
+import AnalyticsPage from '../Pages/Analytics' ;
+
 const Overview= lazy(()=> import("../Pages/Overview"))
 const Invoice= lazy(()=> import("../Pages/Invoice"))
 const Settings= lazy(()=>import('../Pages/Settings'))
 const Tracking= lazy(()=>import('../Pages/Tracking'))
+const LazyTrends= lazy(()=> import ("../Routes/Trends"))
  
  
 
 const CustomersLayout=()=>{
     return(
-        <div>  
+        <div className="bg-stone-100 h-full">  
             <Header/>
             <CustomerSidebar />
             <Routes>
              <Route path='/Tracking' element={<Suspense fallback={<Loading />}>
                   <Tracking />
              </Suspense>} />
+
+             <Route path='/Trends' element={<Suspense fallback={<Loading />}>
+             <LazyTrends />
+             </Suspense>} />
+
+             <Route path='/Analytics' element={
+                  <AnalyticsPage/>}
+             />
              
              <Route path='/Overview' element={<Suspense fallback={<Loading />}>
                   <Overview />
