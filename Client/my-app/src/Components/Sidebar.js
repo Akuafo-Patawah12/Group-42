@@ -37,7 +37,7 @@ const Sidebar = ({}) => {
           <aside className={`fixed left-0 top-[60px] w-[20%] bg-stone-100 hidden h-screen lg:block`}>
              <ul className='translate-y-[40px]  flex flex-col gap-2 mx-auto w-[80%]'>
             {data.map((item,index)=>(
-               <NavLink to={`/${item.name}`}>
+               <NavLink to={`/L/${item.name}`}>
                 <li key={index} className='text-stone-500 pl-2 py-2 rounded-xl font-medium border-2 border-stone-300 hover:text-stone-600 hover:border-stone-400 '>{item.icon}{item.name}</li>
                 </NavLink>
     

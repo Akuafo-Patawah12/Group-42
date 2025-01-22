@@ -81,11 +81,44 @@ trackingNamespace.use((socket,next)=>{
     users[userId]=socket.id 
   }
   // List of namespace or path in socket.io
+
+
+const onlineUsers = {}; // Store online users with socket IDs
+const lastActiveTimestamps = {}; // Store last active timestamps
   
   io.on('connection', (socket) => {  //
       setUser(socket)
       
       PostFunction(socket,users,io,notificationsNamespace)
+
+      // User logs in or joins
+  socket.on("userOnline", (userId) => {
+    onlineUsers[userId] = socket.id; // Map userId to socket.id
+    console.log(`User ${userId} is now online.`);
+    console.log(onlineUsers)
+
+    usersNamespace.in("userRoom").emit("Active",{user_id: socket.id})
+  });
+
+  // User disconnects
+  socket.on("disconnect", () => {
+    const userId = Object.keys(onlineUsers).find(
+      (key) => onlineUsers[key] === socket.id
+    );
+    if (userId) {
+      delete onlineUsers[userId]; // Remove from online list
+      lastActiveTimestamps[userId] = new Date(); // Save last active timestamp
+      console.log(`User ${userId} disconnected. Last active: ${lastActiveTimestamps[userId]}`);
+      console.log("Generated Timestamp:", new Date().toISOString());
+    }
+  });
+
+  // Provide online status
+  socket.on("checkStatus", (userId, callback) => {
+    const isOnline = Boolean(onlineUsers[userId]);
+    const lastActive = lastActiveTimestamps[userId] || null;
+    callback({ isOnline, lastActive });
+  });
 
  
  socket.on('disconnect', () => {

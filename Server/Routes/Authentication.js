@@ -13,7 +13,8 @@ const data= require('../DatabaseSchemas/userSchema')
     try{
         const email_Exist= await data.findOne({email:email}); /* check whether the email exist in the database 
        and store it in email exist variable */
-        console.log(email_Exist)
+       data.findOneAndUpdate({email},{active: new Date()},{new:true}) 
+       console.log(email_Exist)
 
          const protected= email_Exist.account_type // find the user's account type "whether it's a personal or business account"
 

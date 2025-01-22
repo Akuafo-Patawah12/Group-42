@@ -14,6 +14,33 @@ const Clients = () => {
         transports: ['websocket'],
       }),[])
 
+      const socket1= useMemo(() =>io("http://localhost:5000/",{
+        transports: ['websocket'],
+      }),[])
+
+
+      useEffect(()=>{
+        socket1.on("Active",(data)=>{
+             console.log(data)
+        })
+
+        socket.on("joined",(data)=>{
+          console.log(data)
+     })
+        socket1.on("disconnect",(reasons)=>{
+          console.log(reasons)
+      })
+      return()=>{
+          socket1.off("connection")
+          socket1.off("Active")
+          socket1.off("disconnect")
+      }
+      },[socket1])
+
+      useEffect(()=>{
+        socket.emit("joinRoom")
+      },[])
+
     useEffect(()=>{
         socket.emit("getAllUsers")
     },[])
@@ -52,6 +79,7 @@ const Clients = () => {
         }
     },[socket])
 
+    
     
 
     const [formData,setFormData]= useState({
@@ -97,7 +125,39 @@ const Clients = () => {
         } 
     }
 
-    const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",border:"2px solid  #e7e5e4",paddingBock:"10px"}
+    const getTimeDifference = (lastActive) => {
+      const now = new Date(); // Current time in local timezone
+      const past = new Date(lastActive); // Parse timestamp
+      const diffInSeconds = Math.floor((now - past) / 1000); // Difference in seconds
+      console.log("Now:", now); // Log the current date
+    console.log("Past:", past); // Log the parsed timestamp
+  
+      if (diffInSeconds < 1) {
+        return "online"; // Handle future timestamps gracefully
+      }
+    
+      if (diffInSeconds < 60) {
+        return `${diffInSeconds}s ago`; // Less than 1 minute
+      } else if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `${minutes}m ago`; // Less than 1 hour
+      } else if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `${hours}h ago`; // Less than 1 day
+      } else if (diffInSeconds < 2592000) {
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days}d ago`; // Less than 1 month
+      } else if (diffInSeconds < 31536000) {
+        const months = Math.floor(diffInSeconds / 2592000);
+        return `${months}mo ago`; // Less than 1 year
+      } else {
+        const years = Math.floor(diffInSeconds / 31536000);
+        return `${years}y ago`; // More than 1 year
+      }
+    };
+    
+
+    
   return (
     <motion.div
     initial={{ opacity: 0, perspective: 1000, rotateY: -90 ,y:150}}
@@ -132,41 +192,44 @@ const Clients = () => {
         </div>
         </div>
 
-        
-         <table className="w-[95%] bg-white mt-3  overflow-hidden rounded-2xl">
+        <div className="bg-white w-{95%} shadow-md rounded-lg p-6">
+        <h3 className="text-lg font-bold text-gray-800 mb-4">Your Recent Orders</h3>
+         <table className="w-full border-collapse border border-gray-200 rounded">
         <thead>  {/*Table head */}
-            <tr className='bg-stone-300 h-[40px] rounded-2xl'>
-                <th><input type="checkbox" ></input></th>
-                <th style={style}>User_id</th>
-                <th style={style}>#Client</th>
-                <th style={style}>Email</th>
-                <th style={style}>Last Active</th> 
-                <th style={style}>Permissions</th>
-                <th style={style}>Created At</th>
+            <tr className='bg-gray-100'>
+                <th className="border border-gray-300 px-4 py-2 text-left"><input type="checkbox" ></input></th>
+                <th className="border border-gray-300 px-4 py-2 text-left">User_id</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Last Active</th> 
+                <th className="border border-gray-300 px-4 py-2 text-left">Permissions</th>
+                
             </tr>
         </thead>
         <tbody className="transition-all">
             
         {Users.map((user,index)=>(
               <tr key={index} className='border-b-[1px] border-stone-200 h-[35px]  relative'>
-                <td className='flex justify-center item-center'>
+               <td className="border border-gray-300 px-4 py-2"><input type="checkbox" /></td>
+                <td className="border border-gray-300 px-4 py-2">
                    {user._id}
                   </td>
-                <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize: '15px', color:"#57534e"}}>
+                <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize: '15px', color:"#57534e"}} className="border border-gray-300 px-4 py-2">
                   {user.email}
                 </td>
-                <td className="pl-2 text-stone-600">{user.username} </td>
+                <td className="border border-gray-300 px-4 py-2">{user.username} </td>
                 
-                <td style={{fontSize: '15px',color:"#57534e"}}>
-                  {user.account_type}  
+                <td style={{fontSize: '15px',color:"#57534e"}} className="border border-gray-300 px-4 py-2">
+                   {getTimeDifference(user.active)}
                 </td> 
-                <td></td>
-                <td>{user.createdAt}</td>
+                <td className="border border-gray-300 px-4 py-2">{user.account_type} </td>
+                
             </tr>
             ))}
         
         </tbody>
     </table>
+    </div>
     </motion.div>
   )
 }

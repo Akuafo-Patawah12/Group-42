@@ -21,9 +21,13 @@ const TrendsCompo = () => {
     const navigate= useNavigate()
     const [caption, setCaption] = useState('');
     const[category,setCategory] = useState("")
+      const [price, setPrice] = useState("");
+      const [isPremium, setIsPremium] = useState(false);
+      const [selectedCategory, setSelectedCategory] = useState("");
+    
     
   const [posts, setPosts] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState();
   const[likes,setLikes]= useState({})
   const[like,setLike]=useState(false)
 
@@ -33,14 +37,28 @@ const TrendsCompo = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        setUserId(decodedToken.id); 
-       
+        setUserId(decodedToken.id);
+        console.log("the user id is ",userId)
+        // Notify the server that this user is online
+     socket.emit("userOnline", decodedToken.id);
+
+     
+     socket.emit("checkStatus", decodedToken.id, (response) => {
+       setStatus(response); // Update state with the online status and last active
+     });
+    
+     return () => {
+      socket.disconnect();
+    };  
       } catch (error) {
         console.error('Invalid token:', error);
       }
     }
   },[]);
   
+
+
+  //Image Upload to firebase
   const [sendAlert,setSendAlert]=useState(false)
   const sendPost = async(e) => {
     e.preventDefault()
@@ -57,7 +75,7 @@ const TrendsCompo = () => {
   const url=await  getDownloadURL(snapshot.ref) //get image reference and download the url from file server(firebase)
       console.log('File available at', url);
     
-      socket.emit('sendPost',{id:userId,caption,category,img_vid:url}); //emit post including image url to the web server
+      socket.emit('sendPost',{id:userId,caption,category,img_vid:url,selectedCategory,price,isPremium}); //emit post including image url to the web server
       setSendAlert(false)
     
  
@@ -119,6 +137,7 @@ const TrendsCompo = () => {
         // Listen for 'getPost' event from the server
         
         const handlePostData = (data) => {
+          console.log(" this is my post data", data)
           fetchData(data);
       };
 
@@ -131,11 +150,14 @@ const TrendsCompo = () => {
       };
     },[])
 
+
+    //Loading effect after api call
     const [loadingProgress, setLoadingProgress] = useState(false);
     axios.defaults.withCredentials =true;
     
     const [hasFetched, setHasFetched] = useState(false);
       const fetchData = async (postData) => {
+        console.log(postData)
         try {
               const data= shuffleArray(postData);
             const totalData = data.length;
@@ -158,6 +180,7 @@ const TrendsCompo = () => {
       };
     
       
+      //Reshuffle carts after every page reload
       function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
           // Generate a random index between 0 and i
@@ -169,13 +192,21 @@ const TrendsCompo = () => {
         return array;
       }
       
-      
-      
+        //Handling button filter query
+      const handleClick = (id) => {
+        // Update the query parameter when the button is clicked
+        navigate(`/Customer/Trends?similar_for=#${id}`);
+      };
+
+      const viewProduct= (id,category) =>{
+        const encodedCategory = encodeURIComponent(category);
+        navigate(`/Customer/Trends/Items?similar_for=${id}&category=${encodedCategory}`);
+      }
        
 
     
   
-      
+      //Select image from file explorer
         const [image, setImage] = useState(null);
       let pic=useRef()
         const handleChange = e => {
@@ -271,6 +302,78 @@ const TrendsCompo = () => {
       window.removeEventListener("offline", offlineFunction);
     };
   }, []);
+
+
+  
+  const [status, setStatus] = useState({ isOnline: false, lastActive: null });
+
+  
+
+
+  
+
+
+
+
+
+  const categories = [
+    "Electronics",
+    "Fashion",
+    "Home & Living",
+    "Beauty & Personal Care",
+    "Health & Wellness",
+    "Groceries",
+    "Sports & Outdoor",
+    "Books & Stationery",
+    "Toys & Baby Products",
+    "Automotive",
+    "Industrial & Business Supplies",
+    "Pet Supplies",
+    "Mobile & Computer Accessories",
+    "Appliances",
+    "Jewelry",
+    "Art & Collectibles",
+    "Travel & Luggage",
+    "Tools & Hardware",
+    "Event & Party Supplies",
+    "Digital Products",
+    "Eco-Friendly Products",
+    "Luxury Items",
+    "DIY & Crafts",
+    "Gaming",
+  ];
+
+  const getTimeDifference = () => {
+    const now = new Date(); // Current time in local timezone
+    const past = new Date(); // Parse timestamp
+    const diffInSeconds = Math.floor((now - past) / 1000); // Difference in seconds
+    console.log("Now:", now); // Log the current date
+  console.log("Past:", past); // Log the parsed timestamp
+
+    if (diffInSeconds < 1) {
+      return "online"; // Handle future timestamps gracefully
+    }
+  
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds}s ago`; // Less than 1 minute
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes}m ago`; // Less than 1 hour
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours}h ago`; // Less than 1 day
+    } else if (diffInSeconds < 2592000) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days}d ago`; // Less than 1 month
+    } else if (diffInSeconds < 31536000) {
+      const months = Math.floor(diffInSeconds / 2592000);
+      return `${months}mo ago`; // Less than 1 year
+    } else {
+      const years = Math.floor(diffInSeconds / 31536000);
+      return `${years}y ago`; // More than 1 year
+    }
+  };
+  
               
   return (
     <main className='pt-[20px]  '>
@@ -287,7 +390,7 @@ const TrendsCompo = () => {
           placeholder="Select category"
           className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-48 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        <datalist id="categories">
+        <datalist id="categories" onClick={(e)=> handleClick(e.target.value)}>
           <option value="Electronics" />
           <option value="Clothing" />
           <option value="Shoes" />
@@ -303,7 +406,7 @@ const TrendsCompo = () => {
           placeholder="Search for items..."
           className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        <button className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+        <button onClick={()=> handleClick("Shirt")} className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
           Search
         </button>
       </div>
@@ -314,27 +417,40 @@ const TrendsCompo = () => {
       </button>
     </div>
 
-
+  <div className="flex gap-3 overflow-x-auto mx-auto mt-3 w-[90%]" style={{scrollbarWidth:"none"}}>
+     {
+       categories.map((item,index)=>(
+        <button key={index} onClick={()=> handleClick(item)} className='p-3 rounded bg-slate-200 whitespace-nowrap'>{item}</button>
+       ))
+     }
+  </div>
         
-        
+        <div>{status.lastActive}</div>
+        <div>{getTimeDifference(status.isOnline)}</div>
        
           {/*list the post one after the order using the map function*/}
-        <TrendsPosts posts={[...posts]}  setLike={setLike}  
+        <TrendsPosts posts={[...posts]}  setLike={setLike}  viewProduct={viewProduct}
         likePost={likePost} loading={loadingProgress}  onLineProps={[online,setOnline]} loaders={[loader,setLoader,handleImageLoad]} />
       
 
       {/* create a post popup menu*/}
-     <TrendPostPopup
+      
+     {openDialog &&<TrendPostPopup
          reference={popRef}
          send={sendPost}
          picRef={pic}
          cap={caption}
         handleChange={handleChange}
         popUp={openDialog}
+        setOpenDialog={setOpenDialog}
+        price={[price, setPrice]}
+         premium={[isPremium, setIsPremium]}
+        selectCat={[selectedCategory,setSelectedCategory]}
         setCaption={setCaption}
         setCategory={setCategory}
-          
-   /> 
+         
+   />} 
+  
     </main>
   )
 }

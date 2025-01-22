@@ -1,6 +1,8 @@
 import React,{useState} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import axios from 'axios'
@@ -38,13 +40,14 @@ const Login = () => {
                         icon: "success",
                         timer: 2000     //close popup alert after 2 seconds
                     });
+                    
             
                     // Clear validation message
                     seValidation("");
                     setLoader(false)  //After the API succeeds hidden login button loader
             
                     // Navigate to the Trends page
-                    navigate('/Trends');//Navigate to this /Trends path after login succeeds
+                    navigate('/L/Dashboard');//Navigate to this /Trends path after login succeeds
                     break;
             
                 case "Logged in as an individual":
@@ -60,7 +63,7 @@ const Login = () => {
                     seValidation(""); 
                     setLoader(false)  //hidden button loader
                     // Navigate to the Trends page
-                    navigate('/Customer/Products');
+                    navigate('/Customer/Overview');
                     break;
             
                 default:

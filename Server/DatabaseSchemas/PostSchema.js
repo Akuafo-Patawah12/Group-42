@@ -12,6 +12,8 @@ const postSchema = new Schema({
     
   },
   category:String,
+  price: Number,
+  premium: String,
   createdAt: {
     type: Date,
     default: Date.now

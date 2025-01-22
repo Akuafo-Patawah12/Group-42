@@ -1,5 +1,7 @@
 
 const Post=require("../DatabaseSchemas/PostSchema")
+
+
 const PostFunction=(Socket,users,io,notificationsNamespace)=>{
      //asigning the users id to the socket id and inserting into the users object
     console.log(users)
@@ -28,7 +30,9 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
           _id: 1, // Include the _id of the post
           user_id: 1, // Include the user_id
           caption: 1, // Include the caption
-          img_vid: 1, // Include the img_vid
+          img_vid: 1, // Include the img_vid,
+          price:1,
+          category:1,
           createdAt: 1, //Include the createdAt
           username: '$userDetails.username' // Include the username from userDetails
         }
@@ -39,15 +43,49 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
     console.error('Error fetching posts:', error);
    
   } 
- })   
+ }) 
+
+ Socket.on("getPost", async (postId) => {
+  console.log(postId)
+  try {
+    const post = await Post.findById(postId); // Fetch post by ID
+    if (post) {
+      Socket.emit("postData", post); // Emit the post data back to the client
+    } else {
+      Socket.emit("postData", { error: "Post not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    Socket.emit("postData", { error: "An error occurred while fetching the post" });
+  }
+});
+
+
+Socket.on("getProductsByCategory", async (category) => {
+  try {
+    const products = await Post.find({ category: category }); // Query products by category
+    if (products.length > 0) {
+      Socket.emit("categoryProducts", products); // Emit the products to the client
+    } else {
+      Socket.emit("categoryProducts", { error: "No products found in this category" });
+    }
+  } catch (error) {
+    console.error(error);
+    Socket.emit("categoryProducts", { error: "An error occurred while fetching products" });
+  }
+});
+ 
  Socket.on('sendPost', async (data) => { //socket.on means receiving data or information from client side
-   const { id,caption,img_vid,category } = data; //get post from client side
+   const { id,caption,img_vid,selectedCategory,isPremium,price } = data; //get post from client side
    try {
      // Create a new post and save it to the database
      const input = new Post({
        caption,
        img_vid,
-       user_id:id
+       user_id:id,
+       category: selectedCategory,
+       premium: isPremium,
+       price
      });
      await input.save(); //insert post into database 
      const post = await Post.findOne({ _id: input._id }).populate('user_id','username').lean();/* getting post from
@@ -57,7 +95,8 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
          user_id: post.user_id._id,
          caption,
          img_vid,
-         category,
+         category:selectedCategory,
+         price,
          createdAt: post.createdAt,
          username: post.user_id.username
      }

@@ -7,7 +7,7 @@ import React,{lazy, Suspense} from "react"
 import Loading from '../icons/Loading'
 import {AnimatePresence} from "framer-motion"
 import Header from '../Components/HeaderAndSidebar';
-import Sidebar from '../Components/Sidebar2';
+import Sidebar from '../Components/Sidebar';
 const Clients= lazy(()=> import('../Pages/Clients'));
 const ViewIndividualOrder= lazy(()=>import( '../Pages/ViewIndividualOrder'))
 

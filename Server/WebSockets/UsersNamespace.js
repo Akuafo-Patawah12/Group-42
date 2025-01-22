@@ -11,6 +11,13 @@ const userFunc= (socket)=>{
         console.log(error)
     }
    })
+
+   socket.on("joinRoom",async()=>{
+        
+      socket.join("userRoom")  //When client joins orderlist namespace he/she automatically joins the room
+      socket.to("userRoom").emit("joined","hello i joind order room")  /*sending message to all users in the room */
+    
+})
    socket.on("disconnect",()=>{
       console.log("disconnected from user's namespace")
    })

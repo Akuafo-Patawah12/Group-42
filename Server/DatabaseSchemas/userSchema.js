@@ -25,6 +25,11 @@ const userSchema = new Schema({
     default: "Personal",
     required: true
   },
+  active:{
+     type: Date,
+    default: Date.now
+  
+  },
   createdAt: {
     type: Date,
     default: Date.now

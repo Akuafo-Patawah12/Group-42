@@ -7,6 +7,7 @@
 :root{
   --purple: #a422d0;
   --green: #a0c444;
+  --color: #f0dbf7;
 }
 
 .image{
@@ -75,25 +76,14 @@ input[type="email"]:focus{
  }
  
 .header{
+ 
   box-shadow: #3498db;
 }
 
 
 
 
-.corner-only {
-  --s: 50px; /* size of the corners */
-  border: 8px solid #B38184; 
-  padding: 10px;
-  height: 150px;
-  width: 150px;
-  margin-inline: auto;
-  background: #f2f2f2 content-box;
-  mask: 
-    conic-gradient(#000 0 0) content-box,
-    conic-gradient(at var(--s) var(--s),#0000 75%,#000 0) 
-    0 0/calc(100% - var(--s)) calc(100% - var(--s));
-}
+
 
 .container::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
@@ -107,4 +97,9 @@ input {
   -moz-appearance: textfield;
 }
 
-
+.clip{
+  height: 50%;
+  background: var(--color);
+  clip-path: polygon(0% 45%,15% 44%,32% 50%,
+     54% 60%,70% 61%,84% 59%,100% 52%,100% 100%,0% 100%);
+}

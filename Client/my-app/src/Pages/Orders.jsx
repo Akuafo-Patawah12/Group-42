@@ -213,23 +213,23 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
                 ))}
             </datalist>
      </section>
-     <div className='rounded-xl border-[1px] border-stone-300 py-5 w-[95%] ml-auto mt-3'>
+     <div className='rounded-xl border-[1px] overflow-x-auto mx-auto bg-white w-[90%] shadow-md rounded-lg p-6'>
      <table className="w-[95%] bg-white mt-3  overflow-hidden rounded-2xl">
         <thead>  {/*Table head */}
-            <tr className='bg-stone-300 h-[40px] rounded-2xl'>
-                <th><input type="checkbox" ></input></th>
-                <th style={style}>#Order ID</th>
-                <th style={style}>#Client</th>
-                <th style={style}>Product</th>
-                <th style={style}>Quantity</th>
-                <th style={style}>Status</th>
-                <th style={style}>Arrival time</th>
+            <tr className='bg-gray-100 '>
+                <th className="border border-gray-300 px-4 py-2 text-left"><input type="checkbox" ></input></th>
+                <th className="border border-gray-300 px-4 py-2 text-left">#Order ID</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">#Client</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Product</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Quantity</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Arrival time</th>
             </tr>
         </thead>
         <tbody className="transition-all">
             {orders.map((order,index)=>(
               <tr key={order._id} id={`row-${order._id}`} className='border-b-[1px] border-stone-200 h-[35px]  relative'>
-                <td className='flex justify-center item-center'>
+                <td className="border border-gray-300 px-4 py-2">
                   <input 
                    type="checkbox"
                    value={checked}
@@ -237,22 +237,24 @@ const style={color:" #57534e", fontSize: "0.875rem", lineHeight: "1.25rem",borde
                    className='my-auto'
                    ></input>
                   </td>
-                <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize: '15px', color:"#57534e"}}>
+                <td className="border border-gray-300 px-4 py-2" style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize: '15px', color:"#57534e"}}>
                 <Link to={`/Orders/View_Order/${order.customer_id}`}>{order._id}</Link> {/* Adding the customer id into the URL*/}<span onClick={()=>copy(order._id)}  className='absolute bg-white left-[20%] z-1 top-1'><CopyOutlined /></span>
                 </td>
-                <td className="pl-2 text-stone-600">{order.customerName} <span onClick={()=>{messagePop(order.customer_id)}}><MessageOutlined /></span></td>
-                <td></td>
+                <td className="border border-gray-300 px-4 py-2">{order.customerName} <span onClick={()=>{messagePop(order.customer_id)}}><MessageOutlined /></span></td>
+                <td className="border border-gray-300 px-4 py-2"></td>
                 <td onClick={() => deleteOrder(order._id,order.customer_id)}><span className='absolute right-2 top-2'><DeleteOutlined /></span> </td>
                 
-                <td style={{fontSize: '15px',color:"#57534e"}}>
+                <td className="border border-gray-300 px-4 py-2">
                   {order.Status}  
                 </td> 
-                <td></td>
+                <td className="border border-gray-300 px-4 py-2">
+                <OrderMessagePopup msgPop={msgPop} sendMessage={sendMessage}/>
+                </td>
             </tr>
             ))}
         </tbody>
     </table>
-    <OrderMessagePopup msgPop={msgPop} sendMessage={sendMessage}/> 
+     
     </div>
     </motion.div>
   )
