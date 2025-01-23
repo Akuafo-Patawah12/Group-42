@@ -425,8 +425,7 @@ const TrendsCompo = () => {
      }
   </div>
         
-        <div>{status.lastActive}</div>
-        <div>{getTimeDifference(status.isOnline)}</div>
+        
        
           {/*list the post one after the order using the map function*/}
         <TrendsPosts posts={[...posts]}  setLike={setLike}  viewProduct={viewProduct}

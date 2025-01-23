@@ -8,16 +8,16 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
        const[online,setOnline]=onLineProps 
      const[loader,setLoader,handleImageLoad]=loaders 
    const item={rating: 4}
-     
+  
   return (
     
-    <div className='mt-5 w-[90%] shadow-md py-5 rounded-lg bg-white place-items-center mx-auto grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3'> 
+    <div className='mt-5 w-[90%] shadow-md py-5 px-[3%] rounded-lg bg-white place-items-center mx-auto grid grid-cols-1 gap-x-[3%] md:grid-cols-2'> 
     {posts.map((post, index) => ( 
        
 
-        <div key={index} className='relative border-[1px] bg-white border-stone-200 shadow-sm rounded-2xl overflow-hidden w-[250px] hover:shadow-2xl'>
-          <section className=' absolute top-2 z-40 size-6 rounded-[50%] border-2 border-[var(--purple)] bg-gray-400 font-medium grid place-items-center ml-3 '>{post?.username[0]}</section>
-          <section className='flex justify-center items-center h-[200px] bg-stone-100 w-full'>
+        <div key={index} className='relative border-2 bg-white border-purple-500 mt-4 shadow-sm rounded-2xl overflow-hidden hover:shadow-2xl'>
+          <section className=' absolute top-2 z-40 size-8 rounded-[50%] border-2 border-[var(--purple)] bg-gray-400 font-medium grid place-items-center ml-3 '>{post?.username[0]}</section>
+          <section className='flex justify-center items-center h-[300px] bg-stone-100 w-full'>
                 {loader&& <div className='absolute'><ImageLoader /></div>}
                 {online?
                 <LazyLoadImage  
@@ -25,7 +25,7 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
                    alt={post.caption} 
                    effect="blur" 
                    afterLoad={handleImageLoad}
-                   height={200}
+                   height={300}
                    style={{height:"100%"}}
                    onError={console.log("failed to upload image")}
                 />:<div className='absolute'><ImageLoader /></div>
@@ -38,12 +38,12 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
             <span className='text-sm text-stone-500'>{post.caption}</span>
           </div>
         <div className='flex items-center justify-around h-[100px]'>
-          <span onClick={()=> viewProduct(post._id,post.category)} className="bg-[var(--purple)] p-2 rounded-lg"><ShoppingCartOutlined onClick={()=> {
+          <button onClick={()=> viewProduct(post._id,post.category)} className="bg-[var(--purple)] p-2 rounded-lg"><ShoppingCartOutlined onClick={()=> {
             setLike(prev=>!prev);
              
             }} /> 
             <span className="text-white">Add to cart</span>
-          </span>
+          </button>
         <section className='ml-3 text-sm'>
         <div className="flex items-center space-x-1">
           {Array.from({ length: 5 }, (_, index) => (

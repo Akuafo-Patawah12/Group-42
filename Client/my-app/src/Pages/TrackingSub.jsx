@@ -29,7 +29,9 @@ const TrackingSub = (props) => {
             </thead>
             <tbody>
             {props.orders.map((order,index)=>(
-              <tr key={order._id} id={`row-${order._id}`}>
+              <>
+              {props.orders.length=== 0 ? <div>No result</div>
+              : <tr key={order._id} id={`row-${order._id}`}>
                 <td className="border border-gray-300 px-4 py-2">{order._id}</td>
                 <td className="border border-gray-300 px-4 py-2">Sea Freight - Electronics</td>
                 <td className="border border-gray-300 px-4 py-2 text-green-500">{order.Status}</td>
@@ -39,7 +41,8 @@ const TrackingSub = (props) => {
                   </button>
                   <button className="bg-red-500 px-4 py-2 rounded text-white" onClick={() => props.deleteOrder(order._id,order.customer_id)}><DeleteOutlined/></button>
                 </td>
-              </tr>
+              </tr> }
+              </>
             ))}
               
             </tbody>

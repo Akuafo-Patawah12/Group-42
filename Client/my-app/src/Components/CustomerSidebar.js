@@ -37,7 +37,7 @@ const CustomerSidebar = () => {
          <ul className='translate-y-[40px]  flex flex-col gap-2 mx-auto w-[80%]'>
         {data.map((item,index)=>(
            <NavLink to={`/Customer/${item.name}`}>
-            <li key={index} className='text-stone-500 pl-2 py-2 rounded-xl font-medium border-2 border-stone-300 hover:text-stone-600 hover:border-stone-400'>{item.icon}{item.name}</li>
+            <li key={index} className='text-stone-500 pl-2 py-2 rounded-xl font-medium border-2 border-stone-300 hover:text-stone-600 hover:border-stone-400'><span className='text-purple-600'>{item.icon}</span>{item.name}</li>
             </NavLink>
 
         ))}
