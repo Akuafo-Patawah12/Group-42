@@ -24,7 +24,7 @@ const Login = () => {
         
         try{
             setLoader(true)  //display button loader after clicking login button to submit form
-          await axios.post("http://localhost:5000/Login",{formData})   //making an API request from web server
+          await axios.post("http://localhost:4000/Login",{formData})   //making an API request from web server
           .then(res=>{
 
             
@@ -129,14 +129,14 @@ const Login = () => {
 
                 <form onSubmit={handSubmit} className="w-[40%] border-l-2 border-r-2 border-stone-300 items-center absolute h-full bg-white top-0 right-[5%] z-2">
                     <div className=' flex flex-col gap-4 '>
-                        <h4 className='mx-auto mt-10 text-sm font-medium'>SCM SOLUTIONS.</h4>
+                        <h4 className='mx-auto mt-10 text-sm font-medium'>SF Ghana Logistics.</h4>
                         <div className='font-bold  text-gray-600 w-[73%] mx-auto'>Welcome to our supply chain solutions.</div>
                     
                     
 
                     <input type='email'
                         placeholder='Enter email' 
-                        className='border-2 border-gray-400 rounded-md px-2 py-6 text-lg w-[73%] mx-auto h-[35px]'
+                        className='border-2 border-gray-400 rounded-md px-2 py-5 text-md w-[73%] mx-auto h-[35px]'
                         onChange={(e)=>setFormData({...formData,email: e.target.value})} 
                         required={true}
                         ></input>
@@ -145,7 +145,7 @@ const Login = () => {
                     <div className='relative mx-auto w-[73%]'>   
                                         <input type={togglePassword? 'text':'password'}  
                                             placeholder='Password' 
-                                            className='border-2 border-gray-400 rounded-md px-2 py-6 text-lg w-full  h-[35px]'
+                                            className='border-2 border-gray-400 rounded-md px-2 py-5 text-md w-full  h-[35px]'
                                             onChange={(e)=>setFormData({...formData,password: e.target.value})}
                                             required={true} 
                                             ></input>
@@ -167,7 +167,7 @@ const Login = () => {
                         <Link to={"/forgetPassword"} className='text-blue-500 font-medium text-sm'>Forget Password?</Link>
                 </div>
                                    {/*if the button loader is visible the login button will be disabled */}
-                <button type='submit' disabled={loader? true: false} className="h-[35px] flex py-6 text-lg justify-center items-center gap-2 bg-[var(--purple)] w-[73%] rounded-md text-white font-medium mx-auto"><p>Login</p>{loader? <ButtonLoader/>:""}</button>
+                <button type='submit' disabled={loader? true: false} className="h-[35px] flex py-5 text-md justify-center items-center gap-2 bg-[var(--purple)] w-[73%] rounded-md text-white font-medium mx-auto"><p>Login</p>{loader? <ButtonLoader/>:""}</button>
                     
                     
                     <div className='w-[78%] mx-auto'><Link to={"/SignUp"} className='text-blue-500 font-medium hover:underline decoration-2 active:underline '>Create Account</Link> instead.</div>

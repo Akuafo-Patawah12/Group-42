@@ -1,13 +1,13 @@
-import {  EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import {  LeftOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
 import React,{useState,useEffect,useRef,useMemo} from 'react'
 import {jwtDecode} from "jwt-decode"
-import {useNavigate} from 'react-router-dom';
+import {useNavigate,useSearchParams} from 'react-router-dom';
+import {Input,AutoComplete,Empty,Button } from 'antd'
 import axios from 'axios'
 import { storage } from "../../firebase"
 import { v4 } from "uuid"
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import io from "socket.io-client"
-import PostLoader from '../../icons/PostLoader';
 import TrendPostPopup from './TrendPostPopup';
 import TrendsPosts from './TrendsPosts';
 
@@ -15,7 +15,7 @@ import TrendsPosts from './TrendsPosts';
 const TrendsCompo = () => {
 
  
-  const socket = useMemo(() =>io("http://localhost:5000",{
+  const socket = useMemo(() =>io("http://localhost:4000",{
     transports: ['websocket'],credentials: true
   }),[])
     const navigate= useNavigate()
@@ -23,14 +23,100 @@ const TrendsCompo = () => {
     const[category,setCategory] = useState("")
       const [price, setPrice] = useState("");
       const [isPremium, setIsPremium] = useState(false);
-      const [selectedCategory, setSelectedCategory] = useState("");
+  
     
     
   const [posts, setPosts] = useState([]);
   const [userId, setUserId] = useState();
-  const[likes,setLikes]= useState({})
-  const[like,setLike]=useState(false)
+ 
+  
+  const [filteredOptions, setFilteredOptions] = useState(posts);
 
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Read category & search term from URL
+  const initialCategory = searchParams.get("category") || "All";
+  const initialSearch = searchParams.get("search") || "";
+
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [filteredPosts,setFilteredPosts] = useState([])
+
+  useEffect(() => {
+    // Update URL whenever category or search changes
+    const params = new URLSearchParams();
+    if (selectedCategory !== "All") params.set("category", selectedCategory);
+    if (searchTerm) params.set("search", searchTerm);
+    setSearchParams(params);
+
+    // Filter posts based on search & category
+    const filtered = posts.filter((post) => {
+      const matchesCategory =
+        selectedCategory === "All" || post.category === selectedCategory;
+      const matchesSearch = post.category
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+
+    setFilteredPosts(filtered);
+  }, [selectedCategory, searchTerm, posts, setSearchParams, setFilteredPosts]);
+
+  // Handle category button click
+  const handleClick = (category) => {
+    setSelectedCategory(category);
+  };
+
+  // Handle search input changes
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    if (value) {
+      setFilteredOptions(
+        categories.filter((category) =>
+          category.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredOptions([]);
+    }
+  };
+
+  const scrollRef = useRef(null);
+  const [isStart, setIsStart] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+
+  // Scroll function
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = 200; // Adjust scroll speed
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Detect if at the start or end
+  useEffect(() => {
+    const checkScroll = () => {
+      if (scrollRef.current) {
+        setIsStart(scrollRef.current.scrollLeft === 0);
+        setIsEnd(
+          scrollRef.current.scrollLeft + scrollRef.current.clientWidth >=
+          scrollRef.current.scrollWidth - 5
+        );
+      }
+    };
+    if (scrollRef.current) {
+      scrollRef.current.addEventListener("scroll", checkScroll);
+    }
+    return () => {
+      if (scrollRef.current) {
+        scrollRef.current.removeEventListener("scroll", checkScroll);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const token =localStorage.getItem("accesstoken")
@@ -85,16 +171,12 @@ const TrendsCompo = () => {
     } 
     
 
-    function likePost(postId,userId){
-       
-       socket.emit(like?"like":"dislike",{post_id:postId,user_id:userId})
-       
-    }
+    
     useEffect(()=>{
       socket.emit("refreshPost","call refresh")
     },[])
 
-    const[postData,setPostData]=useState()
+    
     useEffect(()=>{
         socket.on('connect',()=>{
             console.log("Connected to server")
@@ -106,12 +188,8 @@ const TrendsCompo = () => {
           // Update the state by adding the new post to the existing posts
           setPosts(prevPosts => [data,...prevPosts,]);
         })
-        socket.on("getLikes",(data)=>{
-            setLikes(data)
-        })
-        socket.on("getDislikes",(data)=>{
-          setLikes(data)
-        })
+        
+        
         
         socket.on('disconnect',(reasons)=>{
             console.log(reasons)
@@ -124,8 +202,7 @@ const TrendsCompo = () => {
         
         return()=>{
             socket.off('receivePost')
-            socket.off("getlikes")
-            socket.off("getDilikes")
+            
             socket.off('connect');
             socket.off('disconnect');
                  
@@ -192,12 +269,7 @@ const TrendsCompo = () => {
         return array;
       }
       
-        //Handling button filter query
-      const handleClick = (id) => {
-        // Update the query parameter when the button is clicked
-        navigate(`/Customer/Trends?similar_for=#${id}`);
-      };
-
+        
       const viewProduct= (id,category) =>{
         const encodedCategory = encodeURIComponent(category);
         navigate(`/Customer/Trends/Items?similar_for=${id}&category=${encodedCategory}`);
@@ -263,19 +335,10 @@ const TrendsCompo = () => {
                 },[]);     
     const [openDialog,setOpenDialog]= useState(false)
 
-    const [inputValue, setInputValue] = useState('');
-    // Predefined options for the datalist
-    const Options = [
-        "#All",
-        "#Clothings",
-        "#Electricals",
-        "#Machinery"
-    ];
+   
 
     // Handle input change
-    const handleInputChange = (event) => {
-        setInputValue(event.target.value);
-    };
+    
 
     const[loader,setLoader]= React.useState(true)
   const handleImageLoad = () => {
@@ -317,6 +380,7 @@ const TrendsCompo = () => {
 
 
   const categories = [
+    "All",
     "Electronics",
     "Fashion",
     "Home & Living",
@@ -378,58 +442,102 @@ const TrendsCompo = () => {
   return (
     <main className='pt-[20px]  '>
       {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg px-[40px] py-2 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
-      <div className="bg-white rounded-lg mt-[70px] mx-auto w-[90%] shadow-md p-4 flex  sm:flex-row items-center justify-between gap-4">
-      {/* Filter Dropdown */}
-      <div className="flex items-center w-full sm:w-auto">
-        <label htmlFor="filter" className="text-gray-700 font-medium mr-2">
-          Filter:
-        </label>
-        <input
-          list="categories"
-          id="filter"
-          placeholder="Select category"
-          className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-48 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-        <datalist id="categories" onClick={(e)=> handleClick(e.target.value)}>
-          <option value="Electronics" />
-          <option value="Clothing" />
-          <option value="Shoes" />
-          <option value="Home Appliances" />
-          <option value="Books" />
-        </datalist>
-      </div>
+      <div className="bg-white rounded-lg mt-[70px] mx-auto w-[95%] shadow-md p-4 flex  sm:flex-row items-center justify-between gap-4">
+      
+      
 
       {/* Search Bar */}
-      <div className="flex items-center w-full sm:w-auto flex-grow sm:flex-grow-0">
-        <input
-          type="text"
-          placeholder="Search for items..."
-          className="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      <div className="flex items-center w-full sm:w-auto flex-grow sm:">
+      <AutoComplete
+        options={filteredOptions.map((item) => ({ value: item }))}
+        onSelect={(value) => setSearchTerm(value)}
+        onSearch={handleSearch}
+        value={searchTerm}
+        className="w-full"
+        notFoundContent={<Empty description="No results found" />} // Ant Design No Results SVG
+      >
+        <Input
+          placeholder="Search categories..."
+          allowClear
+          prefix={<SearchOutlined className="text-gray-400 text-lg" />}
+          size="large"
+          style={{ height: "40px" }}
         />
-        <button onClick={()=> handleClick("Shirt")} className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-          Search
-        </button>
+      </AutoComplete>
+      
+        
       </div>
 
       {/* Add Items Button */}
-      <button onClick={()=>setOpenDialog(true)} className="bg-[var(--purple)] text-white px-4 py-2 rounded-lg hover:bg-green-600 w-full sm:w-auto">
+      <button onClick={()=>setOpenDialog(true)} className="bg-[var(--purple)] text-white px-3 leading-4 text-sm h-[40px]  rounded-xl border-2 border-stone-300 hover:bg-green-600 w-full sm:w-auto">
         Add Items
       </button>
     </div>
 
-  <div className="flex gap-3 overflow-x-auto mx-auto mt-3 w-[90%]" style={{scrollbarWidth:"none"}}>
-     {
-       categories.map((item,index)=>(
-        <button key={index} onClick={()=> handleClick(item)} className='p-3 rounded bg-slate-200 whitespace-nowrap'>{item}</button>
-       ))
-     }
-  </div>
+    <div className="relative flex items-center gap-2 w-[95%] mx-auto mt-3">
+      {/* Left Scroll Button */}
+      <Button
+        icon={<LeftOutlined />}
+        onClick={() => scroll("left")}
+        className={`border-2 border-gray-300 text-gray-600 transition ${
+          isStart ? "opacity-30 cursor-not-allowed" : "opacity-80"
+        }`}
+        disabled={isStart}
+      />
+
+      {/* Scrollable Category Buttons */}
+      <div className="relative w-full overflow-hidden">
+        <div
+          ref={scrollRef}
+          className="flex gap-3 overflow-x-auto flex-nowrap w-full px-2"
+          style={{
+            scrollbarWidth: "none",
+            scrollBehavior: "smooth",
+            position: "relative",
+          }}
+        >
+          {categories.map((item, index) => (
+            <button
+              key={index}
+              onClick={() => handleClick(item)}
+              className={`px-3 py-1 whitespace-nowrap text-sm rounded-xl border-2 ${
+                selectedCategory === item
+                  ? "bg-purple-500 text-white border-purple-500"
+                  : "bg-stone-200 border-stone-300"
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+
+        {/* Fade effect (Left) */}
+        {!isStart && (
+          <div className="absolute left-[-4px] top-[-5px] h-[120%] w-10 bg-gradient-to-r from-[#eee] via-white to-transparent pointer-events-none" />
+        )}
+        
+        {/* Fade effect (Right) */}
+        {!isEnd && (
+          <div className="absolute right-[-4px] top-[-5px] h-[120%] w-10 bg-gradient-to-l from-[#eee] via-white to-transparent pointer-events-none" />
+        )}
+      </div>
+
+      {/* Right Scroll Button */}
+      <Button
+        icon={<RightOutlined />}
+        onClick={() => scroll("right")}
+        className={`border-2 border-gray-300 text-gray-600 transition ${
+          isEnd ? "opacity-30 cursor-not-allowed" : "opacity-100"
+        }`}
+        disabled={isEnd}
+      />
+    </div>
         
         
        
           {/*list the post one after the order using the map function*/}
-        <TrendsPosts posts={[...posts]}  setLike={setLike}  viewProduct={viewProduct}
-        likePost={likePost} loading={loadingProgress}  onLineProps={[online,setOnline]} loaders={[loader,setLoader,handleImageLoad]} />
+        <TrendsPosts posts={[...filteredPosts]}  viewProduct={viewProduct}
+         loading={loadingProgress}  onLineProps={[online,setOnline]} loaders={[loader,setLoader,handleImageLoad]} />
       
 
       {/* create a post popup menu*/}

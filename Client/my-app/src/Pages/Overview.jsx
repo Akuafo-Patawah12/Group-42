@@ -1,28 +1,37 @@
 import React,{useState,useMemo,useEffect} from 'react'
 import {motion} from "framer-motion"
-import {useNavigate} from "react-router-dom"
+
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { Card,Badge, Modal, Button, Form, Input , Empty, Typography, Alert, Space } from "antd";
+
 import {jwtDecode} from "jwt-decode"
 import "./Pages.css"
 import "./Invoice.css"
 import {v4} from "uuid"
-import {Link} from "react-router-dom"
+
 import io from "socket.io-client"
 
-import { PlusOutlined,CarOutlined, DatabaseOutlined,  ProductOutlined, ShoppingCartOutlined, WarningOutlined } from '@ant-design/icons'
+import {BarChartOutlined , CarOutlined, DatabaseOutlined,  ProductOutlined, ShoppingCartOutlined, WarningOutlined } from '@ant-design/icons'
 import TrackingSub from './TrackingSub'
+import LogisticsReport from './LogisticsReport'
 
 const Overview = () => {
    
 
 
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleClose = () => {
+    setSelectedOrder(null);
+  };
 
   const[orders,setOrders]=useState([]) //the array that stores alll the specific clients orders
-  const socket = useMemo(() =>io("http://localhost:5000/Tracking",{
+  const socket = useMemo(() =>io("http://localhost:4000/Tracking",{
     transports: ['websocket'],
   }),[])
 
 
-  const navigate= useNavigate()   
+     
  const[Id,setId]= useState("") //id extracted from access token
  const [creatingOrder,setCreatingOrder]= useState(false);
 
@@ -117,27 +126,55 @@ const Overview = () => {
     }
 },[socket,orders])
 
+
+const [selectedFilter, setSelectedFilter] = useState("All");
+const [filteredOrders, setFilteredOrders] = useState([]);
+
+// Function to filter orders based on status
+useEffect(() => {
+  if (orders.length > 0) {
+    setFilteredOrders(orders);
+    setData(processData(orders)); // Ensure data is set initially
+  }
+}, [orders]); // Runs when `orders` is updated
+
+const filterOrders = (status) => {
+  setSelectedFilter(status);
+
+  if (status === "All") {
+    setFilteredOrders(orders);
+  } else {
+    setFilteredOrders(orders.filter(order => order.status === status));
+  }
+};
+
+// Update chart when filteredOrders change
+useEffect(() => {
+  setData(processData(filteredOrders));
+}, [filteredOrders]);
+
+
 const [activeOrders, setActiveOrders]= useState([])
 const [pendingOrders, setPendingOrders]= useState([])
 useEffect(()=>{
    
      
-        const activeOrder=orders.filter(order => order.Status==="in-transit")
+        const activeOrder= orders.filter(order => order.Status==="in-Transit")
         setActiveOrders(activeOrder)
 
-        const pendingOrder=orders.filter(order => order.Status==="Pending...")
+        const pendingOrder= orders.filter(order => order.Status==="Pending")
         setPendingOrders(pendingOrder)
    
 },[activeOrders,pendingOrders])
 
 
 function pending(){
-  const pendingOrders = orders.filter((order) => order.Status === "Pending...");
+  const pendingOrders = orders.filter((order) => order.Status === "Pending");
     setOrders(pendingOrders);
 }
 
 function transit(){
-  const pendingOrders = orders.filter((order) => order.Status === "in-transit");
+  const pendingOrders = orders.filter((order) => order.Status === "in-Transit");
     setOrders(pendingOrders);
 }
 
@@ -155,20 +192,15 @@ function deleteOrder(order_id,customer_id){  //function to delete an order
 
 const [isOpen, setIsOpen] = useState(false);
 
-const [location,setLocation]= useState({
-    origin:"",
-    destination:""
-})
+const [location,setLocation]= useState("")
+const [supplierNumber,setSupplierNumber] = useState("")
+const [description,setDescription]= useState("")
 
 const togglePopup = () => {
   setIsOpen(!isOpen);
 };
 
-const handleItemChange = (index, field, value) => {
-  const newItems = [...items];
-  newItems[index][field] = value;
-  setItems(newItems);
-};
+
 
 
 
@@ -176,57 +208,30 @@ const handleItemChange = (index, field, value) => {
 
 let active=activeOrders.length
 
- const style={ fontSize: '30px',color:"#555" }
+ const style={ fontSize: '20px',color:"#555" }
 
 
 
 
 
 
- // Pop up info
+ 
 
 
  
-     
- 
-       
-       
-     
-     
  
  
- 
- 
- 
- 
- 
-     
- 
- 
- 
- 
- 
- 
- 
- 
- const addItem = () => {
-   setItems([...items, {  description: "", trackingNo: "", ctnNo: "", cbm: "", amount: "" }]);
- };
- 
- const removeItem = (index) => {
-   setItems(items.filter((_, i) => i !== index));
- };
- 
- const handleSubmit = (e) => {
-   e.preventDefault()
+ const handleSubmit = () => {
+   
    setCreatingOrder(true)
+   console.log({Id:Id,location,description,supplierNumber,tracking_id: v4()})
    setTimeout(()=>{
-     socket.emit("createOrder",{items,...location,tracking_id: v4()})
+     socket.emit("createOrder",{Id:Id,location,description,supplierNumber,tracking_id: v4()})
    },1000)
    
    // Reset form
    
-   setItems([{ description: "", trackingNo: "", ctnNo: "", cbm: "", amount: "" }]);
+   
    togglePopup();
  };
  
@@ -236,100 +241,47 @@ let active=activeOrders.length
  
    
  
-   const [invoiceNumber, setInvoiceNumber] = useState("");
-   const [invoiceDate, setInvoiceDate] = useState("");
-   const [invoiceDueDate, setInvoiceDueDate] = useState("");
+   
+   
+   
+ const processData = (orders) => {
+  const monthlyOrders = {};
+
+  orders.forEach((order) => {
+    const date = new Date(order.createdAt);
+    const monthYear = `${date.toLocaleString("default", { month: "short" })} ${date.getFullYear()}`; // e.g., "Jan 2024"
+
+    if (!monthlyOrders[monthYear]) {
+      monthlyOrders[monthYear] = 0;
+    }
+    monthlyOrders[monthYear] += 1;
+  });
+
+  return Object.keys(monthlyOrders).map((month) => ({
+    month,
+    orders: monthlyOrders[month],
+  }));
+};
+
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+  if (orders && orders.length > 0) {
+    setData(processData(orders));
+  }
+}, [orders]);
+
+   
    
  
-   const[total,setTotal] =useState(0)
    
-   const [items, setItems] = useState([
-       { description: "", trackingNo: "", ctnNo: "", cbm: "", Amount: "",length:"",width:"",height:"" }
-   ]);
- 
-   // Generate a random invoice number
-   const generateInvoiceNumber = () => {
-       const invNumber = 'INV-' + Math.floor(100000 + Math.random() * 900000);
-       setInvoiceNumber(invNumber);
-   };
- 
-   // Format the date to dd/mm/yyyy
-   const formatDateToDDMMYYYY = (date) => {
-       let dd = date.getDate();
-       let mm = date.getMonth() + 1; // Months are zero-based
-       const yyyy = date.getFullYear();
- 
-       // Ensure two digits for day and month
-       if (dd < 10) dd = '0' + dd;
-       if (mm < 10) mm = '0' + mm;
- 
-       return `${dd}/${mm}/${yyyy}`;
-   };
- 
-   useEffect(() => {
-     const newTotal = items.reduce((sum, row) => {
-       const amount = parseFloat(row.Amount) || 0;
-       return sum + amount;
-     }, 0);
-     setTotal(newTotal.toFixed(2));
-   }, [items]); // Only rerun when items change
- 
-   function calculateCBM(index) {
-     // Create a new array to avoid mutating the state directly
-     const newItems = [...items];
-     
-     // Calculate CBM based on dimensions
-     const cbm = items[index].length * items[index].width * items[index].height;
-     newItems[index]["cbm"] = cbm.toFixed(3);
- 
-     // Calculate the amount based on CBM
-     const amount = cbm * 230;
-     newItems[index]["Amount"] = amount.toFixed(2);
- 
-     // Update the items state, which will trigger the effect to recalculate the total
-     setItems(newItems);
-     setActiveIndex(activeIndex === index ? null : index);
- 
-   }
- 
-   
- 
-   // Set the current date as Invoice Date and format it
-   const setInvoice_date = () => {
-       const today = new Date();
-       setInvoiceDate(formatDateToDDMMYYYY(today));
-       setInvoiceDueDate(formatDateToDDMMYYYY(new Date(today.setDate(today.getDate() + 3))));
-   };
- 
  
   
  
-   // Handle input changes for item rows
-   const handleInputChange = (index, event) => {
-       const { name, value } = event.target;
-       const newItems = [...items];
-       newItems[index][name] = value;
+  
  
-       if (name === "length" || name === "width" || name === "height") {
-           const length = parseFloat(newItems[index].length || 0);
-           const width = parseFloat(newItems[index].width || 0);
-           const height = parseFloat(newItems[index].height || 0);
-           const cbm = (length * width * height).toFixed(3);
-           newItems[index].cbm = cbm;
- 
-           // Calculate amount (example rate: $230 per CBM)
-           newItems[index].Amount = (cbm * 230).toFixed(2);
-       }
- 
-       setItems(newItems);
-   };
- 
-   // Initialize on component mount
-   useEffect(() => {
-       generateInvoiceNumber();
-       setInvoice_date();
-   }, []);
- 
+   
  
 
  
@@ -344,296 +296,144 @@ let active=activeOrders.length
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
-    className='w-full bg-stone-100 lg:w-[80%] ml-auto'
+    className='w-full bg-stone-100 pt-5 lg:w-[80%] ml-auto'
     >
       {creatingOrder&&<span className='fixed top-[70px] z-2 -translate-x-[50%] -translate-y-[50%] left-[50%] bg-orange-200'>Creating Order...</span>}
-      <div className='bg-purple-300 rounded-2xl mt-[100px] w-[95%] mx-auto flex gap-4 justify-around'>
-        <span className="font-bold text-xl text-wrap w-10 ">Order Tracking</span>
-        <span className="relative bg-stone-300 rounded-lg  flex items-center">< CarOutlined style={style} /> Active Orders <span className='absolute top-[-5px] right-[-5px] font-thin text-center leading-4 text-sm size-5 rounded-[50%] bg-red-400 text-white'>
-        <motion.span
-        
-        key={active} // Key helps Framer Motion recognize content changes
-        dangerouslySetInnerHTML={{ __html: active }}
-        initial={{ opacity: 0, y: 10 }} // Starting animation
-        animate={{ opacity: 1, y: 0 }} // Ending animation
-        exit={{ opacity: 0, y: -10 }} // When content exits
-        transition={{ duration: 0.5 }} // Duration of the animation
-      />
-          </span></span>
-        <span className="relative bg-stone-300 rounded-lg flex items-center"><ShoppingCartOutlined style={style}/> Total Orders<span className='absolute top-[-5px] right-[-5px] font-thin text-center leading-4 text-sm size-5 rounded-[50%] bg-red-400 text-white'>
-        <motion.div
-        
-        key={orders.length} // Key helps Framer Motion recognize content changes
-        dangerouslySetInnerHTML={{ __html: orders.length }}
-        initial={{ opacity: 0, y: 10 }} // Starting animation
-        animate={{ opacity: 1, y: 0 }} // Ending animation
-        exit={{ opacity: 0, y: -10 }} // When content exits
-        transition={{ duration: 0.5 }} // Duration of the animation
-      />
-          
-      </span></span>
-        <span className='bg-stone-300 rounded-lg flex items-center'><ProductOutlined style={style}/> Delivered Items</span><span className="bg-stone-300 rounded-lg"></span></div>
-      <div className='flex justify-between mt-2 bg-slate-200 w-[95%] mx-auto items-center h-12 rounded-l-2xl gap-2'>
-        <section className="font-medium  h-4/5 rounded-2xl leading-9 bg-slate-400 flex w-[110px] "><button  className='rounded-[50%] my-auto  bg-stone-300 size-[30px] '><DatabaseOutlined /></button> View Data</section>
-        <span className='font-small'>
-          <WarningOutlined color='red'/>
-          You have {pendingOrders.length} pending orders
+      <Card
+      className="w-[95%] mx-auto mt-[70px] p-4 flex flex-wrap gap-4 items-center justify-between rounded-2xl shadow-md"
+      bodyStyle={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "space-around" }}
+    >
+      {/* Title */}
+      <span className="font-bold text-lg sm:text-xl">Shipments Overview</span>
+
+      {/* Active Orders */}
+      <Badge count={active} size="small" offset={[5, -5]}>
+        <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center gap-2 text-sm">
+          <CarOutlined style={style} /> Active Orders
         </span>
-        <section className="flex items-center gap-2 h-full">
-          <button className='bg-[var(--purple)] text-white rounded-2xl h-4/5 font-medium px-2 '>Get Personal report</button>
-          <button onClick={togglePopup} className='bg-[var(--purple)] text-white rounded-2xl h-4/5 font-medium px-2'>Create Order</button>
-        </section>
+      </Badge>
 
+      {/* Total Shipments */}
+      <Badge count={orders.length} size="small" offset={[5, -5]}>
+        <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center gap-2 text-sm">
+          <ShoppingCartOutlined style={style} /> Total Shipments
+        </span>
+      </Badge>
+
+      {/* Delivered Items */}
+      <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center gap-2 text-sm">
+        <ProductOutlined style={style} /> Delivered Items
+      </span>
+    </Card>
+      <div className='flex justify-between mt-2 bg-slate-200 w-[95%] mx-auto items-center py-4 rounded-2xl gap-2'>
+        <div className="flex px-[2%] w-full gap-3">
         
-        {isOpen && (
-            <div style={{borderRadius:"15px 0 15px 0"}} className="w-full bg-white fixed z-50 bottom-0 h-[85vh] overflow-y-auto left-0">
-<div>
-</div>
 
-        <div>
-        <div  style={{padding:"16px"}}>
+        <Card className="w-1/2 rounded-xl shadow-md">
+      {/* View Data Section */}
+      <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+        <Button shape="circle" icon={<DatabaseOutlined />} size="large" />
+        <Typography.Text className="font-medium">View Data</Typography.Text>
+      </div>
+
+      {/* Pending Shipments Alert */}
+      <Alert
+        message={`You have ${pendingOrders.length} pending shipments`}
+        type="warning"
+        showIcon
+        icon={<WarningOutlined />}
+        className="my-3"
+      />
+
+      {/* Actions */}
+      <Space>
+        <Button type="primary" className="bg-[var(--purple)]">Get Personal Report</Button>
+        <Button type="primary" className="bg-[var(--purple)]" text-white onClick={() => setIsOpen(true)}>
+          Request Quote
+        </Button>
+      </Space>
+    </Card>
+     
+
+    <Card  className="w-1/2 rounded-xl shadow-md">
+      {/* View Analytics Section */}
+      <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+        <Button shape="circle" icon={<BarChartOutlined />} size="large" />
+        <Typography.Text className="font-medium">Analytics overview</Typography.Text>
+      </div>
+
+     
+
+     
+      {orders.length===0 ?<p><Empty styles={{ image:{ height: 50 } }} description="No shipment" /></p>:
+      <ResponsiveContainer width="100%" height={190}>
+    <BarChart data={data}>
+      <XAxis dataKey="month" />
+      <YAxis allowDecimals={false} />
+      <Tooltip  />
+      <Bar dataKey="orders" fill="#c084fc" barSize={20} />
+    </BarChart>
+  </ResponsiveContainer>}
         
-              <form onSubmit={handleSubmit}>
-              
-                  <p style={{marginTop:"30px",paddingBottom:"10px"}}>Shipments Details</p>
-                  <section style={{border:"1px solid #ddd"}} className='hero'>
-    <table className="details-table">
-  <thead>
-    <tr className="tr">
-      <th className="th">DESCRIPTION</th>
-      <th className="th">TRACKING NO.</th>
-      <th className="th">CTN NO.</th>
-      <th className="th">CBM</th>
-      <th className="th">Amount $</th>
-    </tr>
-  </thead>
-  <tbody>
-    {items.map((item, index) => (
-      <tr key={index} className="table-row tr">
-        <td className="td">
-          <input
-            type="text"
-            name="description"
-            value={item.description}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-        </td>
-        <td className="td">
-          <input
-            type="text"
-            name="trackingNo"
-            value={item.trackingNo}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-        </td>
-        <td className="td">
-          <input
-            type="text"
-            name="ctnNo"
-            value={item.ctnNo}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-        </td>
-        <td style={{display:"flex",minWidth:"100px"}} className="td">
-          <input
-            type="text"
-            name="cbm"
-            placeholder="Dimension"
-            value={item.cbm}
-            onChange={(e) => handleInputChange(index, e)}
-            disabled={true}
-          />
-          <button>Add</button>
-        </td>
-        <td className="td">
-          <input
-            type="text"
-            name="amount"
-            value={item.Amount}
-            onChange={(e) => handleInputChange(index, e)}
-            disabled={true}
-          />
-        </td>
-        <td className="td">
-          <button
-            type="button"
-            className="remove-item-button"
-            onClick={() => removeItem(index)}
-          >
-            &times;
-          </button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+    </Card>
+        
+        </div>
+        </div>
+        
+       
+        
 
+       
+      
+      
+    
 
-{items.map((item, index) => (
-  <div key={index} className="table">
   
-  <section>
-          <input
-            type="text"
-            name="description"
-            placeholder="Description"
-            value={item.description}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-        </section>
-        <section>
-          <input
-            type="text"
-            name="trackingNo"
-            placeholder='Tracking No.'
-            value={item.trackingNo}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-        </section>
-        <section>
-          <input
-            type="text"
-            name="ctnNo"
-            placeholder="Ctn No."
-            value={item.ctnNo}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-        </section>
-        <section>
-          <input
-            type="text"
-            name="cbm"
-            placeholder="CBM"
-            value={item.cbm}
-            disabled={true}
-            style={{cursor:"not-allowed"}}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-          <button className="dimensions" type="button" onClick={() => toggleDimensions(index)} >Add dimensions</button>
-        </section>
-        <section>
-          <input
-            type="text"
-            name="amount"
-            placeholder="Amount $"
-            value={item.Amount}
-            style={{cursor:"not-allowed"}}
-            onChange={(e) => handleInputChange(index, e)}
-            disabled={true}
-          />
-        </section>
-        {activeIndex === index && (<div className='dimen-container'>
-        
-        <div className="dimen">
-        <div className="dimen-index">{index+1}</div>
-        <button type="button" onClick={()=> toggleDimensions(index)} className='close-dimen'>X</button>
-          <input type='number' placeholder='Width'
-            name="width"
-            value={item.width}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-          <input type='number' placeholder='Height'
-            name="height"
-            value={item.height}
-            onChange={(e) => handleInputChange(index, e)}
-          />
-          <input type='number' placeholder='Length'
-            name="length"
-            value={item.length}
-            onChange={(e) => handleInputChange(index, e)}
-          />
 
-          <button type="button" onClick={()=> calculateCBM(index)}>Add</button>
-        </div>
-        </div>)}
+ 
 
-
-        <section>
-          <button
-            type="button"
-            className="remove-item-button"
-            onClick={() => removeItem(index)}
-          >
-            &times;
-          </button>
-        </section>
-        <div className='table-index'>{index + 1}</div>
-  </div>
-))}
-                 
-<div className="total">
-  <section>Total</section>
-  <section>${total}</section>
-</div>   
-                  <button
-                    type="button"
-                    className="add_btn"
-                    onClick={addItem}
-                  >
-                    <PlusOutlined />
-                    Add Item
-                  </button>
-                 
-                  </section>
-                
-                
-               
-
-
-            <div class="order_note">
-            <h3>Note:</h3>
-            <ol>
-                <li>SFGL does not ship contraband goods. Your goods will be security checked.</li>
-                <li>Our departure timelines are subject to cargo availability.</li>
-                <li>Ship transit times may change without recourse to us.</li>
-                <li>Cargo may require inspection by customs and other regulatory bodies at their instance and time.</li>
-                <li>Our minimum CBM is 0.02. All items below 0.02CBM will be charged per our minimum CBM.</li>
-                <li>Measurements will be re-taken at the warehouse in Ghana to confirm CBM before payments are made.</li>
-                <li>Goods stored in our warehouse are subject to warehouse lien...</li>
-                <li>After goods have arrived, leaving items at the warehouse for more than 4 days will incur a warehouse charge...</li>
-                <li>Goods more than 300kg will be charged per ton and goods...</li>
-                <li>Goods weighing more than 700kg is equivalent to 1 CBM.</li>
-            </ol>
-        </div>
-
-
-                <div className="payment_btn" style={{display:"flex",border:"none",gap:"10px",justifyContent:"flex-end",marginTop:"20px"}} >
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={togglePopup}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    
-                    className="animated-button"
-                    
-                    style={{display:"flex",gap:"5px",background:"#A7C756",border:"none",color:"white",paddingBlock:"8px",paddingInline:"16px",borderRadius:"10px"}}
-            
-                  >
-                    Make Payment
-                  </button>
-                  <Link to={"/AllOrders"}><button className="view">View Orders</button></Link>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          {creatingOrder && <div className='creating_order'>Creating Order... </div> }
-          <div>
-      
-      
-    </div>
+      {/* Request a quote modal */}
+      <Modal
+        title="Request a Quote"
+        open={isOpen}
+        onCancel={()=>setIsOpen(false)}
+        footer={null}
+      >
+        <Form layout="vertical" onFinish={handleSubmit}>
          
 
+          <Form.Item
+            label="Location"
+            name="location"
+            rules={[{ required: true, message: "Please enter the product location" }]}
+          >
+            <Input placeholder="Enter the product location" value={location} onChange={(e)=> setLocation(e.target.value)}/>
+          </Form.Item>
+          
+          <Form.Item label="Supplier Number" name="supplierNumber">
+            <Input placeholder="Enter supplier number (Optional)" value={supplierNumber} onChange={(e)=> setSupplierNumber(e.target.value)}/>
+          </Form.Item>
 
-           
-        </div>
-      )}
-      </div>
-      <TrackingSub orders={[...orders]} deleteOrder={deleteOrder} pending={pending} transit={transit}/>
+          <Form.Item
+            label="Description"
+            name="message"
+            rules={[{ required: true, message: "Please enter your message" }]}
+          >
+            <Input.TextArea rows={4} placeholder="Describe your request" value={description} onChange={(e)=> setDescription(e.target.value)}/>
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Submit Request
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+  
+
+
+      {selectedOrder && <LogisticsReport order={selectedOrder} onClose={handleClose} />} 
+      <TrackingSub orders={[...filteredOrders]} setSelectedOrder={setSelectedOrder} filterOrders={filterOrders} selectedFilter={selectedFilter} deleteOrder={deleteOrder} pending={pending} transit={transit}/>
     </motion.div>
   );
 };

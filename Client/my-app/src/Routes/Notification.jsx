@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import io from 'socket.io-client'
 export default function Notification(){
-    const socket= io("http://localhost:5000/notify",{transports: ['websocket']});
+    const socket= io("http://localhost:4000/notify",{transports: ['websocket']});
 
     const[notification,setNotification]= useState([])
     useEffect(()=>{

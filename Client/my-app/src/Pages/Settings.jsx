@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {motion } from "framer-motion"
 import io from "socket.io-client"
 const Settings = () => {
-  const socket = useMemo(() =>io("http://localhost:5000",{
+  const socket = useMemo(() =>io("http://localhost:4000",{
     transports: ['websocket'],
   }),[])
   const navigate= useNavigate()

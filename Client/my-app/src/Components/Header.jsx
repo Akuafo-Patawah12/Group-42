@@ -21,7 +21,7 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
 
 
   return (
-    <header className='w-full border-b-2 bg-white fixed top-0 z-40 h-[80px] items-center flex justify-between' style={{borderTop:"5px solid var(--purple)"}}>
+    <header className='w-full border-b-2 bg-white sticky top-0 z-40 h-[80px] items-center flex justify-between' style={{borderTop:"5px solid var(--purple)"}}>
             <SvgIcon />
            
     
@@ -71,28 +71,28 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
           
 
           <div className='flex gap-2 h-full items-center'>
-         <button onClick={()=> setIsOpen(prev=> !prev)} className="h-[60px] block" style={{border:"none",background:"#a422d0",borderRadius:"10px",paddingInline:"10px",color:"#fff",fontSize:"16px",fontWeight:"500"}}>Track shipments</button>
+         <button onClick={()=> setIsOpen(prev=> !prev)} className="h-[40px] block" style={{border:"none",background:"#a422d0",borderRadius:"10px",paddingInline:"8px",color:"#fff",fontSize:"14px",fontWeight:"500"}}>Track shipments</button>
 
          <div className="flex items-center justify-center   md:hidden lg:hidden">
       <button
         onClick={pop2}
-        className="relative w-10 h-10 focus:outline-none"
+        className="relative w-7 h-7 focus:outline-none"
       >
         {/* Top bar */}
         <div
-          className={`absolute top-1 left-0 w-full h-[5px] border-purple-600 border-2 rounded transition-transform duration-300 ${
+          className={`absolute top-1 left-0 w-full h-[5px] border-stone-600 border-2 rounded transition-transform duration-300 ${
             popUp2 ? "rotate-45 translate-y-3 border-stone-600" : ""
           }`}
         ></div>
         {/* Middle bar */}
         <div
-          className={`absolute top-4 left-0 w-full h-[5px] bg-stone-500  rounded transition-opacity duration-300 ${
+          className={`absolute top-3 left-0 w-full h-[5px] bg-stone-500  rounded transition-opacity duration-300 ${
             popUp2 ? "opacity-0" : ""
           }`}
         ></div>
         {/* Bottom bar */}
         <div
-          className={`absolute top-7 left-0 w-full h-[5px] border-purple-600 border-2 rounded transition-transform duration-300 ${
+          className={`absolute top-5 left-0 w-full h-[5px] border-stone-600 border-2 rounded transition-transform duration-300 ${
             popUp2 ? "-rotate-45 -translate-y-3 border-stone-600" : ""
           }`}
         ></div>

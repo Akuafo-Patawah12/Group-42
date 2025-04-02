@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import {  ShoppingCartOutlined, StarFilled } from '@ant-design/icons';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { Empty } from "antd";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PostLoader from '../../icons/PostLoader';
 import { ImageLoader } from '../../icons/ButtonLoader';
@@ -10,14 +11,15 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
    const item={rating: 4}
   
   return (
-    
-    <div className='mt-5 w-[90%] shadow-md py-5 px-[3%] rounded-lg bg-white place-items-center mx-auto grid grid-cols-1 gap-x-[3%] md:grid-cols-2'> 
+  <> 
+  {posts.length===0? <div className='text-center text-2xl font-bold h-[65svh] flex items-center justify-center'><Empty description="No product found" /></div>:
+<div className="mt-5 w-[95%] shadow-md py-5 px-[3%] rounded-lg bg-white mx-auto columns-1 md:columns-2 lg:columns-3 space-y-4">
     {posts.map((post, index) => ( 
        
 
-        <div key={index} className='relative border-2 bg-white border-purple-500 mt-4 shadow-sm rounded-2xl overflow-hidden hover:shadow-2xl'>
+        <div key={index} className='relative w-[250px] border-2 bg-white border-purple-500 mt-4 shadow-sm rounded-2xl overflow-hidden break-inside-avoid   hover:shadow-2xl'>
           <section className=' absolute top-2 z-40 size-8 rounded-[50%] border-2 border-[var(--purple)] bg-gray-400 font-medium grid place-items-center ml-3 '>{post?.username[0]}</section>
-          <section className='flex justify-center items-center h-[300px] bg-stone-100 w-full'>
+          <section className='flex justify-center items-center  bg-stone-100 w-full'>
                 {loader&& <div className='absolute'><ImageLoader /></div>}
                 {online?
                 <LazyLoadImage  
@@ -25,7 +27,7 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
                    alt={post.caption} 
                    effect="blur" 
                    afterLoad={handleImageLoad}
-                   height={300}
+                   
                    style={{height:"100%"}}
                    onError={console.log("failed to upload image")}
                 />:<div className='absolute'><ImageLoader /></div>
@@ -37,15 +39,15 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
             <span className='font-medium text-xs bg-stone-200 w-[80px]'>#{post.category}</span>
             <span className='text-sm text-stone-500'>{post.caption}</span>
           </div>
-        <div className='flex items-center justify-around h-[100px]'>
-          <button onClick={()=> viewProduct(post._id,post.category)} className="bg-[var(--purple)] p-2 rounded-lg"><ShoppingCartOutlined onClick={()=> {
+        <div className='flex items-center justify-around py-6'>
+          <button onClick={()=> viewProduct(post._id,post.category)} className="bg-[var(--purple)] px-2 py-1 rounded-lg"><ShoppingCartOutlined onClick={()=> {
             setLike(prev=>!prev);
              
             }} /> 
-            <span className="text-white">Add to cart</span>
+            <span className="ml-1 text-white text-sm">Add to cart</span>
           </button>
-        <section className='ml-3 text-sm'>
-        <div className="flex items-center space-x-1">
+        <section className='ml-3 text-sm flex flex-col items-end gap-1 h-[50px] '>
+        <div className="flex items-center space-x-1 ">
           {Array.from({ length: 5 }, (_, index) => (
             <svg
               key={index}
@@ -54,7 +56,7 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-5 h-5 text-yellow-500"
+              className="size-3 text-yellow-500 "
             >
               <path
                 strokeLinecap="round"
@@ -65,13 +67,16 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
           ))}
         </div>
         <br/>
-        <span>${post.price}</span></section></div>
+        <span className="text-sm">${post.price}</span>
+        </section>
+        </div>
         </div>
         </div>
       ))}
       {loading ? (<PostLoader />):""} 
         
-    </div>
+    </div>}
+    </>
   )
 }
 

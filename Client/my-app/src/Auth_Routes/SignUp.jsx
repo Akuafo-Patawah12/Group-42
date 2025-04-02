@@ -22,7 +22,7 @@ const SignUp = () => {
         e.preventDefault();
         try{
             setLoader(true)
-          await axios.post("http://localhost:5000/SignUp",{formData})
+          await axios.post("http://localhost:4000/SignUp",{formData})
           .then(res=>{
             if(res.data.message==="exist") {
                 setValidation("Email already exist") 

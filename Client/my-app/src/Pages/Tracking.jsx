@@ -52,7 +52,7 @@ const TrackingPage = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen py-12 px-6 lg:px-24 w-[80%] ml-auto">
+    <div className="bg-gray-100 min-h-screen py-12 px-6 mt-[70px] lg:px-24 w-[80%] ml-auto">
       {/* Page Header */}
       <header className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Track Your Shipment</h1>

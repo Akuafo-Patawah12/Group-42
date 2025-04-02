@@ -1,51 +1,84 @@
-import React from 'react';
-import axios from 'axios'
-import {DatabaseOutlined,SettingOutlined,FileTextOutlined,BarChartOutlined,CompassOutlined,TruckOutlined,LogoutOutlined} from "@ant-design/icons"
-import {NavLink} from "react-router-dom"
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import {
+  DatabaseOutlined,
+  SettingOutlined,
+  FileTextOutlined,
+  BarChartOutlined,
+  CompassOutlined,
+  TruckOutlined,
+  LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from "@ant-design/icons";
+import { Layout, Menu, Button, Tooltip } from "antd";
+import { NavLink, useNavigate,useLocation } from "react-router-dom";
+import axios from "axios";
+
+const { Sider } = Layout;
 
 const CustomerSidebar = () => {
-    const data=[
-        {name:"Overview",icon:<DatabaseOutlined />},
-        {name:"Shipping", icon: <TruckOutlined />},
-        {name:"Invoice",icon:<FileTextOutlined/>}, 
-        {name:"Analytics",icon:<BarChartOutlined />},
-        {name:"Tracking",icon:<CompassOutlined />},
-        {name:"Settings",icon:<SettingOutlined />}
-      ]
-      const navigate= useNavigate()
+  const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  axios.defaults.withCredentials = true;
 
-   axios.defaults.withCredentials=true
-  const LogOut =async()=>{
-     try{
-        await axios.post("http://localhost:5000/logout")
-        .then(res=>{
-         if(res.data==="Success"){
-          localStorage.removeItem("accesstoken")
-            navigate("/Login")
-         }
-        })
-        .catch(err=> console.log(err))
-       
-        
-     }catch(e){
-       console.error(e)
-     }
-  }
+  const LogOut = async () => {
+    try {
+      await axios.post("http://localhost:5000/logout").then((res) => {
+        if (res.data === "Success") {
+          localStorage.removeItem("accesstoken");
+          navigate("/Login");
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const menuItems = [
+    { key: "overview", label: "Overview", icon: <DatabaseOutlined className="text-purple-600"/>, path: "/Customer/Overview" },
+    { key: "shipping", label: "Shipping", icon: <TruckOutlined className="text-purple-600"/>, path: "/Customer/Shipping" },
+    { key: "invoice", label: "Invoice", icon: <FileTextOutlined className="text-purple-600"/>, path: "/Customer/Invoice" },
+    { key: "analytics", label: "Analytics", icon: <BarChartOutlined className="text-purple-600"/>, path: "/Customer/Analytics" },
+    { key: "tracking", label: "Tracking", icon: <CompassOutlined className="text-purple-600"/>, path: "/Customer/Tracking" },
+    { key: "settings", label: "Settings", icon: <SettingOutlined className="text-purple-600"/>, path: "/Customer/Settings" },
+  ];
+
   return (
-    <aside className={`fixed left-0 top-[60px] w-[20%] bg-stone-100 hidden h-screen lg:block`}>
-         <ul className='translate-y-[40px]  flex flex-col gap-2 mx-auto w-[80%]'>
-        {data.map((item,index)=>(
-           <NavLink to={`/Customer/${item.name}`}>
-            <li key={index} className='text-stone-500 pl-2 py-2 rounded-xl font-medium border-2 border-stone-300 hover:text-stone-600 hover:border-stone-400'><span className='text-purple-600'>{item.icon}</span>{item.name}</li>
-            </NavLink>
+    <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} className="fixed left-2 top-8 h-screen  bg-stone-100">
+      {/* Sidebar Toggle Button */}
+      <div className="flex justify-center my-4">
+        <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
+      </div>
 
+      {/* Sidebar Menu */}
+      <Menu theme="light" mode="inline" selectedKeys={[location.pathname]} style={{height:"80%",borderRadius:"10px",boxShadow:"0 1px 2px 0 rgba(0, 0, 0, 0.05)"}} defaultSelectedKeys={["overview"]}>
+        {menuItems.map((item) => (
+          <Menu.Item 
+           style={{
+            borderRadius: "8px",
+            fontWeight: 500,
+            backgroundColor: location.pathname === item.path ? "#E9D5FF" : "transparent", // bg-purple-300
+            transition: "background 0.3s ease",
+          }}
+           key={item.key}
+            icon={<span className="text-purple-600">
+            {item.icon}
+            </span>}>
+            <NavLink to={item.path}>{item.label}</NavLink>
+          </Menu.Item>
         ))}
-           <li  ><button onClick={LogOut} className='bg-red-300 py-2 rounded-xl font-medium h-full w-full '><LogoutOutlined /> Log Out</button></li>
-          
-         </ul>
-         
-      </aside>
+      </Menu>
+
+      {/* Logout Button */}
+      <div className="absolute translate-x-[-50%] translate-y-[-50%] left-[50%] bottom-[100px] w-[90%] flex justify-center">
+        <Tooltip title="Log Out">
+          <Button type="primary" danger className="bg-red-300" icon={<LogoutOutlined />} onClick={LogOut} block={!collapsed}>
+            {!collapsed && "Log Out"}
+          </Button>
+        </Tooltip>
+      </div>
+    </Sider>
   );
 };
 

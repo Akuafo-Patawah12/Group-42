@@ -20,13 +20,8 @@ const About = () => {
   return (
     <div>
 
-    <div className='relative h-[400px]'>
-        <section style={{position:"absolute",inset:"0",background:"rgb(0,0,0,0.3)",fontSize:"40px",fontWeight:"700",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}>
-                About Us
-           </section>
-    </div>
-           
-        <section style={{borderBottom:"5px solid #eee",paddingBottom:"40px"}} className="about_org">
+     <h1 className="text-3xl w-fit font-extrabold mx-auto">About us</h1>
+     <section style={{width:"80%",marginInline:"auto",paddingBottom:"40px"}} className="about_org">
             <p style={{textAlign:"justify",fontSize:"15px"}} className="about_p">
                 Established in February 2019, Shun Feng Ghana Logistics (SFGL) has rapidly grown into one of 
                 West Africa's most trusted logistics providers, specializing in the efficient and seamless shipping 
@@ -35,6 +30,14 @@ const About = () => {
                 it." 
             </p>
         </section>
+
+    <div className='relative h-[400px] w-4/5 overflow-hidden rounded-xl mx-auto mt-10'>
+        <section style={{position:"absolute",inset:"0",background:"rgb(0,0,0,0.3)",fontSize:"40px",fontWeight:"700",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}>
+                
+           </section>
+    </div>
+           
+        
         <div className='flex justify-around'>
         <div className='w-[40%]'>
         

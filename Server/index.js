@@ -21,27 +21,15 @@ app.use(cors({
 app.use("/",router)  //A middleware that returns all API for authentication
 let server //creating a server instance
 
-if (cluster.isMaster) { //Load balancing
-  console.log(`Master ${process.pid} is running`);
-  
-  // Fork workers.
-  for (let i = 0; i < numCPUs; i++) { //getting the number of CPU cores and restart the server
-      cluster.fork();  // auto restart server
-  }
 
-  cluster.on('exit', (worker, code, signal) => { //when a cpu worker dies 
-      console.log(`Worker ${worker.process.pid} died ,${worker.length}`);
-      // Optionally restart the worker
-      cluster.fork();
-  });
 
-} else{
+
    server = http.createServer(app);  //creating a server using Hyper Text Transfer Protocol
    initializeSocket(server);  //this function returns io from the Socket file
-}
 
 
-const PORT = process.env.PORT || 5000;  //grabbing the port number from .env file 
+
+const PORT = process.env.PORT || 4000;  //grabbing the port number from .env file 
 
 async function startServer(){
   try{

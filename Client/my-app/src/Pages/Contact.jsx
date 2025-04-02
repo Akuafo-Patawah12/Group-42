@@ -24,32 +24,32 @@ const ContactPage = () => {
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Send Us a Message</h2>
             <form className="space-y-4">
               <div>
-                <label className="block text-gray-600 mb-1">Full Name</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
                 <input
                   type="text"
                   placeholder="Enter your name"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                 />
               </div>
               <div>
-                <label className="block text-gray-600 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                 />
               </div>
               <div>
-                <label className="block text-gray-600 mb-1">Message</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Message</label>
                 <textarea
                   placeholder="Enter your message"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                   rows="4"
                 ></textarea>
               </div>
               <button
                 type="submit"
-                className="w-full bg-[var(--purple)] text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                className="text-sm w-full bg-[var(--purple)] text-white py-2 rounded-lg hover:bg-blue-700 transition"
               >
                 Send Message
               </button>
@@ -59,47 +59,47 @@ const ContactPage = () => {
           {/* Contact Details */}
           <div>
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Contact Details</h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 text-sm font-medium mb-4">
               If you prefer, you can also contact us directly using the details below.
             </p>
             <ul className="space-y-3">
               <li className="flex items-center">
-                <span className="bg-purple-200 text-[var(--purple)] p-2 rounded-full mr-3">
+                <span className="bg-gray-200 text-[var(--purple)] p-2 rounded-full mr-3">
                   📞
                 </span>
-                <span> 020 811 6360 / 053 948 0433</span>
+                <span className="text-sm"> 020 811 6360 / 053 948 0433</span>
               </li>
               <li className="flex items-center">
-                <span className="bg-purple-200 text-[var(--purple)] p-2 rounded-full mr-3">
+                <span className="bg-gray-200 text-[var(--purple)] p-1 rounded-full mr-3">
                   ✉️
                 </span>
-                <span>sfghanalogistics24@gmail.com</span>
+                <span className="text-sm">sfghanalogistics24@gmail.com</span>
               </li>
               <li className="flex items-center">
-                <span className="bg-purple-200 text-[var(--purple)] p-2 rounded-full mr-3">
+                <span className="bg-gray-200 text-[var(--purple)] p-1 rounded-full mr-3">
                   📍
                 </span>
-                <span>George Bush Highway, Dzorwulu, Accra-Ghana </span>
+                <span className="text-sm">George Bush Highway, Dzorwulu, Accra-Ghana </span>
               </li>
             </ul>
             <div className="mt-6">
-              <h3 className="text-gray-700 font-semibold mb-2">Follow Us:</h3>
+              <h3 className="text-gray-700 text-sm font-semibold mb-2">Follow Us:</h3>
               <div className="flex space-x-4">
                 <a
-                  href="#"
-                  className="text-[var(--purple)] hover:text-blue-800 transition"
+                  href="/"
+                  className="text-sm text-[var(--purple)] hover:text-blue-800 transition"
                 >
                   Facebook
                 </a>
                 <a
-                  href="#"
-                  className="text-[var(--purple)] hover:text-blue-800 transition"
+                  href="/"
+                  className="text-sm text-[var(--purple)] hover:text-blue-800 transition"
                 >
                   Twitter
                 </a>
                 <a
-                  href="#"
-                  className="text-[var(--purple)] hover:text-blue-800 transition"
+                  href="/"
+                  className="text-sm text-[var(--purple)] hover:text-blue-800 transition"
                 >
                   Youtube
                 </a>

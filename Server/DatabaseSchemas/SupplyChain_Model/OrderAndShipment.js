@@ -5,31 +5,26 @@ const orderSchema= new Schema({
 
     //Linking the users table to the order table
         customer_id: {type:Schema.Types.ObjectId,ref:"User"},  
-        items: [
-          {
-            itemName: String,
-            quantity: Number,
-          }
-        ],
+        cbm: Number,
+        qty: Number,
         totalAmount: Number,
         shipmentId: {type:Schema.Types.ObjectId, ref:"Shipment"},
-        origin: String,
-          
-        destination:String,
-            
-      
-    Status:{
-       type:String,
-        enum: ["Pending...","in-Transit","Delivered"],
-        default:"Pending..."
-    }
-    ,
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
-    updateAt:Date
-})
+        tracking_no: {type:String, required:true},
+              
+        Status:{
+          type:String,
+            enum: ["Pending","in-Transit","Delivered"],
+            default:"Pending"
+        }
+        ,
+        description: String,
+        location: String,
+        createdAt: {
+          type: Date,
+          default: Date.now
+        },
+        updateAt:Date
+    })
 
 const shipmentSchema= new Schema({
     order_id:{type:Schema.Types.ObjectId,ref:"Order"},

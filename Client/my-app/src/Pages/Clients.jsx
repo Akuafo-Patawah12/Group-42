@@ -10,11 +10,11 @@ import { motion} from 'framer-motion';
 
 const Clients = () => {
 
-    const socket= useMemo(() =>io("http://localhost:5000/users",{
+    const socket= useMemo(() =>io("http://localhost:4000/users",{
         transports: ['websocket'],
       }),[])
 
-      const socket1= useMemo(() =>io("http://localhost:5000/",{
+      const socket1= useMemo(() =>io("http://localhost:4000/",{
         transports: ['websocket'],
       }),[])
 
