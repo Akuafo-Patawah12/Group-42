@@ -58,14 +58,16 @@ const data= require('../DatabaseSchemas/userSchema')
                 sendCookie(); // Set the refresh token cookie
                 return res.json({
                     message: "Logged in as an individual",
-                    accessToken: access_token
+                    accessToken: access_token,
+                    user_name: email_Exist.username,
                 });
 
             case "Business":
                 sendCookie(); // Set the refresh token cookie
                 return res.json({
                     message: "Logged in as a company",
-                    accessToken: access_token
+                    accessToken: access_token,
+                    user_name: email_Exist.username,
                 });
 
             default:

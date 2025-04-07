@@ -23,8 +23,8 @@ const Login = () => {
        const[loader,setLoader] =useState(false)
     const[validation,seValidation] =useState("")
        const navigate= useNavigate()
-       const handleSubmit = async(e)=>{
-        e.preventDefault();
+       const handleSubmit = async()=>{
+        
         
         try{
             setLoader(true)  //display button loader after clicking login button to submit form
@@ -35,7 +35,9 @@ const Login = () => {
             switch (res.data.message) {
                 case "Logged in as a company":
                     // Store the access token in local storage
+                    localStorage.setItem('user', res.data.user_name);
                     localStorage.setItem('accesstoken', res.data.accessToken);  /*receiving access token from server and 
+                    
                     storing token into browsers local storage*/
             
                     // Show success message with SweetAlert2
@@ -56,6 +58,7 @@ const Login = () => {
             
                 case "Logged in as an individual":
                     // Show success message with SweetAlert2
+                    localStorage.setItem('user', res.data.user_name);
                     localStorage.setItem('accesstoken', res.data.accessToken);
                     Swal.fire({
                         title: "Logged in successful as an Individual",

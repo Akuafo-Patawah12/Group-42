@@ -32,7 +32,11 @@ const TrackingSub = (props) => {
       key: "actions",
       render: (_, order) => (
         <>
-          <Button type="primary" style={{ marginRight: 8 }} className='bg-purple-200' onClick={() => props.setSelectedOrder(order)}>
+          <Button type="primary" style={{ marginRight: 8 }} className='bg-purple-300 text-stone-700' 
+          onClick={() => {
+            props.setSelectedOrder(order)
+            props.handleOpen()
+            }}>
             View Details
           </Button>
           <Button
@@ -63,7 +67,7 @@ const TrackingSub = (props) => {
   >Delivered</button>
 
   <button 
-    className={`bg-stone-300 border-2 border-stone-400 rounded-2xl py-1 text-sm px-2 ${props.selectedFilter === "In Transit" ? "bg-stone-500 text-white" : ""}`}  
+    className={`bg-stone-300 border-2 border-stone-400 rounded-2xl py-1 text-sm px-2 ${props.selectedFilter === "in-Transit" ? "bg-stone-500 text-white" : ""}`}  
     onClick={() => props.filterOrders("in-Transit")}
   >In Transit</button>
 

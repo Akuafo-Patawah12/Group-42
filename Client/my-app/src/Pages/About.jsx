@@ -19,7 +19,7 @@ const About = () => {
     },[index])
   return (
     <div>
-
+      
      <h1 className="text-3xl w-fit font-extrabold mx-auto">About us</h1>
      <section style={{width:"80%",marginInline:"auto",paddingBottom:"40px"}} className="about_org">
             <p style={{textAlign:"justify",fontSize:"15px"}} className="about_p">

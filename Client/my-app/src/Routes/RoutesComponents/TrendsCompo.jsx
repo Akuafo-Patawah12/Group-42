@@ -281,12 +281,30 @@ const TrendsCompo = () => {
       //Select image from file explorer
         const [image, setImage] = useState(null);
       let pic=useRef()
-        const handleChange = e => {
-          if (e.target.files[0]) { //allowing users to access file which can be images/pdf/video/audio from file explorer
-            setImage(e.target.files[0]);  //store the selected image in image variable
-              pic.current.src= URL.createObjectURL(e.target.files[0]); 
-          }
+      const handleFile = (file) => {
+        if (file && file.type.startsWith('image/')) {
+          setImage(file);
+          const objectUrl = URL.createObjectURL(file);
+          pic.current.src = objectUrl;
         }
+      };
+    
+      const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+      };
+    
+      const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      };
+    
+      const handleChange = (e) => {
+        const file = e.target.files[0];
+        handleFile(file);
+      };
 
         useEffect(() => {
           
@@ -500,7 +518,7 @@ const TrendsCompo = () => {
             <button
               key={index}
               onClick={() => handleClick(item)}
-              className={`px-3 py-1 whitespace-nowrap text-sm rounded-xl border-2 ${
+              className={`px-3 py-1 whitespace-nowrap text-xs rounded-xl border-2 ${
                 selectedCategory === item
                   ? "bg-purple-500 text-white border-purple-500"
                   : "bg-stone-200 border-stone-300"
@@ -547,6 +565,9 @@ const TrendsCompo = () => {
          send={sendPost}
          picRef={pic}
          cap={caption}
+         image={image}
+         handleDragOver={handleDragOver}
+         handleDrop={handleDrop}
         handleChange={handleChange}
         popUp={openDialog}
         setOpenDialog={setOpenDialog}

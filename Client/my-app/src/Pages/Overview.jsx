@@ -21,9 +21,7 @@ const Overview = () => {
 
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const handleClose = () => {
-    setSelectedOrder(null);
-  };
+  
 
   const[orders,setOrders]=useState([]) //the array that stores alll the specific clients orders
   const socket = useMemo(() =>io("http://localhost:4000/Tracking",{
@@ -144,7 +142,11 @@ const filterOrders = (status) => {
   if (status === "All") {
     setFilteredOrders(orders);
   } else {
-    setFilteredOrders(orders.filter(order => order.status === status));
+    const orderItem = orders.filter(order => 
+      order.Status && order.Status.toLowerCase() === status.toLowerCase()
+    );
+    setFilteredOrders(orderItem);
+    
   }
 };
 
@@ -274,9 +276,24 @@ let active=activeOrders.length
 
    
    
- 
+ const [isVisible,setIsVisible] = useState(false)
+ const [loading3,setLoading3]= useState(false)
    
- 
+const handleOpen = () => {
+  setLoading3(true);
+  setIsVisible(true);
+
+  // Simulating data fetching delay
+  setTimeout(() => {
+    
+    setLoading3(false);
+  }, 1000);
+};
+
+const CloseReport = () => {
+  setIsVisible(false);
+  setSelectedOrder(null);
+};
   
  
   
@@ -432,8 +449,8 @@ let active=activeOrders.length
   
 
 
-      {selectedOrder && <LogisticsReport order={selectedOrder} onClose={handleClose} />} 
-      <TrackingSub orders={[...filteredOrders]} setSelectedOrder={setSelectedOrder} filterOrders={filterOrders} selectedFilter={selectedFilter} deleteOrder={deleteOrder} pending={pending} transit={transit}/>
+      {selectedOrder && <LogisticsReport order={selectedOrder} loading3={loading3} visible={isVisible} onClose={CloseReport} />} 
+      <TrackingSub orders={[...filteredOrders]} setSelectedOrder={setSelectedOrder} handleOpen={handleOpen} filterOrders={filterOrders} selectedFilter={selectedFilter} deleteOrder={deleteOrder} pending={pending} transit={transit}/>
     </motion.div>
   );
 };

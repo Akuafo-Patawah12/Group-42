@@ -21,8 +21,8 @@ const SignUp = () => {
      const navigate= useNavigate()
      const[loader,setLoader] =useState(false)
        const[validation,setValidation] =useState("")
-       const handSubmit = async(e)=>{
-        e.preventDefault();
+       const handSubmit = async()=>{
+        
         try{
             setLoader(true)
           await axios.post("http://localhost:4000/SignUp",{formData})
@@ -160,7 +160,7 @@ const SignUp = () => {
         htmlType="submit"
         disabled={loader}
         loading={loader}
-        className="h-[35px] w-full bg-[var(--purple)]hover:bg-purple-300 transition duration-300 ease-in-out"
+        className="h-[35px] w-full bg-[var(--purple)] hover:bg-purple-300 transition duration-300 ease-in-out"
       >
         Sign Up
       </Button>

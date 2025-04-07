@@ -37,22 +37,21 @@ const CustomerSidebar = () => {
 
   const menuItems = [
     { key: "overview", label: "Overview", icon: <DatabaseOutlined className="text-purple-600"/>, path: "/Customer/Overview" },
-    { key: "shipping", label: "Shipping", icon: <TruckOutlined className="text-purple-600"/>, path: "/Customer/Shipping" },
-    { key: "invoice", label: "Invoice", icon: <FileTextOutlined className="text-purple-600"/>, path: "/Customer/Invoice" },
-    { key: "analytics", label: "Analytics", icon: <BarChartOutlined className="text-purple-600"/>, path: "/Customer/Analytics" },
+    
     { key: "tracking", label: "Tracking", icon: <CompassOutlined className="text-purple-600"/>, path: "/Customer/Tracking" },
+    { key: "profile", label: "Profile", icon: <DatabaseOutlined className="text-purple-600"/>, path: "/Customer/Profile" },
     { key: "settings", label: "Settings", icon: <SettingOutlined className="text-purple-600"/>, path: "/Customer/Settings" },
   ];
 
   return (
-    <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} className="fixed left-2 top-8 h-screen  bg-stone-100">
+    <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} className="fixed left-2 top-8 h-screen   bg-stone-100">
       {/* Sidebar Toggle Button */}
       <div className="flex justify-center my-4">
         <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
       </div>
 
       {/* Sidebar Menu */}
-      <Menu theme="light" mode="inline" selectedKeys={[location.pathname]} style={{height:"80%",borderRadius:"10px",boxShadow:"0 1px 2px 0 rgba(0, 0, 0, 0.05)"}} defaultSelectedKeys={["overview"]}>
+      <Menu theme="light" mode="inline" selectedKeys={[location.pathname]} style={{height:"80%",borderRadius:"10px",border:"1px solid #d6d3d1",boxShadow:"0 1px 2px 0 rgba(0, 0, 0, 0.05)"}} defaultSelectedKeys={["overview"]}>
         {menuItems.map((item) => (
           <Menu.Item 
            style={{
