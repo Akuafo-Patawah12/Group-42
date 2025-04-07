@@ -14,30 +14,30 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
        setHeight(!height)
     }
 
-            const Link_text={textDecoration:"none", fontSize:"15px"}
+            const Link_text={textDecoration:"none", fontSize:"14px",paddingInline:"4px"}
       
 
             
 
 
   return (
-    <header className='w-full border-b-2 bg-white sticky top-0 z-40 h-[80px] items-center flex justify-between' style={{borderTop:"5px solid var(--purple)"}}>
+    <header className='w-full  bg-white sticky top-0 z-40 h-[80px] items-center flex justify-between' >
             <SvgIcon />
            
     
     
-    <nav   style={{transform:"translateY(10px)"}} className="hidden gap-4 text-lg font-semibold md:flex lg:flex">
-         <NavLink to={"/"}><span className='header_links' style={{fontSize:"16px",fontWeight:"600",}}>Home</span> </NavLink>
-         <NavLink to={"/About_us"} style={{position:"relative"}} className="click" onClick={()=>{setPopNav(prev => !prev)}}><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>About  <Triangle style={{rotate:"180deg",transform:"translateY(-8px)"}}/></span> 
+    <nav className="px-3 h-[40px] rounded-xl bg-slate-100 hidden gap-4 text-sm  md:flex lg:flex items-center justify-center" style={{border:"1px solid #ddd"}}>
+         <NavLink to={"/"}><span className='header_links' style={{fontSize:"14px",fontWeight:"600",borderRight:"2px solid #ccc"}}>Home</span> </NavLink>
+         <NavLink to={"/About_us"} style={{position:"relative"}} className="click border-r-2 border-r-[#ccc]" onClick={()=>{setPopNav(prev => !prev)}}><span style={{display:"flex",fontSize:"14px",fontWeight:"500"}}>About  <Triangle style={{rotate:"180deg",transform:"translateY(-8px)"}}/></span> 
               <div className="drop" style={{position:"absolute",background:"white",width:"200%",padding:"8px",zIndex:"40"}}>
-                <a href='#why_choose_us'><p ><Link className="block px-4 py-2 hover:bg-gray-100 transition"  to={"/"} style={{fontSize:"15px"}}>Why choose us</Link></p></a>
-                <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/About"} style={{fontSize:"15px"}}>About us</Link></p>
+                <a href='#why_choose_us'><p ><Link className="block px-4 py-2 hover:bg-gray-100 transition"  to={"/"} style={{fontSize:"14px"}}>Why choose us</Link></p></a>
+                <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/About"} style={{fontSize:"14px"}}>About us</Link></p>
                 
          </div>
          </NavLink>
 
          
-         <NavLink to={"/Services"} style={{position:"relative",}} className="click "><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>Services  <Triangle style={{rotate:"180deg",transform:"translateY(-10px)"}}/></span> 
+         <NavLink to={"/Services"} style={{fontSize:"14px",position:"relative",borderRight:"2px solid #ccc"}} className="click "><span style={{display:"flex",fontSize:"14px",fontWeight:"500"}}>Services  <Triangle style={{rotate:"180deg",transform:"translateY(-10px)"}}/></span> 
               <div className="drop" style={{position:"absolute",background:"white",width:"170%",padding:"8px",isolation:"isolate",zIndex:"99"}}>
                 <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/Services/AirFreight"} style={Link_text}>Air freight</Link></p>
                 <p><Link className="block px-4 py-2 hover:bg-gray-100 transition" to={"/Services/SeaFreight"} style={Link_text}>Sea freight</Link></p>
@@ -48,9 +48,9 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
               </div>
          </NavLink>
          
-         <NavLink to={"/Contact_us"} style={Link_text} className="header_links"><span style={{fontSize:"16px",fontWeight:"600"}} >Contact</span> </NavLink>
+         <NavLink to={"/Contact_us"} style={Link_text} className="header_links border-r-2 border-r-[#ccc]"><span style={{fontSize:"14px",fontWeight:"600"}} >Contact</span> </NavLink>
  
-         <NavLink to={"/More"} style={Link_text} className=" click"><span style={{display:"flex",fontSize:"16px",fontWeight:"500"}}>More  <Triangle style={{rotate:"180deg",transform:"translateY(-8px)"}}/></span> 
+         <NavLink to={"/More"} style={Link_text} className=" click"><span style={{display:"flex",fontSize:"14px",fontWeight:"500"}}>More  <Triangle style={{rotate:"180deg",transform:"translateY(-8px)"}}/></span> 
          <div className="drop" style={{position:"absolute",background:"white",width:"170%",padding:"8px",isolation:"isolate",zIndex:"99"}}>
               
                
@@ -71,33 +71,37 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
           
 
           <div className='flex gap-2 h-full items-center'>
-         <button onClick={()=> setIsOpen(prev=> !prev)} className="h-[40px] block" style={{border:"none",background:"#a422d0",borderRadius:"10px",paddingInline:"8px",color:"#fff",fontSize:"14px",fontWeight:"500"}}>Track shipments</button>
+         <button onClick={()=> setIsOpen(prev=> !prev)} className="h-[40px] block bg-purple-200 bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 border-2 border-purple-400 " style={{color:"#222",borderRadius:"10px",paddingInline:"8px",fontSize:"14px",fontWeight:"500"}}>Track shipments</button>
 
-         <div className="flex items-center justify-center   md:hidden lg:hidden">
-      <button
-        onClick={pop2}
-        className="relative w-7 h-7 focus:outline-none"
-      >
-        {/* Top bar */}
-        <div
-          className={`absolute top-1 left-0 w-full h-[5px] border-stone-600 border-2 rounded transition-transform duration-300 ${
-            popUp2 ? "rotate-45 translate-y-3 border-stone-600" : ""
-          }`}
-        ></div>
-        {/* Middle bar */}
-        <div
-          className={`absolute top-3 left-0 w-full h-[5px] bg-stone-500  rounded transition-opacity duration-300 ${
-            popUp2 ? "opacity-0" : ""
-          }`}
-        ></div>
-        {/* Bottom bar */}
-        <div
-          className={`absolute top-5 left-0 w-full h-[5px] border-stone-600 border-2 rounded transition-transform duration-300 ${
-            popUp2 ? "-rotate-45 -translate-y-3 border-stone-600" : ""
-          }`}
-        ></div>
-      </button>
-    </div>
+         <div className="flex items-center justify-center md:hidden lg:hidden">
+  <button
+    onClick={pop2}
+    aria-label="Toggle Menu"
+    className="relative w-9 h-9 flex items-center justify-center rounded-md transition-all duration-300 group focus:outline-none"
+  >
+    {/* Top bar */}
+    <span
+      className={`absolute w-6 h-[3px] bg-stone-700 rounded-md transform transition-transform duration-300 ease-in-out ${
+        popUp2 ? "rotate-45 top-1/2" : "top-2"
+      }`}
+    ></span>
+
+    {/* Middle bar */}
+    <span
+      className={`absolute w-6 h-[3px] bg-stone-700 rounded-md transition-opacity duration-300 ease-in-out ${
+        popUp2 ? "opacity-0" : "top-[47%]"
+      }`}
+    ></span>
+
+    {/* Bottom bar */}
+    <span
+      className={`absolute  h-[3px] bg-stone-700 rounded-md transform transition-transform duration-300 ease-in-out ${
+        popUp2 ? "-rotate-45 top-1/2 w-6" : "bottom-2 w-4 left-[20%]"
+      }`}
+    ></span>
+  </button>
+</div>
+
     </div>
         </header>
   )

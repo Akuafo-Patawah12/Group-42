@@ -20,7 +20,7 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
         <div key={index} className='relative w-[250px] border-2 bg-white border-purple-500 mt-4 shadow-sm rounded-2xl overflow-hidden break-inside-avoid   hover:shadow-2xl'>
           <section className=' absolute top-2 z-40 size-8 rounded-[50%] border-2 border-[var(--purple)] bg-gray-400 font-medium grid place-items-center ml-3 '>{post?.username[0]}</section>
           <section className='flex justify-center items-center  bg-stone-100 w-full'>
-                {loader&& <div className='absolute'><ImageLoader /></div>}
+                {loader&& <div className='h-[200px] flex items-center justify-center'><ImageLoader /></div>}
                 {online?
                 <LazyLoadImage  
                    src={post.img_vid} 

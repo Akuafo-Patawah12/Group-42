@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom"
 import { ReactComponent as SvgIcon } from "../icons/svgl_svg_format_2.svg"
-import { FireOutlined, BellOutlined } from "@ant-design/icons";
+import {  BellOutlined } from "@ant-design/icons";
+import {ShoppingCart} from "lucide-react"
 import { Button, Space } from "antd";
 
 export default function Header() {
@@ -12,7 +13,7 @@ export default function Header() {
       <Space>
         <NavLink to={"/Customer/Trends"}>
           <Button
-            icon={<FireOutlined />}
+            icon={<ShoppingCart />}
             className="rounded-xl flex justify-center items-center border-2 border-gray-300 font-medium"
           >
             Marketplace

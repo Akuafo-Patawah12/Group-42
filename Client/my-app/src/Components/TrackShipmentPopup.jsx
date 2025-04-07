@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 
+import { Modal, Input, Button, Typography, Alert, Space } from "antd";
+
+const { Title, Text } = Typography;
+
 const TrackShipmentPopup = ({open,trackRef}) => {
     const [setIsOpen,isOpen] = open
   
@@ -19,71 +23,68 @@ const TrackShipmentPopup = ({open,trackRef}) => {
 
   return (
     <div >
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        onClick={() => setIsOpen(true)}
-      >
-        Track Shipment
-      </button>
+      
 
-      {isOpen && (
-        <div  className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div ref={trackRef}   className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">Track Your Shipment</h2>
+      <Modal
+      open={isOpen}
+      onCancel={() => {
+        setIsOpen(false);
+        setTrackingId("");
+        setShipmentStatus(null);
+      }}
+      footer={null}
+      title="Track Your Shipment"
+    >
+      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+        <Input
+          placeholder="Enter Tracking ID"
+          value={trackingId}
+          onChange={(e) => setTrackingId(e.target.value)}
+        />
 
-            <input
-              type="text"
-              placeholder="Enter Tracking ID"
-              value={trackingId}
-              onChange={(e) => setTrackingId(e.target.value)}
-              className="w-full px-3 py-3 border rounded mb-4"
-            />
+        <Alert
+          type="info"
+          showIcon
+          className="border-2 border-purple-300 bg-purple-50"
+          message={
+            <div>
+              <Text strong>NB:</Text> Your Consignment No. is the same as the Tracking number, which is sent to the email address you submitted for registration. <br />
+              <br />
+              The tracking number is a 13-digit code which starts with the prefix <Text code>“ILL”</Text> and ends with <Text code>“-SHP”</Text>.
+              <br />
+              <br />
+              If you cannot find the email in your inbox, please check your Spam. Kindly get in touch with us if you still have not received your tracking number.
+            </div>
+          }
+        />
 
-<section className='border-2 border-orange-400 border-dashed rounded py-2 px-[2%]'>
-           <span style={{fontWeight:"600",fontSize:"16px",color:"black"}}>NB:</span> Your Consignment No. is the same as the Tracking number, which is sent to the email address you submitted for registration. 
+        <Button type="primary" className="bg-purple-500" block onClick={handleTrackShipment}>
+          Track
+        </Button>
 
-The tracking number is a 13-digit code which starts with the prefix “ILL” and ends with “-SHP”
-
-If you cannot find the email in your inbox, please check your Spam. Kindly get in touch with us if you still have not received your tracking number
-        </section>
-
-            <button
-              className="bg-purple-500 mt-4 text-white px-4 py-3 rounded hover:bg-purple-600 w-full"
-              onClick={handleTrackShipment}
-            >
-              Track
-            </button>
-
-            {shipmentStatus && (
-              <div className="mt-4 bg-gray-100 p-3 rounded">
-                <p>
-                  <span className="font-bold">Tracking ID:</span>{" "}
-                  {shipmentStatus.id}
-                </p>
-                <p>
-                  <span className="font-bold">Status:</span>{" "}
-                  {shipmentStatus.status}
-                </p>
-                <p>
-                  <span className="font-bold">Estimated Delivery:</span>{" "}
-                  {shipmentStatus.estimatedDelivery}
-                </p>
-              </div>
-            )}
-           
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-3 rounded hover:bg-red-600 w-full"
-              onClick={() => {
-                setIsOpen(false);
-                setTrackingId("");
-                setShipmentStatus(null);
-              }}
-            >
-              Close
-            </button>
+        {shipmentStatus && (
+          <div style={{ background: "#f5f5f5", padding: 12, borderRadius: 6 }}>
+            <p>
+              <Text strong>Tracking ID:</Text> {shipmentStatus.id}
+            </p>
+            <p>
+              <Text strong>Status:</Text> {shipmentStatus.status}
+            </p>
+            <p>
+              <Text strong>Estimated Delivery:</Text> {shipmentStatus.estimatedDelivery}
+            </p>
           </div>
-        </div>
-      )}
+        )}
+
+        <Button danger block onClick={() => {
+          setIsOpen(false);
+          setTrackingId("");
+          setShipmentStatus(null);
+        }}>
+          Close
+        </Button>
+      </Space>
+    </Modal>
     </div>
   );
 };

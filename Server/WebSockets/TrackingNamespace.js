@@ -60,6 +60,23 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
         console.log(error)
     }
 })
+
+Socket.on("track",async(data,callback)=>{
+   
+    try{
+      console.log(data)
+      const Order = await shipment.find({ items: { $elemMatch: { trackingNo: data } } });
+      if(Order.length===0){
+         callback({status: "error", message:"Your tracking id is not associated with any order"})
+      }
+      console.log(Order)
+      callback({status: "ok",message:"Tracking"})
+      socket.emit("get_item_location",{route: Order[0].route,country: Order[0].selected_country})
+      
+    }catch(error){
+        console.log(error)
+    }
+   })
   
     // Log the users currently in the /order room for debugging
     

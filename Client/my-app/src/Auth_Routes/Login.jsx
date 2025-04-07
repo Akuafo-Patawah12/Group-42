@@ -3,8 +3,12 @@ import { Link,useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { Form, Input, Button, Checkbox, Typography } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+
+
+
+
 import axios from 'axios'
 import WarningIcon from '../icons/Warning_icon'
 import ButtonLoader from '../icons/ButtonLoader';
@@ -19,7 +23,7 @@ const Login = () => {
        const[loader,setLoader] =useState(false)
     const[validation,seValidation] =useState("")
        const navigate= useNavigate()
-       const handSubmit = async(e)=>{
+       const handleSubmit = async(e)=>{
         e.preventDefault();
         
         try{
@@ -119,60 +123,108 @@ const Login = () => {
     
   return (
     
-        <div className='flex justify-center mt-[40px] w-full items-center h-screen bg-gray-100 '>
+        <div className='flex justify-center w-full items-center h-screen bg-gray-100 '>
 
             <section className=' relative border-[1px]  w-full  overflow-hidden bg-white border-stone-300 shadow-2xl flex items-center flex-col h-full lg:flex-row gap-2 '>
                 
-                <div className='w-full  h-[130px]  lg:h-full overflow-hidden'>
+                <div className='w-full  h-full  lg:overflow-hidden'>
                     <img src='../images/welcome.jpg' className='h-full w-full object-cover object-center' alt='sign'></img>
                 </div>
 
-                <form onSubmit={handSubmit} className="w-[40%] border-l-2 border-r-2 border-stone-300 items-center absolute h-full bg-white top-0 right-[5%] z-2">
-                    <div className=' flex flex-col gap-4 '>
-                        <h4 className='mx-auto mt-10 text-sm font-medium'>SF Ghana Logistics.</h4>
-                        <div className='font-bold  text-gray-600 w-[73%] mx-auto'>Welcome to our supply chain solutions.</div>
-                    
-                    
+                <Form
+  onFinish={handleSubmit}
+  className="form w-[95%] border-l-2 border-r-2 border-stone-300 items-center absolute h-full bg-white   z-2 lg:w-[40%] top-0 right-[5%]"
+>
+  <div className="flex flex-col gap-4">
+    <Typography.Title level={5} className="mx-auto mt-10 !mb-0">
+      SF Ghana Logistics.
+    </Typography.Title>
 
-                    <input type='email'
-                        placeholder='Enter email' 
-                        className='border-2 border-gray-400 rounded-md px-2 py-5 text-md w-[73%] mx-auto h-[35px]'
-                        onChange={(e)=>setFormData({...formData,email: e.target.value})} 
-                        required={true}
-                        ></input>
-                    
-                  
-                    <div className='relative mx-auto w-[73%]'>   
-                                        <input type={togglePassword? 'text':'password'}  
-                                            placeholder='Password' 
-                                            className='border-2 border-gray-400 rounded-md px-2 py-5 text-md w-full  h-[35px]'
-                                            onChange={(e)=>setFormData({...formData,password: e.target.value})}
-                                            required={true} 
-                                            ></input>
-                                            <div className='absolute right-2 top-[6px]' onClick={pass_to_text}>{togglePassword? <EyeInvisibleOutlined /> : <EyeOutlined />}</div>
-                                            </div>
+    <Typography.Text className="font-bold text-gray-600 w-[73%] mx-auto text-center">
+      Welcome to our supply chain solutions.
+    </Typography.Text>
 
-             <div className='flex w-[78%] text-md font-small  text-red-400 items-center mx-auto'>
-                    {validation==="" ?"":<WarningIcon size={18}/>} {validation} 
-             </div>
+    <Form.Item
+      name="email"
+      rules={[{ required: true, message: 'Please input your email!' }]}
+      className="w-[73%] mx-auto"
+    >
+      <Input
+        placeholder="Enter email"
+        className="h-[35px]"
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+      />
+    </Form.Item>
 
-                <div className='flex mx-auto w-[73%] justify-between items-center'>
-                    <section className='flex items-center'>
-                        <input type='checkbox'
-                           checked={formData.rememberMe}
-                           onChange={(e) => setFormData({...formData,rememberMe:e.target.checked})}
-                        />
-                        <label className='font-medium text-sm'>Stay logged in</label>
-                    </section>
-                        <Link to={"/forgetPassword"} className='text-blue-500 font-medium text-sm'>Forget Password?</Link>
-                </div>
-                                   {/*if the button loader is visible the login button will be disabled */}
-                <button type='submit' disabled={loader? true: false} className="h-[35px] flex py-5 text-md justify-center items-center gap-2 bg-[var(--purple)] w-[73%] rounded-md text-white font-medium mx-auto"><p>Login</p>{loader? <ButtonLoader/>:""}</button>
-                    
-                    
-                    <div className='w-[78%] mx-auto'><Link to={"/SignUp"} className='text-blue-500 font-medium hover:underline decoration-2 active:underline '>Create Account</Link> instead.</div>
-                </div>
-            </form>
+    <Form.Item
+      name="password"
+      rules={[{ required: true, message: 'Please input your password!' }]}
+      className="w-[73%] mx-auto"
+    >
+      <Input.Password
+        placeholder="Password"
+        iconRender={(visible) =>
+          visible ? <EyeInvisibleOutlined /> : <EyeOutlined />
+        }
+        className="h-[35px]"
+        onChange={(e) =>
+          setFormData({ ...formData, password: e.target.value })
+        }
+        visibilityToggle={{
+          visible: togglePassword,
+          onVisibleChange: pass_to_text,
+        }}
+      />
+    </Form.Item>
+
+    <div className="flex w-[78%] text-md font-small text-red-400 items-center mx-auto">
+      {validation === '' ? '' : <WarningIcon size={18} />} {validation}
+    </div>
+
+    <div className="flex mx-auto w-[73%] justify-between items-center">
+      <Form.Item name="rememberMe" valuePropName="checked" noStyle>
+        <Checkbox
+          checked={formData.rememberMe}
+          onChange={(e) =>
+            setFormData({ ...formData, rememberMe: e.target.checked })
+          }
+        >
+          <span className="font-medium text-sm">Stay logged in</span>
+        </Checkbox>
+      </Form.Item>
+
+      <Link
+        to="/forgetPassword"
+        className="text-blue-500 font-medium text-sm"
+      >
+        Forget Password?
+      </Link>
+    </div>
+
+    <Form.Item className="w-[73%] mx-auto">
+      <Button
+        type="primary"
+        htmlType="submit"
+        disabled={loader}
+        className="h-[35px] w-full bg-[var(--purple)]"
+        loading={loader}
+      >
+        Login
+      </Button>
+    </Form.Item>
+
+    <div className="w-[78%] mx-auto text-center">
+      <Link
+        to="/SignUp"
+        className="text-blue-500 font-medium hover:underline decoration-2 active:underline"
+      >
+        Create Account
+      </Link>{' '}
+      instead.
+    </div>
+  </div>
+</Form>
+
             </section>
         </div>
     

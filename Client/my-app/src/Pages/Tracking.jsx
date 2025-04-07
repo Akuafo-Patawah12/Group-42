@@ -1,165 +1,386 @@
-import React, { useState } from "react";
-import Map, { Marker,  NavigationControl,Source,Layer } from "react-map-gl";
-import {route1,route2,route3,route4,route5} from "../Components/Routes"
-const TrackingPage = () => {
-  const [trackingNumber, setTrackingNumber] = useState("");
-  const [trackingInfo, setTrackingInfo] = useState(null);
-  const [error, setError] = useState("");
+import React,{useState,useMemo,useEffect,useRef} from 'react'
+import {useSearchParams,useNavigate} from "react-router-dom"
+import "./Tracking.css"
+import io from "socket.io-client"
+import { message,Empty } from "antd"
 
-  const handleTracking = () => {
-    if (!trackingNumber) {
-      setError("Please enter a valid tracking number.");
-      return;
+import {route1,route2,route3,route4,route5} from "../Data/RouteData"
+import  ShipIcon  from "../icons/Truck.svg"
+import  MapShipIcon  from "../icons/CargoShip.svg"
+import  Ship2Icon  from "../icons/image.svg"
+import { RightCircleFilled,ArrowRightOutlined, UpOutlined ,CheckOutlined  } from '@ant-design/icons'
+import Map, { Marker,  NavigationControl,Source,Layer } from "react-map-gl";
+import { Form, Input, Button } from "antd";
+
+const Mapbox = () => {
+
+  const parent= useRef(null)
+  const socket = useMemo(() =>io("http://localhost:4000/Tracking",{
+    transports: ["websocket","polling"],
+    withCredentials: true,
+  secure: true
+  }),[])
+  
+  const [route,setRoute] = useState("")
+  const [country , setCountry] = useState("")
+  const [lineGeoJSON, setLineGeoJSON] = useState(null);
+  const [isModalOpen,setIsModalOpen]= useState(false)
+  
+useEffect(()=>{
+socket.on('connect',()=>{
+    console.log("Connected to server")
+})
+
+socket.on('get_item_location',(data)=>{
+  console.log("tracking order",data)
+  setRoute(data.route || "")
+  setCountry(data.country || "")
+})
+
+socket.on("connect_error",(error)=>{
+          console.log(error)
+          if(error.message.includes("Refresh token expired")){
+            setTimeout(()=>{
+              setIsModalOpen(true)
+            },1000)
+          }
+        })
+
+socket.on("disconnect", reason => console.log(reason))
+return()=>{
+socket.off("connect")
+socket.off("get_item_location")
+socket.off("connect_error")
+socket.off("disconnect")
+
+}
+},[socket]);
+
+
+const [searchParams] = useSearchParams();
+const trackingId = searchParams.get("tracking_id");
+
+    
+
+      const pRefs = useRef([]);
+      
+      
+      const routesMap = {
+        Guangzhou_Route_1: route1,
+        Yiwu_Route_1: route2,
+        Guangzhou_Route_2: route3,
+        Guangzhou_Route_3: route4,
+        Yiwu_Route_2: route5,
+        
+      };
+ 
+
+      
+       
+      
+      
+  
+      useEffect(() => {
+        if (route && routesMap[route]) {
+          const landCoordinates = routesMap[route].map(({ Longitude, Latitude }) => [Longitude, Latitude]);
+      
+          setLineGeoJSON({
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: landCoordinates, // Only land routes
+            },
+          });
+        }
+      }, [route]);
+      
+      
+
+      
+
+const [xPosition, setXposition] = useState(0);
+const [bound, setBound] = useState(0);
+const [Index,setIndex] = useState(0)
+const [scroll,setScroll] = useState(0)
+
+function Scroll() {
+  if (parent.current) {
+    const { scrollLeft, scrollTop } = parent.current;
+
+    // Check if horizontal scroll changed
+    if (scrollLeft !== scroll) {
+      setScroll(scrollLeft);
     }
 
-    // Simulating API call (replace with actual API logic)
-    const mockData = {
-      number: trackingNumber,
-      status: "In Transit",
-      estimatedDelivery: "January 22, 2025",
-      checkpoints: [
-        { date: "January 16, 2025", location: "Warehouse A", status: "Dispatched" },
-        { date: "January 17, 2025", location: "Port City", status: "Loaded onto Ship" },
-        { date: "January 18, 2025", location: "Customs Check", status: "Cleared" },
-      ],
-    };
-
-    setTrackingInfo(mockData);
-    setError("");
+    // Prevent vertical scrolling
+    if (scrollTop !== 0) {
+      parent.current.scrollTop = 0;
+    }
+  }
+}
+useEffect(() => {
+  const element= parent.current
+  if (!element) return;
+  
+  element.addEventListener('scroll', Scroll); // Add scroll event listener
+  
+  return () => {
+    
+    element.removeEventListener('scroll', Scroll); // Cleanup on unmount
+    
   };
+}, [scroll,xPosition]);
 
-  const [viewport,setViewport] = useState({
-    latitude: 23.0848,
-    longitude: 113.4348,
-    zoom: 2,
-  });
+const countRef = useRef(null);
 
-  const lineGeoJSON = {
-    type: "Feature",
-    geometry: {
-      type: "LineString",
-      coordinates: [
-        [route1[0].Longitude,route1[0].Latitude],
-        [route1[1].Longitude,route1[1].Latitude],
-        [route1[2].Longitude,route1[2].Latitude],
-        [route1[3].Longitude,route1[3].Latitude],
-        [route1[4].Longitude,route1[4].Latitude],
-        [route1[5].Longitude,route1[5].Latitude],
-        [route1[6].Longitude,route1[6].Latitude],
-        ],
-    },
-    properties: {},
+// Function to update bound when the country is found
+const updateBound = () => {
+  if (!pRefs.current) return;
+
+  pRefs.current.forEach((p) => {
+    const foundIndex = pRefs.current.findIndex(p => p && p.innerHTML.trim() === country);
+    setIndex(foundIndex);
+
+    if (p && p.innerHTML.trim() === country) {
+      const rect = p.getBoundingClientRect();
+      const newBound = Math.round(rect.left + scroll); // Adjust for scroll
+      setBound(newBound);
+
+      // Immediately update position to match the new bound
+      
+
+      // Reset animation if already running
+      if (countRef.current) clearInterval(countRef.current);
+
+      countRef.current = setInterval(() => {
+        setXposition((previousNumber) => {
+          if (previousNumber === newBound) {
+            clearInterval(countRef.current);
+            return previousNumber;
+          }
+
+          return previousNumber < newBound ? previousNumber + 1 : previousNumber - 1;
+        });
+    },10)
+    }
+    })
+    return()=>{
+      clearInterval(countRef.current)
+    }
+    }
+
+
+// Runs when country or index changes
+useEffect(() => {
+  updateBound();
+}, [country, Index]);
+
+// Runs when window is resized
+useEffect(() => {
+  const handleResize = () => {
+    updateBound(); // Ensure updated position on resize
   };
+  window.addEventListener("resize", handleResize);
 
+  return () => window.removeEventListener("resize", handleResize);
+},[xPosition]);
+
+
+
+      const [scrollPosition, setScrollPosition] = useState(0); // Track scroll position
+      const [showButton, setShowButton] = useState(false); // Show/hide the back-to-top button
+    
+      // Handle the scroll event
+      const handleScroll = () => {
+        const position = window.scrollY;
+        setScrollPosition(position);
+        if (position > 300) { // Show the button after 300px scroll
+          setShowButton(true);
+        } else {
+          setShowButton(false);
+        }
+      };
+    
+      // Scroll to the top when the button is clicked
+      const scrollToTop = () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      };
+    
+      useEffect(() => {
+        window.addEventListener('scroll', handleScroll); // Add scroll event listener
+        return () => {
+          window.removeEventListener('scroll', handleScroll); // Cleanup on unmount
+        };
+      }, []);
+  
+ 
+  
+ const [form] = Form.useForm();
+
+ 
+
+ 
+
+const navigate = useNavigate();
+const track_id = searchParams.get("track_id"); // Get track_id from URL
+
+// Handle search input change
+const handleSearch = (e) => {
+  console.log(e.target.value); // Log user input
+};
+
+// Handle form submission
+const handleTrack = (values) => {
+  if (values.search) {
+    navigate(`?track_id=${values.search}`); // Add tracking ID to URL
+  }
+};
+
+// Send track_id to backend via Socket.IO when it exists in the URL
+useEffect(() => {
+  if (track_id) {
+   socket.emit("track",track_id,(response)=>{
+    response.status==="ok"  ? message.success(response.message)  : message.error(response.message);
+  })
+    console.log(`Sent track_id to backend: ${track_id}`);
+  }
+}, [track_id]);
   return (
-    <div className="bg-gray-100 min-h-screen py-12 px-6 mt-[70px] lg:px-24 w-[80%] ml-auto">
-      {/* Page Header */}
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Track Your Shipment</h1>
-        <p className="text-gray-600 text-lg">
-          Enter your tracking number to get real-time updates on your shipment status.
-        </p>
-      </header>
+    <>
 
-      {/* Tracking Input */}
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
-        <div className="flex flex-col md:flex-row items-center gap-4">
-          <input
-            type="text"
-            placeholder="Enter Tracking Number"
-            className="w-full md:w-2/3 border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={trackingNumber}
-            onChange={(e) => setTrackingNumber(e.target.value)}
+    <div className='mt-[100px] w-80%'>
+    
+      <h2>Track Your Order</h2>
+      <Form onFinish={handleTrack} layout="inline">
+        <Form.Item name="search" style={{ flex: 1 }}>
+          <Input
+            placeholder="Enter Tracking ID..."
+            allowClear
+            size="large"
+            onChange={handleSearch}
           />
-          <button
-            onClick={handleTracking}
-            className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition"
-          >
-            Track
-          </button>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" size="large">
+            Search
+          </Button>
+        </Form.Item>
+      </Form>
+      {track_id && <p>Tracking ID: {track_id}</p>}
+    </div>
+  
+   {routesMap[route] ? <div>
+        <div className="headline">
+        <div className="line_header">SHIPPING ROUTE FROM CHINA TO GHANA.</div>
+         
         </div>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+        
+        <div className="line_map" ref={parent}>
+        <div className="line_inner" >
+          
+        <div  className="ship" style={{background:"yellow !important",position:"relative"}}><img src={ShipIcon} alt='ship' style={{ position: "absolute",top:"-40px", left: `${xPosition-3}px` ,width:"fit-content"}}/> 
+         </div>
+        <section className="line" style={{position:"relative"}} >
+          
+        
+      {routesMap[route].map((port, index) => (
+        <div key={index} className="current_city" >
+        <div className="ship-cont">
+      <div
+        style={{
+          background: "var(--green)",
+          position: "relative",
+          height: "30px",
+          width: "30px",
+          border:"2px solid #444",
+          borderRadius:"50%",
+        }}
+      >
+        {pRefs.current[index]?.getBoundingClientRect &&
+          pRefs.current[index].getBoundingClientRect().left +
+            Math.round(scroll) <=
+            xPosition + 10  && (
+            <CheckOutlined style={{ position: "relative", top: "0", left: "0" }} />
+          )}
       </div>
+      <div className="cordinates">
+      <p  ref={(el) => (pRefs.current[index] = el)}>
+        {port.countryPort} 
+      </p>
+      <main>{port.country}</main>
+      </div>
+    </div>
 
-      {/* Tracking Information */}
-      {trackingInfo && (
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Tracking Details</h2>
-          <p className="text-gray-600 mb-2">
-            <span className="font-bold">Tracking Number:</span> {trackingInfo.number}
-          </p>
-          <p className="text-gray-600 mb-2">
-            <span className="font-bold">Current Status:</span> {trackingInfo.status}
-          </p>
-          <p className="text-gray-600 mb-6">
-            <span className="font-bold">Estimated Delivery:</span>{" "}
-            {trackingInfo.estimatedDelivery}
-          </p>
+    {/* Insert Arrow After Every Ship-Cont Except the Last One */}
+    {index > 0 && index < routesMap[route].length + 2 ? (
+      <ArrowRightOutlined className={`arrow arrow_${index + 1}`} />
+    ) : null}
+  </div>
+))}
+    
 
-          {/* Checkpoints */}
-          <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4">Shipment Checkpoints</h3>
-            <ul className="space-y-4">
-              {trackingInfo.checkpoints.map((checkpoint, index) => (
-                <li key={index} className="flex items-start gap-4">
-                  <div className="text-blue-500 font-bold">{checkpoint.date}</div>
-                  <div>
-                    <p className="text-gray-800 font-semibold">{checkpoint.location}</p>
-                    <p className="text-gray-600">{checkpoint.status}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+        </section>
+        
+        
         </div>
-      )}
 
-      <Map
-      initialViewState={viewport}
+        </div>
+       
+          <div style={{width:"fit-content",marginInline:"auto",paddingBlock:"10px"}}><a href='#Map' ><button className='route_button'><Ship2Icon /> ROUTE MAP <RightCircleFilled style={{color:"#A7C756",marginLeft:"10px"}}/> </button></a></div>
+        <div style={{width:"95%",marginInline:"auto"}}>
+        <Map
+      initialViewState={{
+        latitude: routesMap[route][Index].Latitude,
+        longitude: routesMap[route][Index].Longitude,
+        zoom: 2,
+      }}
       style={{ width: "100%", height:"400px",marginTop:"30px" }}
       mapStyle="mapbox://styles/mapbox/streets-v11"
-      mapboxAccessToken="pk.eyJ1IjoiYWt1YWZvLTEiLCJhIjoiY200MXhxNnJrMDQzNjJrcjAzbXg4cTliMCJ9.6cwG6dff4E2UjnQz7q963A"
+      mapboxAccessToken= {import.meta.env.VITE_MAP_API_KEY}
       id="Map"
     >
-      <Marker latitude={23.0848} longitude={113.4348}>
-        <div>Ship</div>
+      <Marker latitude={routesMap[route][Index].Latitude} longitude={routesMap[route][Index].Longitude}>
+        <div><MapShipIcon/></div>
       </Marker>
 
-      <Marker longitude={route1[0].Longitude} latitude={route1[0].Latitude} color="blue">
+      <Marker longitude={routesMap[route][0].Longitude} latitude={routesMap[route][0].Latitude} color="blue">
         <div>
-          <p style={{ fontSize:"12px", color: "blue" }}>{route1[0].countryPort}</p>
+          <p style={{ fontSize:"12px", color: "blue" }}>{routesMap[route][0].countryPort}</p>
         </div>
       </Marker>
-      <Marker longitude={route1[1].Longitude} latitude={route1[1].Latitude} color="green">
+      <Marker longitude={routesMap[route][1].Longitude} latitude={routesMap[route][1].Latitude} color="green">
         <div>
-          <p style={{ fontSize: "12px", color: "green" }}>{route1[1].countryPort}</p>
+          <p style={{ fontSize: "12px", color: "green" }}>{routesMap[route][1].countryPort}</p>
         </div>
       </Marker>
-      <Marker longitude={route1[2].Longitude} latitude={route1[2].Latitude} color="red">
+      <Marker longitude={routesMap[route][2].Longitude} latitude={routesMap[route][2].Latitude} color="red">
         <div>
-          <p style={{ fontSize: "12px", color: "red" }}>{route1[2].countryPort}</p>
-        </div>
-      </Marker>
-
-      <Marker longitude={route1[3].Longitude} latitude={route1[3].Latitude} color="red">
-        <div>
-          <p style={{ fontSize: "12px", color: "red" }}>{route1[3].countryPort}</p>
+          <p style={{ fontSize: "12px", color: "red" }}>{routesMap[route][2].countryPort}</p>
         </div>
       </Marker>
 
-       <Marker longitude={route1[4].Longitude} latitude={route1[4].Latitude} color="red">
+      <Marker longitude={routesMap[route][3].Longitude} latitude={route1[3].Latitude} color="red">
         <div>
-          <p style={{ fontSize: "12px", color: "red" }}>{route1[4].countryPort}</p>
+          <p style={{ fontSize: "12px", color: "red" }}>{routesMap[route][3].countryPort}</p>
         </div>
       </Marker>
 
-       <Marker longitude={route1[5].Longitude} latitude={route1[5].Latitude} color="red">
+       <Marker longitude={routesMap[route][4].Longitude} latitude={routesMap[route][4].Latitude} color="red">
         <div>
-          <p style={{ fontSize: "12px", color: "red" }}>{route1[5].countryPort}</p>
+          <p style={{ fontSize: "12px", color: "red" }}>{routesMap[route][4].countryPort}</p>
         </div>
       </Marker>
 
-      <Marker longitude={route1[6].Longitude} latitude={route1[6].Latitude} color="red">
+       <Marker longitude={routesMap[route][5].Longitude} latitude={routesMap[route][5].Latitude} color="red">
+        <div>
+          <p style={{ fontSize: "12px", color: "red" }}>{routesMap[route][5].countryPort}</p>
+        </div>
+      </Marker>
+
+      <Marker longitude={routesMap[route][6].Longitude} latitude={routesMap[route][6].Latitude} color="red">
         <div>
           <p style={{ fontSize: "12px", color: "red" }}>{route1[6].countryPort}</p>
         </div>
@@ -167,11 +388,12 @@ const TrackingPage = () => {
 
       {/* Add Line */}
       <Source id="line-source" type="geojson" data={lineGeoJSON}>
+      
         <Layer
           id="line-layer"
           type="line"
           paint={{
-            "line-color": "#FF5733", // Line color (orange-red)
+            "line-color": "#8A2BE2", // BlueViolet line color
             "line-width": 3, // Line thickness
           }}
         />
@@ -183,7 +405,28 @@ const TrackingPage = () => {
       {/* Add Popup or other components here */}
     </Map>  
     </div>
-  );
-};
 
-export default TrackingPage;
+
+    {showButton && (
+        <button
+          className="back-to-top"
+          style={{
+            borderWidth: `${Math.min(scrollPosition / 10, 100)}%`, // Border grows as you scroll
+          }}
+          onClick={scrollToTop}
+        >
+          <UpOutlined />
+        </button>
+      )}
+
+    </div>: 
+     <div style={{height:"400px",display:"flex",alignItems:"center",justifyContent:"center"}}>
+     <Empty description={<span style={{ fontSize: "16px", fontWeight: "500",marginLeft:"-25px" }}>No Data Available</span>} />
+     </div>
+    }
+  
+    </>
+  )
+}
+
+export default Mapbox

@@ -72,27 +72,7 @@ input[type="email"]:focus{
    
  }
  
- .active > span{
-   color: var(--purple);
- }
  
- .active::before{
-   content: "";
-   position: absolute;
-   width: 100%;
-   height: 4px;
-   background: var(--purple);
-   z-index: 2;
-   left: 0;
-   
-   bottom: -13px;
-   
- }
- 
-.header{
- 
-  box-shadow: #3498db;
-}
 
 
 
@@ -116,4 +96,12 @@ input {
   background: var(--color);
   clip-path: polygon(0% 45%,15% 44%,32% 50%,
      54% 60%,70% 61%,84% 59%,100% 52%,100% 100%,0% 100%);
+}
+
+@media (max-width: 768px) {
+  .form{
+    transform:translate(-50%, -50%);
+    left: 50%;
+    top:50%;
+  }
 }
