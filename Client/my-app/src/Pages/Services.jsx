@@ -18,7 +18,7 @@ const Services = () => {
     const svg={marginInline:"auto"}
   return (
     <div>
-        <section className="mt-[50px] relative bg-stone-200 w-full h-[400px]">
+        <section className="relative bg-stone-200 w-full h-[400px]">
             <img src="../images/Air.jpg" alt="image" className='imag imag_1'></img>
             <img src="../images/Air2.jpg" alt="image" className="imag imag_2"></img>
             <img src="../images/Sea.jpg" alt="image" className="imag imag_3"></img>

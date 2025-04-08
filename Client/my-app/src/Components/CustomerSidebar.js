@@ -2,38 +2,27 @@ import React, { useState } from "react";
 import {
   DatabaseOutlined,
   SettingOutlined,
-  FileTextOutlined,
-  BarChartOutlined,
+ 
   CompassOutlined,
-  TruckOutlined,
+  
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Button, Tooltip } from "antd";
-import { NavLink, useNavigate,useLocation } from "react-router-dom";
+import { NavLink,useLocation } from "react-router-dom";
 import axios from "axios";
+import useLogout from "../Hooks/Logout";
 
 const { Sider } = Layout;
 
 const CustomerSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate();
+ 
   const location = useLocation();
   axios.defaults.withCredentials = true;
 
-  const LogOut = async () => {
-    try {
-      await axios.post("http://localhost:5000/logout").then((res) => {
-        if (res.data === "Success") {
-          localStorage.removeItem("accesstoken");
-          navigate("/Login");
-        }
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const logout = useLogout()
 
   const menuItems = [
     { key: "overview", label: "Overview", icon: <DatabaseOutlined className="text-purple-600"/>, path: "/Customer/Overview" },
@@ -72,7 +61,7 @@ const CustomerSidebar = () => {
       {/* Logout Button */}
       <div className="absolute translate-x-[-50%] translate-y-[-50%] left-[50%] bottom-[100px] w-[90%] flex justify-center">
         <Tooltip title="Log Out">
-          <Button type="primary" danger className="bg-red-300" icon={<LogoutOutlined />} onClick={LogOut} block={!collapsed}>
+          <Button type="primary" danger className="bg-red-300" icon={<LogoutOutlined />} onClick={logout} block={!collapsed}>
             {!collapsed && "Log Out"}
           </Button>
         </Tooltip>

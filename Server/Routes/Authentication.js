@@ -129,7 +129,7 @@ const SignUp =async(req,res)=>{
     //logging out user
     async function logout (req,res){
         res.cookie("refreshToken","",{maxAge:1});  // set the expiring time of the token to 1 second
-            res.json("Success")
+            res.status(200).json("Success")
        }
 
 

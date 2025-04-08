@@ -1,12 +1,14 @@
-import React,{useState,useEffect,useMemo} from 'react'
+import React,{useState,useEffect,useMemo,useRef} from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import Warning_icon from '../icons/Warning_icon'
 import ButtonLoader from '../icons/ButtonLoader';
-
+import { Button, Table, Input, Checkbox } from 'antd';
 import {Swal} from "sweetalert2"
 import { motion} from 'framer-motion';
+
+import { SearchOutlined } from '@ant-design/icons';
 
 const Clients = () => {
 
@@ -156,7 +158,125 @@ const Clients = () => {
       }
     };
     
-
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef(null);
+  
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+      confirm();
+      setSearchText(selectedKeys[0]);
+      setSearchedColumn(dataIndex);
+    };
+  
+    const handleReset = (clearFilters, confirm) => {
+      clearFilters();
+      setSearchText('');
+      confirm(); // resets the table to show all rows
+    };
+  
+    const getColumnSearchProps = (dataIndex) => ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={searchInput}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSelectedKeys(value ? [value] : []);
+              if (!value) {
+                handleReset(clearFilters, confirm);
+              }
+            }}
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              className="bg-blue-500 text-white px-2 py-1 rounded text-sm"
+            >
+              Search
+            </button>
+            <button
+              onClick={() => handleReset(clearFilters, confirm)}
+              className="bg-gray-300 px-2 py-1 rounded text-sm"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+      ),
+      onFilter: (value, record) =>
+        record[dataIndex]?.toString().toLowerCase().includes(value.toLowerCase()),
+    });
+  
+    const columns = [
+      {
+        title: <Checkbox />,
+        dataIndex: 'checkbox',
+        key: 'checkbox',
+        render: () => <Checkbox />,
+        width: 50,
+      },
+      {
+        title: 'User_id',
+        dataIndex: '_id',
+        key: '_id',
+      },
+      {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
+        ...getColumnSearchProps('email'),
+        render: (text) => (
+          <div
+            style={{
+              cursor: 'pointer',
+              overflowX: 'auto',
+              maxWidth: '80px',
+              fontSize: '15px',
+              color: '#57534e',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+            }}
+            title={text}
+          >
+            {text}
+          </div>
+        ),
+      },
+      {
+        title: 'Name',
+        dataIndex: 'username',
+        key: 'username',
+      },
+      {
+        title: 'Last Active',
+        dataIndex: 'active',
+        key: 'active',
+        render: (active) => (
+          <span style={{ fontSize: '15px', color: '#57534e' }}>
+            {getTimeDifference(active)}
+          </span>
+        ),
+      },
+      {
+        title: 'Permissions',
+        dataIndex: 'account_type',
+        key: 'account_type',
+      },
+    ];
+  
+    const dataSource = Users.map((user, index) => ({
+      key: index,
+      ...user,
+    }));
+    
     
   return (
     <motion.div
@@ -164,9 +284,9 @@ const Clients = () => {
     animate={{ opacity: 1, perspective: 1000, rotateY: 0 ,y:0}}
     exit={{ opacity: 0 ,y:-100}}
     duration={{duration: 0.3}}
-    className='mt-[60px] w-full bg-stone-100 lg:w-[80%] ml-auto'>
+    className='mt-[100px] w-full bg-stone-100 lg:w-[80%] ml-auto'>
         <div className='relative'>
-            <button>Add user</button>
+            <Button primary>Add user</Button>
             <div className="w-[250px] absolute hidden bottom-[-130px] flex flex-col gap-4 bg-white shadow-2xl">
             <form onSubmit={handSubmit}>
             <input type='text'
@@ -194,41 +314,14 @@ const Clients = () => {
 
         <div className="bg-white w-{95%} shadow-md rounded-lg p-6">
         <h3 className="text-lg font-bold text-gray-800 mb-4">Your Recent Orders</h3>
-         <table className="w-full border-collapse border border-gray-200 rounded">
-        <thead>  {/*Table head */}
-            <tr className='bg-gray-100'>
-                <th className="border border-gray-300 px-4 py-2 text-left"><input type="checkbox" ></input></th>
-                <th className="border border-gray-300 px-4 py-2 text-left">User_id</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Last Active</th> 
-                <th className="border border-gray-300 px-4 py-2 text-left">Permissions</th>
-                
-            </tr>
-        </thead>
-        <tbody className="transition-all">
-            
-        {Users.map((user,index)=>(
-              <tr key={index} className='border-b-[1px] border-stone-200 h-[35px]  relative'>
-               <td className="border border-gray-300 px-4 py-2"><input type="checkbox" /></td>
-                <td className="border border-gray-300 px-4 py-2">
-                   {user._id}
-                  </td>
-                <td style={{cursor:"pointer",scrollbarWidth:"none",overflowX:"auto",maxWidth:"80px",fontSize: '15px', color:"#57534e"}} className="border border-gray-300 px-4 py-2">
-                  {user.email}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">{user.username} </td>
-                
-                <td style={{fontSize: '15px',color:"#57534e"}} className="border border-gray-300 px-4 py-2">
-                   {getTimeDifference(user.active)}
-                </td> 
-                <td className="border border-gray-300 px-4 py-2">{user.account_type} </td>
-                
-            </tr>
-            ))}
-        
-        </tbody>
-    </table>
+        <Table
+      dataSource={dataSource}
+      columns={columns}
+      scroll={{ x: 'max-content' }}
+      pagination={{ pageSize: 15 }}
+      rowClassName="h-[35px]"
+      bordered
+    />
     </div>
     </motion.div>
   )

@@ -17,7 +17,7 @@ const Dashboard= lazy(()=> import('../Pages/Dashboard'));
 const Warehousing= lazy(()=>import('../Pages/Warehousing'));
 const Orders= lazy(()=> import('../Pages/Orders')) 
  
-const Reports= lazy(()=> import('../Pages/Reports')) 
+const ContainerPage= lazy(()=> import('../Pages/ContainerPage')) 
 const Shipment= lazy(()=>import('../Pages/Shipment'))  
 
 const Notify = lazy(()=> import("../Routes/Notification"))
@@ -37,8 +37,8 @@ const LayoutBundle = () => {
              <Route path='/Notification' element={<Suspense fallback={<Loading />}>
                   <Notify /> 
              </Suspense>} />
-             <Route path='/Reports' element={<Suspense fallback={<Loading />}>
-                  <Reports /> 
+             <Route path='/containers' element={<Suspense fallback={<Loading />}>
+                  <ContainerPage /> 
              </Suspense>} />
              
              <Route path='/Shipments' element={<Suspense fallback={<Loading />}>

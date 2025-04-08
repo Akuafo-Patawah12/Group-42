@@ -1,93 +1,176 @@
-import React from 'react'
-import {motion} from 'framer-motion'
+import React, { useEffect, useState, useMemo } from "react";
+import { Layout, Card, Row, Col, Statistic, DatePicker, Space } from "antd";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { DeleteOutlined, MessageOutlined } from '@ant-design/icons';
+import io from "socket.io-client";
+import moment from "moment";
+
+const { Header, Content } = Layout;
+
 const Dashboard = () => {
+  // State to store shipment data and shipment status counts
+  const [shipmentData, setShipmentData] = useState([]);
+  const [shipmentStatus, setShipmentStatus] = useState({
+    delivered: 0,
+    pending: 0,
+    inTransit: 0,
+    cancelled: 0
+  });
+  const [selectedMonth, setSelectedMonth] = useState(moment()); // default is current month
+
+  // Memoized Socket.IO client connection
+  const socket = useMemo(
+    () => io("http://localhost:4000/logistics", { transports: ["websocket"] }),
+    []
+  );
+
+  // Data for the pie chart
+  const pieData = [
+    { name: "Delivered", value: shipmentStatus.delivered },
+    { name: "Pending", value: shipmentStatus.pending },
+    { name: "In Transit", value: shipmentStatus.inTransit },
+    { name: "Cancelled", value: shipmentStatus.cancelled }
+  ];
+
+  // Socket.IO connection and event listeners
+  useEffect(() => {
+    socket.emit("joinRoom", { roomId: "logistics-dashboard" });
+
+    socket.on("shipmentStatusUpdate", (data) => {
+      // Update the state with the new shipment data
+      setShipmentData((prevData) => [...prevData, data]);
+
+      // Update shipment status counts
+      setShipmentStatus((prevStatus) => ({
+        ...prevStatus,
+        [data.status.toLowerCase()]: prevStatus[data.status.toLowerCase()] + 1
+      }));
+    });
+
+    return () => {
+      socket.off("shipmentStatusUpdate");
+    };
+  }, [socket]);
+
+  // Handler to delete a shipment (example)
+  const deleteShipment = (shipmentId) => {
+    socket.emit("deleteShipment", shipmentId);
+  };
+
+  // Handler for month change
+  const handleMonthChange = (date, dateString) => {
+    if (date) {
+      setSelectedMonth(date);
+      // You could add logic here to fetch and filter data based on the selected month
+    }
+  };
+
   return (
-    <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    >
+    <Layout style={{ minHeight: "100vh" }} className='mt-[100px] w-full bg-stone-100 lg:w-[80%] ml-auto'>
+      
+      <Content style={{ padding: "20px 50px" }}>
+        <Row gutter={[16, 16]}>
+          {/* Month Picker */}
+          <Col span={24}>
+            <Space direction="vertical" size={12}>
+              <DatePicker
+                defaultValue={selectedMonth}
+                onChange={handleMonthChange}
+                picker="month"
+                style={{ width: "100%" }}
+              />
+            </Space>
+          </Col>
+        </Row>
 
-  <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-white shadow px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Add Shipment
-          </button>
-        </header>
+        <Row gutter={[16, 16]}>
+          {/* Card showing the Pie Chart */}
+          <Col xs={24} sm={12} lg={8}>
+            <Card title="Shipment Status" bordered={false}>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={120}
+                    label
+                  >
+                    <Cell key="cell-1" fill="#4CAF50" />
+                    <Cell key="cell-2" fill="#FFC107" />
+                    <Cell key="cell-3" fill="#2196F3" />
+                    <Cell key="cell-4" fill="#F44336" />
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
 
-        {/* Dashboard Content */}
-        <main className="p-4 space-y-4">
-          {/* Analytics Summary */}
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white p-4 shadow rounded-lg">
-              <h2 className="text-lg font-semibold text-gray-700">Total Shipments</h2>
-              <p className="text-3xl font-bold text-blue-500">1,234</p>
-            </div>
-            <div className="bg-white p-4 shadow rounded-lg">
-              <h2 className="text-lg font-semibold text-gray-700">Pending Orders</h2>
-              <p className="text-3xl font-bold text-yellow-500">87</p>
-            </div>
-            <div className="bg-white p-4 shadow rounded-lg">
-              <h2 className="text-lg font-semibold text-gray-700">Delivered</h2>
-              <p className="text-3xl font-bold text-green-500">1,147</p>
-            </div>
-          </section>
+          {/* Card showing shipment status counts */}
+          <Col xs={24} sm={12} lg={8}>
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                <Card>
+                  <Statistic
+                    title="Delivered"
+                    value={shipmentStatus.delivered}
+                    prefix={<MessageOutlined />}
+                    valueStyle={{ color: "#4CAF50" }}
+                  />
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card>
+                  <Statistic
+                    title="Pending"
+                    value={shipmentStatus.pending}
+                    prefix={<MessageOutlined />}
+                    valueStyle={{ color: "#FFC107" }}
+                  />
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card>
+                  <Statistic
+                    title="In Transit"
+                    value={shipmentStatus.inTransit}
+                    prefix={<MessageOutlined />}
+                    valueStyle={{ color: "#2196F3" }}
+                  />
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card>
+                  <Statistic
+                    title="Cancelled"
+                    value={shipmentStatus.cancelled}
+                    prefix={<DeleteOutlined />}
+                    valueStyle={{ color: "#F44336" }}
+                  />
+                </Card>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
 
-          {/* Recent Orders */}
-          <section className="bg-white p-4 shadow rounded-lg">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Recent Orders</h2>
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b">
-                  <th className="py-2 px-4">Order ID</th>
-                  <th className="py-2 px-4">Customer</th>
-                  <th className="py-2 px-4">Status</th>
-                  <th className="py-2 px-4">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b hover:bg-gray-50">
-                  <td className="py-2 px-4">#00123</td>
-                  <td className="py-2 px-4">John Doe</td>
-                  <td className="py-2 px-4 text-yellow-500">Pending</td>
-                  <td className="py-2 px-4">2025-01-18</td>
-                </tr>
-                <tr className="border-b hover:bg-gray-50">
-                  <td className="py-2 px-4">#00122</td>
-                  <td className="py-2 px-4">Jane Smith</td>
-                  <td className="py-2 px-4 text-green-500">Delivered</td>
-                  <td className="py-2 px-4">2025-01-17</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
+        {/* List of shipment updates */}
+        <Row style={{ marginTop: "20px" }}>
+          <Col span={24}>
+            <Card title="Recent Shipments" bordered={false}>
+              <ul>
+                {shipmentData.map((shipment) => (
+                  <li key={shipment.id}>
+                    <strong>Shipment ID:</strong> {shipment.id} -{" "}
+                    <strong>Status:</strong> {shipment.status}
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </Col>
+        </Row>
+      </Content>
+    </Layout>
+  );
+};
 
-          {/* Shipment Tracking */}
-          <section className="bg-white p-4 shadow rounded-lg">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Active Shipments</h2>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span>Shipment #12345</span>
-                <span className="text-blue-500">In Transit</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Shipment #12344</span>
-                <span className="text-yellow-500">Pending</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Shipment #12343</span>
-                <span className="text-green-500">Delivered</span>
-              </div>
-            </div>
-            </section>
-            </main>
-            </div>
-         
-
-    </motion.div>
-  )
-}
-
-export default Dashboard
+export default Dashboard;
