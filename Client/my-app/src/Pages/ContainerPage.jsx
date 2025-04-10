@@ -518,7 +518,7 @@ const ContainerPage = () => {
 
 
   return (
-    <Layout style={{ minHeight: "100vh" }} className='mt-[80px] pt-[20px] w-full bg-stone-100 lg:w-[85%] ml-auto'>
+    <Layout style={{ minHeight: "100vh" }} className='w-full  mt-[80px] bg-stone-100 pt-5 lg:w-[82%] ml-auto'>
      
      <div className="flex flex-col w-[90%] mb-3 mx-auto sm:flex-row justify-between items-center gap-4  px-4 py-3 bg-white rounded-2xl shadow-sm border">
   <button

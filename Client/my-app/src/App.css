@@ -103,5 +103,20 @@ input {
     transform:translate(-50%, -50%);
     left: 50%;
     top:50%;
+    width: 60%;
+  }
+}
+
+@media (max-width: 999px) {
+  .form{
+    width: 70% !important;
+    
+  }
+}
+
+
+@media (max-width: 568px) {
+  .form{
+    width: 95%;
   }
 }

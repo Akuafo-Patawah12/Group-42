@@ -136,15 +136,17 @@ const Login = () => {
 
                 <Form
   onFinish={handleSubmit}
-  className="form w-[95%] border-l-2 border-r-2 border-stone-300 items-center absolute h-full bg-white   z-2 lg:w-[40%] top-0 right-[5%]"
+  className="form w-[95%] border-l-2 border-r-2 border-stone-300 items-center justify-center absolute h-full bg-white z-2 lg:w-[40%] top-0 right-[5%]"
 >
-  <div className="flex flex-col gap-4 itmes">
-    <Typography.Title level={5} className="mx-auto mt-10 !mb-0">
+   
+  <div className="flex flex-col gap-4">
+  <div className="w-[80px] h-[80px] border-2 border-purple-500 overflow-hidden p-3 mx-auto mt-7 rounded-full"><img src="../images/sfgl_logo.jpg" alt="logo" /></div>
+    <Typography.Title level={5} className="mx-auto mt-2 !mb-0">
       SF Ghana Logistics.
     </Typography.Title>
 
     <Typography.Text className="font-bold text-gray-600 w-[73%] mx-auto text-center">
-      Welcome to our supply chain solutions.
+    Streamlining your logistics and marketing needs — welcome to smarter supply chain solutions.
     </Typography.Text>
 
     <Form.Item
