@@ -138,7 +138,7 @@ const Login = () => {
   onFinish={handleSubmit}
   className="form w-[95%] border-l-2 border-r-2 border-stone-300 items-center absolute h-full bg-white   z-2 lg:w-[40%] top-0 right-[5%]"
 >
-  <div className="flex flex-col gap-4">
+  <div className="flex flex-col gap-4 itmes">
     <Typography.Title level={5} className="mx-auto mt-10 !mb-0">
       SF Ghana Logistics.
     </Typography.Title>
@@ -192,13 +192,13 @@ const Login = () => {
             setFormData({ ...formData, rememberMe: e.target.checked })
           }
         >
-          <span className="font-medium text-sm">Stay logged in</span>
+          <span className="font-medium text-sm ">Stay logged in</span>
         </Checkbox>
       </Form.Item>
 
       <Link
         to="/forgetPassword"
-        className="text-blue-500 font-medium text-sm"
+        className="text-purple-500 font-medium text-sm"
       >
         Forget Password?
       </Link>
@@ -219,7 +219,7 @@ const Login = () => {
     <div className="w-[78%] mx-auto text-center">
       <Link
         to="/SignUp"
-        className="text-blue-500 font-medium hover:underline decoration-2 active:underline"
+        className="text-purple-500 font-medium hover:underline decoration-2 active:underline"
       >
         Create Account
       </Link>{' '}

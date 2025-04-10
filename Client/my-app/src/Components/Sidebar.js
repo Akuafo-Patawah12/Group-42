@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import {
-  SettingOutlined,
-  DashboardOutlined,
+ 
+ 
   LogoutOutlined,
-  DatabaseOutlined,
   PullRequestOutlined,
-  TruckOutlined,
-  ContainerOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
+import { Package,LayoutDashboard, Truck,User, Settings } from 'lucide-react';
+
 import { useNavigate, NavLink,useLocation } from "react-router-dom";
 import { Layout, Menu, Button, Tooltip } from "antd";
 import axios from "axios";
@@ -28,11 +27,11 @@ const Sidebar = () => {
 
   
   const menuItems = [
-    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/L/Dashboard" },
-    { key: "user", label: "Users", icon: <DatabaseOutlined />, path: "/L/Clients" },
-    { key: "shipments", label: "Shipments", icon: <PullRequestOutlined />, path: "/L/Orders" },
-    { key: "containers", label: "Containers", icon: <ContainerOutlined />, path: "/L/containers" },
-    { key: "settings", label: "Settings", icon: <SettingOutlined />, path: "/L/Settings" },
+    { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard />, path: "/L/Dashboard" },
+    { key: "user", label: "Users", icon: <User />, path: "/L/Clients" },
+    { key: "shipments", label: "Shipments", icon: <Truck />, path: "/L/Orders" },
+    { key: "containers", label: "Containers", icon: <Package />, path: "/L/containers" },
+    { key: "settings", label: "Settings", icon: <Settings />, path: "/L/Settings" },
   ];
 
   return (

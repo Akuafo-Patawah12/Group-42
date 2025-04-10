@@ -61,7 +61,7 @@ const CustomerSidebar = () => {
       {/* Logout Button */}
       <div className="absolute translate-x-[-50%] translate-y-[-50%] left-[50%] bottom-[100px] w-[90%] flex justify-center">
         <Tooltip title="Log Out">
-          <Button type="primary" danger className="bg-red-300" icon={<LogoutOutlined />} onClick={logout} block={!collapsed}>
+          <Button type="primary"  className="bg-red-300 border text-red-500 border-red-400" icon={<LogoutOutlined />} onClick={logout} block={!collapsed}>
             {!collapsed && "Log Out"}
           </Button>
         </Tooltip>

@@ -84,6 +84,62 @@ const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
           }
       })
 
+
+      Socket.on("createContainer", async (data, callback) => {
+        try {
+          const {  containerNumber,loadingDate, status, port, route, eta, cbmRate } = data;
+          console.log({  containerNumber,loadingDate, status, port, route, eta, cbmRate });
+      
+          if ( !containerNumber || !containerNumber || !loadingDate || !status || !port || !route || !eta || !cbmRate) {
+            return callback({ status: "error", message: "All fields are required." });
+          }
+      
+          // Corrected check: Use findOne() instead of find()
+          const existingContainer = await Shipment.findOne({ containerNumber });
+      
+          if (existingContainer) {
+            return callback({ status: "error", message: "Container number is already in use" });
+          }
+      
+          const newContainer = new Shipment({
+            
+            containerNumber,
+            loadingDate,
+            status,
+            port,
+            route,
+            cbmRate,
+            eta,
+          });
+      
+          await newContainer.save();
+      
+          // Acknowledge success to the sender
+          callback({ status: "ok", message: "Container added" });
+      
+          // Emit event to all connected users
+          Socket.emit("newContainerAdded", newContainer);
+          orderListNamespace.in("adminRoom").emit("newContainerAdded", newContainer);
+      
+        } catch (error) {
+          console.error("Error creating container:", error);
+          callback({ status: "error", message: "Failed to create container." });
+        }
+      });
+    
+    
+      Socket.on("fetchContainers", async (callback) => {
+        try {
+          const containers = await Shipment.find({})
+          console.log(containers)
+            
+          callback({ status: "ok", containers });
+        } catch (error) {
+          console.error("Error fetching containers:", error);
+          callback({ status: "error", message: "Failed to fetch containers" });
+        }
+      });
+
       Socket.on("disconnect",()=>{
         console.log("disconnect from shipment Namespace")
       })

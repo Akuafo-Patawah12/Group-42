@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { DeleteOutlined, MessageOutlined, CopyOutlined } from '@ant-design/icons';
-import { Button, Input, Table, Space, Tag } from 'antd';
+import { Button,Form, Input, Table,Modal,message, Space, Tag } from 'antd';
 import { motion } from 'framer-motion';
 import io from 'socket.io-client';
 import { jwtDecode } from 'jwt-decode';
@@ -149,6 +149,26 @@ const Orders = () => {
     },
   ];
 
+  const [form] = Form.useForm();
+  const [modalOpen, setModalOpen] = useState(false)
+
+  const onStart = (containerNumber) => {
+    console.log("Start shipment for:", containerNumber);
+    // Send this to your backend or Socket.IO here
+  };
+
+  const handleStart = async () => {
+    try {
+      const values = await form.validateFields();
+      onStart(values.containerNumber);
+      form.resetFields();
+      setModalOpen(false)
+      message.success("Shipment started!");
+    } catch (error) {
+      // Validation error
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 100 }}
@@ -156,29 +176,51 @@ const Orders = () => {
       exit={{ opacity: 0, y: -100 }}
       className='mt-[100px] w-full bg-stone-100 lg:w-[80%] ml-auto'
     >
-      <Button className="mb-4" type="primary">
-        #Orders
-      </Button>
-      <Space direction="vertical" className="filters" style={{ marginBottom: '16px' }}>
-        <Input
-          placeholder="Filter orders"
-          value={inputValue}
-          onChange={handleInputChange}
-          style={{ width: 200 }}
-        />
-        <Input
-          list="activities"
-          value={inputValue}
-          onChange={handleInputChange}
-          placeholder="Filter by activity"
-          style={{ width: 200 }}
-        />
-        <datalist id="activities">
-          {['#All', '#Delivered', '#In Transit', '#Pending'].map((option) => (
-            <option key={option} value={option} />
-          ))}
-        </datalist>
-      </Space>
+      
+      <div className="flex flex-col w-[90%] mb-3 mx-auto sm:flex-row justify-between items-center gap-4  px-4 py-3 bg-white rounded-2xl shadow-sm border">
+  <button
+    onClick={()=> setModalOpen(true)}
+    className="bg-purple-600 text-white px-5 py-2 rounded-xl hover:bg-purple-400 transition-all text-sm font-medium"
+  >
+    Start shipment
+  </button>
+
+  <input
+    type="text"
+    placeholder="Search by Container Number..."
+   
+    className="w-full sm:w-72 px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
+
+<Modal
+      title="Start Shipment"
+      open={modalOpen}
+      onCancel={() => {
+        form.resetFields();
+        setModalOpen(false)
+      }}
+      footer={null}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item
+          label="Container Number"
+          name="containerNumber"
+          rules={[{ required: true, message: 'Please enter a container number' }]}
+        >
+          <Input placeholder="e.g., CNT1234567" />
+        </Form.Item>
+
+        <div className="flex justify-end gap-2">
+          <Button onClick={()=> setModalOpen(false)}>Cancel</Button>
+          <Button type="primary" onClick={handleStart}>
+            Start
+          </Button>
+        </div>
+      </Form>
+    </Modal>
+
 
       <Table
         columns={columns}

@@ -488,7 +488,7 @@ const TrendsCompo = () => {
 
       {/* Add Items Button */}
       <button onClick={()=>setOpenDialog(true)} className="bg-[var(--purple)] text-white px-3 leading-4 text-sm h-[40px]  rounded-xl border-2 border-stone-300 hover:bg-green-600 w-full sm:w-auto">
-        Add Items
+        Add Product
       </button>
     </div>
 

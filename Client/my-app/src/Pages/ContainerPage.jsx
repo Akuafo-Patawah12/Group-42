@@ -1,6 +1,8 @@
 import React, { useState, useEffect,useMemo,useRef } from "react";
 import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col, Tag, Space,message, Button,Select ,Typography,Spin} from "antd";
 import { SearchOutlined } from '@ant-design/icons';
+import { Edit, Trash2 } from "lucide-react";
+
 import io from "socket.io-client"
 
 
@@ -11,7 +13,7 @@ const { Text } = Typography;
 const ContainerPage = () => {
   // Sample data for containers (can be fetched from an API or database)
 
-  const socket = useMemo(() =>io("https://api.sfghanalogistics.com/shipment",{
+  const socket = useMemo(() =>io("http://localhost:4000/Shipping",{
     transports: ["websocket","polling"],
     withCredentials: true,
     secure: true
@@ -72,7 +74,7 @@ const ContainerPage = () => {
       Yiwu_Route_2: ["Ningbo – Zhoushan Port, Yiwu", "Colombo Port", "Suez Port (Port Tawfiq)", "Port of Algiers", "Port of Las Palmas", "Port of Banjul", "Tema Port"],
     };
   
-    const statusOptions = ["All", "In Transit", "At Tema Port waiting for clearance", "At our warehouse"]; 
+    const statusOptions = ["All","Pending", "In Transit", "Delivered"]; 
     const [filterStatus, setFilterStatus] = useState("All");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -150,8 +152,9 @@ const ContainerPage = () => {
         console.log("connected to container page")
     })
 
-    socket.on("get_container",(data)=>{
-        
+    socket.on("newContainerAdded",(data)=>{
+      message.success("new container added")
+      setContainers(prev => [data,...prev])
     })
 
     socket.on("containersUpdated", (updatedContainers) => {
@@ -316,7 +319,9 @@ const ContainerPage = () => {
     },(response)=>{
       if (response.status === "error") {
         message.error(response.message);
-      } 
+      } else{
+        message.success(response.message)
+      }
          
       })
     
@@ -421,51 +426,120 @@ const ContainerPage = () => {
 
   // Columns for the table
   const columns = [
+    
+    { title: "Container Number", dataIndex: "containerNumber", key: "containerNumber" },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
       render: (status) => {
-        let color = status === "Delivered" ? "green" : status === "Pending" ? "orange" : "blue";
+        const color = status === "Pending..." ? "orange" : status === "In Transit" ? "blue" : status === "Delivered" ? "green" : "red";
         return <Tag color={color}>{status}</Tag>;
-      }
+      },
     },
-    {
-      title: "Container Number",
-      dataIndex: "containerNumber",
-      key: "containerNumber",
-    },
-    {
-      title: "ETA",
-      dataIndex: "eta",
-      key: "eta",
-    },
+    { title: "Route", dataIndex: "route", key: "route" },
+    { title: "Port", dataIndex: "port", key: "port" },
     {
       title: "CBM Rate",
       dataIndex: "cbmRate",
       key: "cbmRate",
+      render: (cbmRate) => `$${cbmRate.toFixed(2)}`,
     },
     {
       title: "Loading Date",
       dataIndex: "loadingDate",
       key: "loadingDate",
+      render: (loadingDate) => new Date(loadingDate).toLocaleDateString()
+      },
+    {
+      title: "ETA",
+      dataIndex: "eta",
+      key: "eta",
+      render: (eta) => new Date(eta).toLocaleDateString(),
     },
     {
-      title: "Routes",
-      dataIndex: "routes",
-      key: "routes",
+      title: "Assigned Orders",
+     
+      key: "assignedOrders",
+      render: (_,orders) =>
+         <div >
+        {orders.assignedOrders.length > 0 ? (
+          
+          <>
+          <Tag style={{float:"left"}}>{orders.assignedOrders.length}</Tag> 
+          
+          </>
+        ) : (
+          <Tag color="gray">No Orders</Tag>
+        )}
+       
+        </div>,
     },
     {
-      title: "Total Shipments",
-      dataIndex: "totalShipments",
-      key: "totalShipments",
+      title: "Actions",
+      key: "actions",
+      render: (_,container) =>
+        <div style={{ display: "flex", gap: "3px" }}>
+  <Button 
+    size="small" 
+    type="primary" 
+    onClick={() => {
+      handleOpen3();
+      setOrderInfo({ ...orderInfo, container_id: container._id });
+    }}
+  >
+    Add Order
+  </Button>
+
+  <Button 
+    size="small" 
+    type="default" 
+    style={{fontSize:"12px"}}
+    onClick={() => {
+      handleEditContainer();
+      setContainerIds(container._id);
+    }}
+  >
+    <Edit />
+  </Button>
+
+  <Button 
+    size="small" 
+    type="danger" 
+    onClick={()=> deleteContainer(container._id)}
+  >
+    <Trash2 style={{ color:"red"}}/>
+  </Button>
+</div>
+,
     },
   ];
 
-  return (
-    <Layout style={{ minHeight: "100vh" }} className='mt-[100px] w-full bg-stone-100 lg:w-[80%] ml-auto'>
 
-<Modal title="Add container" open={isEdit} onCancel={() => setIsEdit(false)} footer={null}>
+
+  return (
+    <Layout style={{ minHeight: "100vh" }} className='mt-[80px] pt-[20px] w-full bg-stone-100 lg:w-[85%] ml-auto'>
+     
+     <div className="flex flex-col w-[90%] mb-3 mx-auto sm:flex-row justify-between items-center gap-4  px-4 py-3 bg-white rounded-2xl shadow-sm border">
+  <button
+    onClick={() => setIsEdit(true)}
+    className="bg-purple-600 text-white px-5 py-2 rounded-xl hover:bg-purple-400 transition-all text-sm font-medium"
+  >
+    Add Container
+  </button>
+
+  <input
+    type="text"
+    placeholder="Search by Container Number..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    onPaste={(e) => setSearch(e.clipboardData.getData("text"))}
+    className="w-full sm:w-72 px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
+
+    <Modal title="Add container" open={isEdit} onCancel={() => setIsEdit(false)} footer={null}>
       <Form layout="vertical">
         
         {/* Select Route */}
@@ -642,7 +716,7 @@ const ContainerPage = () => {
       
     </Modal>
 
-      <Content style={{ padding: "20px 50px" }}>
+      <Content style={{ padding: "10px 50px" }}>
         <Row gutter={[16, 16]}>
           {/* Container Page Title */}
           <Col span={24}>
