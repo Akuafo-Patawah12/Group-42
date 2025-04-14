@@ -1,0 +1,144 @@
+
+
+  .click{
+    height: 30px;
+    padding-inline: 4px 0;
+    color: #111;
+  }
+  .click:hover .drop{
+    z-index: 99;
+    height: auto;
+    visibility: visible;
+    animation: hover 1s linear;
+  }
+
+  
+.open{
+    height: 33px;
+    width: 35px;
+    position: relative;
+    display: none;
+    border-radius: 5px;
+    background-color: transparent;
+    
+    
+  
+    & div{
+        background-color: #555;
+        width: 90%;
+        height: 3px;
+        border-radius: 5px;
+        position: absolute;
+        transition: all .3s;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        
+    }
+  }
+
+  .drop{
+   
+    overflow: hidden;
+    
+    visibility: hidden;
+    transform: translateY(5px);
+    height: 0;
+    border-radius: 7px;
+    z-index: 40;
+    box-shadow: 1px 2px 5px #bbb;
+  
+   
+  }
+  
+  .drop > p:hover{
+    background-color: rgba(0,0,0,0.1);
+  }
+  
+  .open:hover{
+    background: transparent;
+  }
+
+  .click:hover .drop{
+    z-index: 99;
+    height: auto;
+    visibility: visible;
+    animation: hover 0.4s linear;
+  }
+  
+  @keyframes hover{
+    from{ height:0;}
+    to{height: 100%}
+  }
+
+
+  .nav-tabbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+    height: 42px;
+  }
+  
+  .nav-tabbar .tab-link {
+    position: relative;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 10px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-tabbar .tab-link:hover {
+    color: var(--purple);
+    border-bottom: 3px solid var(--purple);
+  }
+  
+  .nav-tabbar .tab-link.active {
+    color: var(--purple);
+    border-bottom: 3px solid var(--purple);
+    background: #fff;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .nav-tabbar .dropdown {
+    position: absolute;
+    background: white;
+    top: 100%;
+    left: 0;
+    padding: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: none;
+    min-width: 180px;
+    z-index: 999;
+  }
+  
+  .nav-tabbar .dropdown a {
+    display: block;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .nav-tabbar .dropdown a:hover {
+    background: #f0f0f0;
+  }
+  
+  .nav-tabbar .tab-link:hover .dropdown {
+    display: block;
+  }
+
+  @media (max-width:768px){
+    .nav-tabbar{
+       display: none;
+    }
+  }
+  
+
+  
+  
