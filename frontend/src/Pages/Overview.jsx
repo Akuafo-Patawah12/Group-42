@@ -167,7 +167,7 @@ useEffect(()=>{
         const pendingOrder= orders.filter(order => order.Status==="Pending")
         setPendingOrders(pendingOrder)
    
-},[activeOrders,pendingOrders])
+},[orders])
 
 
 function pending(){
@@ -313,12 +313,23 @@ const CloseReport = () => {
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
-    className='w-full bg-stone-100 pt-5 lg:w-[80%] ml-auto'
+    className=' layout-shift w-full bg-stone-100 pt-5 lg:w-[80%] '
     >
       {creatingOrder&&<span className='fixed top-[70px] z-2 -translate-x-[50%] -translate-y-[50%] left-[50%] bg-orange-200'>Creating Order...</span>}
       <Card
-      className="w-[95%] mx-auto mt-[70px] p-4 flex flex-wrap gap-4 items-center justify-between rounded-2xl shadow-md"
-      bodyStyle={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "space-around" }}
+      style={{
+  width: '95%',
+  margin: '70px auto 0',
+  padding: '0.5rem',
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '1rem',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  borderRadius: '1rem',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+}}
+
     >
       {/* Title */}
       <span className="font-bold text-lg sm:text-xl">Shipments Overview</span>
@@ -342,11 +353,11 @@ const CloseReport = () => {
         <ProductOutlined style={style} /> Delivered Items
       </span>
     </Card>
-      <div className='flex justify-between mt-2 bg-slate-200 w-[95%] mx-auto items-center py-4 rounded-2xl gap-2'>
-        <div className="flex px-[2%] w-full gap-3">
+      <div style={{marginInline:"auto",marginTop:"8px"}} className='flex  justify-between mt-2 bg-slate-200 w-[95%] mx-auto items-center py-4 rounded-2xl gap-2 '>
+        <div className="flex flex-col px-[2%] w-full gap-3 md:flex-row">
         
 
-        <Card className="w-1/2 rounded-xl shadow-md">
+        <Card className="w-full rounded-xl shadow-md md:w-1/2">
       {/* View Data Section */}
       <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
         <Button shape="circle" icon={<DatabaseOutlined />} size="large" />
@@ -359,12 +370,13 @@ const CloseReport = () => {
         type="warning"
         showIcon
         icon={<WarningOutlined />}
-        className="my-3"
+        style={{marginBlock:"12px"}}
+        
       />
 
       {/* Actions */}
       <Space>
-        <Button type="primary" className="bg-[var(--purple)]">Get Personal Report</Button>
+        <Button type="primary" className="bg-[var(--purple)]">Personal Report</Button>
         <Button type="primary" className="bg-[var(--purple)]" text-white onClick={() => setIsOpen(true)}>
           Request Quote
         </Button>
@@ -372,7 +384,7 @@ const CloseReport = () => {
     </Card>
      
 
-    <Card  className="w-1/2 rounded-xl shadow-md">
+    <Card  className="w-full rounded-xl shadow-md md:w-1/2">
       {/* View Analytics Section */}
       <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
         <Button shape="circle" icon={<BarChartOutlined />} size="large" />
@@ -382,7 +394,7 @@ const CloseReport = () => {
      
 
      
-      {orders.length===0 ?<p><Empty styles={{ image:{ height: 50 } }} description="No shipment" /></p>:
+      {orders.length===0 ?<div><Empty styles={{ image:{ height: 50 } }} description="No shipment" /> </div>:
       <ResponsiveContainer width="100%" height={190}>
     <BarChart data={data}>
       <XAxis dataKey="month" />

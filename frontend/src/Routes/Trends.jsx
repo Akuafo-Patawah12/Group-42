@@ -15,7 +15,7 @@ const Trends = () => {
          initial={{ opacity: 0, perspective: 1000, rotateY: -90,y:100 }}
          animate={{ opacity: 1, perspective: 1000, rotateY: 0 ,y:0}}
          exit={{ opacity: 0,y:100}}
-            className='w-full bg-stone-100  lg:w-[80%] ml-auto'>
+            className='layout-shift w-full bg-stone-100  lg:w-[80%] '>
 
           
             <TrendsCompo />

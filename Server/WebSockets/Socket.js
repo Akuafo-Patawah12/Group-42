@@ -15,7 +15,7 @@ const userFunc = require('./UsersNamespace');
 function initializeSocket(server) {   
 const io = socketIo(server, {   //Creating connect between server and User Interface  "Realtime WebApp"
     cors: {
-      origin:"http://localhost:5173",
+      origin:"http://localhost:5174",
       methods: ['GET','POST'],
       allowedHeaders: ['Content-Type'],
       credentials: true
@@ -87,6 +87,7 @@ const onlineUsers = {}; // Store online users with socket IDs
 const lastActiveTimestamps = {}; // Store last active timestamps
   
   io.on('connection', (socket) => {  //
+    try{
       setUser(socket)
       
       PostFunction(socket,users,io,notificationsNamespace)
@@ -102,6 +103,7 @@ const lastActiveTimestamps = {}; // Store last active timestamps
 
   // User disconnects
   socket.on("disconnect", () => {
+    console.log('user disconnected from defaultnamespace');
     const userId = Object.keys(onlineUsers).find(
       (key) => onlineUsers[key] === socket.id
     );
@@ -120,11 +122,10 @@ const lastActiveTimestamps = {}; // Store last active timestamps
     callback({ isOnline, lastActive });
   });
 
+} catch (err) {
+  console.error("Error during socket setup:", err);
+}
  
- socket.on('disconnect', () => {
-  
-   console.log('user disconnected');
- });
 });
 
 usersNamespace.on("connection",(socket,callBack)=>{

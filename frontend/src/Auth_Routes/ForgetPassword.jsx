@@ -9,7 +9,7 @@ const ForgetPassword = () => {
   const handSubmit = async(e)=>{
     e.preventDefault();
     try{
-      await axios.post("http://localhost:5000/forgetPassword",{email})
+      await axios.post("http://localhost:4000/forgetPassword",{email})
       .then(res=>{
         message.success(
           "SCM sent a reset link to your email.",

@@ -119,28 +119,30 @@ const TrendsCompo = () => {
   }, []);
 
   useEffect(() => {
-    const token =localStorage.getItem("accesstoken")
+    const token = localStorage.getItem("accesstoken");
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         setUserId(decodedToken.id);
-        console.log("the user id is ",userId)
+  
+        console.log("the user id is ", decodedToken.id); // use decodedToken.id instead
+  
         // Notify the server that this user is online
-     socket.emit("userOnline", decodedToken.id);
-
-     
-     socket.emit("checkStatus", decodedToken.id, (response) => {
-       setStatus(response); // Update state with the online status and last active
-     });
-    
-     return () => {
-      socket.disconnect();
-    };  
+        socket.emit("userOnline", decodedToken.id);
+  
+        // Check status immediately
+        socket.emit("checkStatus", decodedToken.id, (response) => {
+          setStatus(response);
+        });
+  
+        
+        
       } catch (error) {
-        console.error('Invalid token:', error);
+        console.error("Invalid token:", error);
       }
     }
-  },[]);
+  }, []);
+  
   
 
 
@@ -460,7 +462,7 @@ const TrendsCompo = () => {
   return (
     <main className='pt-[20px]  '>
       {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg px-[40px] py-2 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
-      <div className="bg-white rounded-lg mt-[70px] mx-auto w-[95%] shadow-md p-4 flex  sm:flex-row items-center justify-between gap-4">
+      <div style={{marginInline:"auto",marginTop:"70px"}} className="bg-white rounded-lg  w-[95%] shadow-md p-4 flex  sm:flex-row items-center justify-between gap-4">
       
       
 
@@ -487,12 +489,12 @@ const TrendsCompo = () => {
       </div>
 
       {/* Add Items Button */}
-      <button onClick={()=>setOpenDialog(true)} className="bg-[var(--purple)] text-white px-3 leading-4 text-sm h-[40px]  rounded-xl border-2 border-stone-300 hover:bg-green-600 w-full sm:w-auto">
+      <button onClick={()=>setOpenDialog(true)} className="bg-[var(--purple)] text-white  leading-4 text-xs h-[40px]  rounded-xl border-2 border-stone-300 hover:bg-green-600 w-[180px] md: text-sm ">
         Add Product
       </button>
     </div>
 
-    <div className="relative flex items-center gap-2 w-[95%] mx-auto mt-3">
+    <div style={{marginInline:"auto",marginTop:"12px"}} className="relative flex items-center gap-2 w-[95%]  ">
       {/* Left Scroll Button */}
       <Button
         icon={<LeftOutlined />}
@@ -518,11 +520,11 @@ const TrendsCompo = () => {
             <button
               key={index}
               onClick={() => handleClick(item)}
-              className={`px-3 py-1 whitespace-nowrap text-xs rounded-xl border-2 ${
+              className={`px-3 py-[6px] whitespace-nowrap text-xs font-medium rounded-xl border-2 ${
                 selectedCategory === item
                   ? "bg-purple-500 text-white border-purple-500"
                   : "bg-stone-200 border-stone-300"
-              }`}
+              } lg:py-2 px-4`}
             >
               {item}
             </button>

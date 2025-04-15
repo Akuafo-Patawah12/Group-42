@@ -13,16 +13,17 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
   return (
   <> 
   {posts.length===0? <div className='text-center text-2xl font-bold h-[65svh] flex items-center justify-center'><Empty description="No product found" /></div>:
-<div className="mt-5 w-[95%] shadow-md py-5 px-[2%] rounded-lg bg-white mx-auto columns-1 md:columns-2 lg:columns-3 space-y-4">
+<div style={{marginInline:"auto",marginTop:"20px"}} className=" w-[95%] shadow-md py-5 px-[2%] rounded-lg bg-white columns-1 grid-gap-2 md:columns-2 lg:columns-3 space-y-4">
     {posts.map((post, index) => ( 
        
-
+<React.Suspense fallback="Loading...">
       <div
   key={index}
-  className="relative w-[270px] mt-4 border-2 border-purple-500 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden break-inside-avoid"
+  style={{marginBottom:"20px"}}
+  className="relative w-full  border-2 border-purple-500 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden break-inside-avoid md:w-[270px]"
 >
   {/* Avatar */}
-  <section className="absolute top-2 left-3 z-40 size-8 rounded-full border-2 border-purple-500 bg-gray-400 font-semibold text-white grid place-items-center text-sm">
+  <section style={{marginBottom:"20px"}} className="absolute top-2 left-3 z-40 size-8 rounded-full border-2 border-purple-500 bg-gray-400 font-semibold text-white grid place-items-center text-sm">
     {post?.username[0]}
   </section>
 
@@ -47,7 +48,7 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
     {/* Category */}
     <div className="mb-2">
       <span className="text-[10px] text-gray-500 uppercase tracking-wide">Category</span>
-      <div className="inline-block mt-1 bg-purple-100 text-purple-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm">
+      <div style={{marginTop:"4px"}} className="inline-block mt-1 bg-purple-100 text-purple-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm">
         #{post.category}
       </div>
     </div>
@@ -55,11 +56,11 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
     {/* Description */}
     <div className="mb-2">
       <span className="text-[10px] text-gray-500 uppercase tracking-wide">Description</span>
-      <p className="text-sm text-gray-700 mt-1">{post.caption}</p>
+      <p className="text-xs font-medium text-gray-700 mt-1">{post.caption}</p>
     </div>
 
     {/* Actions */}
-    <div className="flex items-center justify-between mt-4">
+    <div style={{marginTop:"16px"}} className="flex items-center justify-between ">
       {/* Add to Cart */}
       <button
         onClick={() => viewProduct(post._id, post.category)}
@@ -95,11 +96,14 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
     </div>
   </div>
 </div>
+ </React.Suspense>
 
       ))}
       {loading ? (<PostLoader />):""} 
         
-    </div>}
+    </div>
+   
+    }
     </>
   )
 }

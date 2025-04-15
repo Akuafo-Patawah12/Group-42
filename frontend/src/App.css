@@ -164,3 +164,15 @@ animation: water 4s ease-in-out infinite;
  51% 62%,67% 50%,84% 45%,100% 46%,100% 100%,0% 100%);
 }
 }
+.customer_sidebar{
+  display:none;
+}
+
+@media (min-width:768px){
+  .layout-shift{
+     margin-left: auto;
+  }
+  .customer_sidebar{
+    display:block;
+  }
+}

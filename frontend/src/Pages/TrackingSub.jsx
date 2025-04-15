@@ -53,7 +53,7 @@ const TrackingSub = (props) => {
   return (
     <>
       
-      <section className='flex gap-4 w-[95%] mt-4 mx-auto items-center'>
+      <section style={{scrollbarWidth:"none",marginInline:"auto"}} className='flex gap-4 w-[95%] mt-4 mx-auto items-center overflow-x-auto'>
   <p className="text-sm font-medium">Filter activities</p>
 
   <button 
@@ -83,10 +83,10 @@ const TrackingSub = (props) => {
 
 </section>
 
-        <div className="bg-white w-[95%] mx-auto shadow-md rounded-lg p-6 mt-3">
+        <div style={{marginInline:"auto",marginTop:"12px"}} className="bg-white w-[95%]  shadow-md rounded-lg p-6 ">
           <h3 className="text-lg font-bold text-gray-800 mb-4">Your Recent Orders</h3>
         
-      <Table dataSource={props.orders} columns={columns} pagination={{ pageSize: 5 }} rowKey={(record, index) => index} />
+      <Table dataSource={props.orders} columns={columns} pagination={{ pageSize: 5 }} rowKey={(record, index) => index}  scroll={{ x: 'max-content' }}/>
         </div>
 
       </>

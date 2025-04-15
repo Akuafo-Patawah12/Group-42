@@ -21,7 +21,7 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
 
 
   return (
-    <header className='w-full bg-white sticky top-0 z-60 h-[80px] items-center flex justify-between' >
+    <header className='w-full bg-white sticky top-0 z-60 h-[80px]  items-center flex justify-between' >
             <div className='flex items-center font-bold text-xl'><img src="/images/sfgl_logo.jpg" alt='logo' className='w-14 '/><div className='content'><p>SFGL</p><p>SFGL</p></div></div>
              
     

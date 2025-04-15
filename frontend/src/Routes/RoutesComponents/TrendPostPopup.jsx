@@ -51,7 +51,7 @@ const TrendPostPopup = (props) => {
       </div>
 
       {/* File Input */}
-      <label htmlFor="fileInput" className="bg-purple-500 text-white px-6 py-2  rounded-lg cursor-pointer text-sm text-center flex items-center gap-1">
+      <label htmlFor="fileInput" style={{marginBlock:"12px"}} className="bg-purple-500 text-white px-6 py-2  rounded-lg cursor-pointer text-sm text-center flex items-center gap-1">
         <input
           type="file"
           id="fileInput"
@@ -65,7 +65,7 @@ const TrendPostPopup = (props) => {
 
       {/* Display selected file name */}
       {props.image && (
-        <div className="mt-3 text-sm text-gray-700">
+        <div style={{marginTop:"12px"}} className="mt-3 text-sm text-gray-700">
           <strong>Selected File:</strong> {props.image.name}
         </div>
       )}

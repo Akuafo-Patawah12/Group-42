@@ -2,7 +2,7 @@ import React,{useState,useEffect,useMemo,useRef} from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-import Warning_icon from '../icons/Warning_icon'
+import { AlertTriangle }  from 'lucide-react';
 import ButtonLoader from '../icons/ButtonLoader';
 import { Button, Table, Input, Checkbox } from 'antd';
 import {message} from "antd"
@@ -37,7 +37,7 @@ const Clients = () => {
           socket1.off("Active")
           socket1.off("disconnect")
       }
-      },[socket1])
+      },[])
 
       useEffect(()=>{
         socket.emit("joinRoom")
@@ -84,46 +84,45 @@ const Clients = () => {
     
     
 
-    const [formData,setFormData]= useState({
-        username:"",
-        email:"",
-        account_type:"Admin",
-        password:"",
-       });
+    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [loader, setLoader] = useState(false);
+  const [validation, setValidation] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
-     const navigate= useNavigate()
-     const[loader,setLoader] =useState(false)
-       const[validation,setValidation] =useState("")
-       const handSubmit = async(e)=>{
-        e.preventDefault();
-        try{
-            setLoader(true)
-          await axios.post("http://localhost:5000/SignUp",{formData})
-          .then(res=>{
-            if(res.data.message==="exist") {
-                setValidation("Email already exist") 
-                setLoader(false)
-            }else{
-                setValidation("")
-                 message.success(
-                    "Sign up successfully"
-                   );
-                 setLoader(false)
-                navigate('/Login');
-            }
-        })
-          .catch(err=>{
-            setLoader(false)
-            message.error(
-                "Oops,system down"
-                
-             ); 
-            console.log(err)
-        })
-      }catch(e){
-         console.log(e)
-        } 
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoader(true);
+    try {
+      const res = await axios.post('http://localhost:5000/SignUp', { formData });
+      if (res.data.message === 'exist') {
+        setValidation('Email already exists');
+        setLoader(false);
+      } else {
+        setValidation('');
+        message.success('Sign up successfully');
+        setLoader(false);
+        navigate('/Login');
+      }
+    } catch (err) {
+      setLoader(false);
+      message.error('Oops, system down');
+      console.error(err);
     }
+  };
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => {
+    setIsOpen(false);
+    setValidation('');
+    setFormData({ username: '', email: '', password: '' });
+  };
+
+
+   
+     
+       
 
     const getTimeDifference = (lastActive) => {
       const now = new Date(); // Current time in local timezone
@@ -277,38 +276,72 @@ const Clients = () => {
     
     
   return (
-    <motion.div
+    <div
     initial={{ opacity: 0, perspective: 1000, rotateY: -90 ,y:150}}
     animate={{ opacity: 1, perspective: 1000, rotateY: 0 ,y:0}}
     exit={{ opacity: 0 ,y:-100}}
     duration={{duration: 0.3}}
-    className='mt-[100px] w-full bg-stone-100 lg:w-[80%] ml-auto'>
+     style={{marginTop:"100px"}}
+      className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
         <div className='relative'>
-            <Button primary>Add user</Button>
-            <div className="w-[250px] absolute hidden bottom-[-130px] flex flex-col gap-4 bg-white shadow-2xl">
-            <form onSubmit={handSubmit}>
-            <input type='text'
-               onChange={(e)=>{setFormData({...formData,username:e.target.value})}}
-               required={true}
-               className='h-8 border-2'
-            ></input>
-            <input type='email'
-               onChange={(e)=>{setFormData({...formData,email:e.target.value})}}
-               required={true}
-               className='h-8 border-2'
-            ></input>
-            <input type="password" 
-               className='h-8 border-2'
-               required={true}
-               onChange={(e)=>{setFormData({...formData,password:e.target.value})}}
-               />
-            <div className='flex w-[73%] text-md font-small text-red-400 items-center mx-auto'>
-                         {validation==="" ?"":<Warning_icon size={18}/>} {validation} 
+            <Button primary onClick={openModal}>Add user</Button>
             </div>
-            <button type='submit' disabled={loader?true:false} className="h-[35px] flex justify-center items-center gap-2 bg-green-400 w-[73%] rounded-md text-white font-medium mx-auto"><p>Add</p>{loader? <ButtonLoader/>:""}</button>
+
+             {/* Modal */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white w-[300px] rounded-xl shadow-2xl p-6 relative animate-scaleIn">
+            <h2 className="text-lg font-semibold mb-4 text-gray-700">Add New User</h2>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              <input
+                type="text"
+                required
+                placeholder="Username"
+                className="border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              />
+              <input
+                type="email"
+                required
+                placeholder="Email"
+                className="border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+              <input
+                type="password"
+                required
+                placeholder="Password"
+                className="border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              />
+
+              {validation && (
+                <div className="flex items-center gap-2 text-red-500 text-sm">
+                  <AlertTriangle size={18} />
+                  <span>{validation}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loader}
+                className="mt-2 bg-green-500 hover:bg-green-600 text-white rounded-md py-2 font-medium flex items-center justify-center gap-2"
+              >
+                <span>Add</span>
+                {loader && <ButtonLoader />}
+              </button>
             </form>
+
+            {/* Close button */}
+            <button
+              onClick={closeModal}
+              className="absolute top-2 right-3 text-gray-400 hover:text-gray-600 text-xl"
+            >
+              ×
+            </button>
+          </div>
         </div>
-        </div>
+      )}
 
         <div className="bg-white w-{95%} shadow-md rounded-lg p-6">
         <h3 className="text-lg font-bold text-gray-800 mb-4">Your Recent Orders</h3>
@@ -321,7 +354,7 @@ const Clients = () => {
       bordered
     />
     </div>
-    </motion.div>
+    </div>
   )
 }
 

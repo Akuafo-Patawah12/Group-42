@@ -19,7 +19,7 @@ const ContainerPage = () => {
     secure: true
   }),[])
 
-  const socket1 = useMemo(() =>io("https://api.sfghanalogistics.com/orders",{
+  const socket1 = useMemo(() =>io("http://localhost:4000/orders",{
     transports: ["websocket","polling"],
     withCredentials: true,
     secure: true
@@ -43,26 +43,12 @@ const ContainerPage = () => {
   }, [search, containers]); 
 
   useEffect(() => {
-    const handleConnect = () => {
-
+    
       socket1.emit("joinRoom", "adminRoom");
       socket.emit("get_all_container");
-    };
 
-    if (socket.connected) {
-      handleConnect();
-    } else {
-      socket.on("connect", handleConnect);
-      socket1.on("connect", handleConnect);
-    }
-
-    return () => {
-      socket.off("connect", handleConnect);
-      socket1.off("connect", handleConnect);
-      socket.disconnect();
-      socket1.disconnect();
-    };
-  }, []);
+    
+  },[]);
 
   
 
@@ -114,8 +100,8 @@ const ContainerPage = () => {
   
     
   useEffect(() => {
-    const handleConnect = () => {
-      console.log("Socket connected:", socket.id);
+  
+      
 
       socket.emit("fetchContainers", (response) => {
         if (response.status === "ok") {
@@ -125,17 +111,8 @@ const ContainerPage = () => {
         }
         setLoading(false);
       });
-    };
-
-    if (socket.connected) {
-      handleConnect(); // Emit immediately if already connected
-    } else {
-      socket.on("connect", handleConnect);
-    }
-
-    return () => {
-      socket.off("connect", handleConnect);
-    };
+  
+  
   }, []); // No dependencies needed
 
     useEffect(() => {
@@ -458,7 +435,7 @@ const ContainerPage = () => {
       render: (eta) => new Date(eta).toLocaleDateString(),
     },
     {
-      title: "Assigned Orders",
+      title: "Assigned Shipments",
      
       key: "assignedOrders",
       render: (_,orders) =>
@@ -470,7 +447,7 @@ const ContainerPage = () => {
           
           </>
         ) : (
-          <Tag color="gray">No Orders</Tag>
+          <Tag color="gray">No shipments</Tag>
         )}
        
         </div>,
@@ -518,9 +495,10 @@ const ContainerPage = () => {
 
 
   return (
-    <Layout style={{ minHeight: "100vh" }} className='w-full  mt-[80px] bg-stone-100 pt-5 lg:w-[82%] ml-auto'>
+    <Layout style={{marginTop:"100px"}}
+      className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
      
-     <div className="flex flex-col w-[90%] mb-3 mx-auto sm:flex-row justify-between items-center gap-4  px-4 py-3 bg-white rounded-2xl shadow-sm border">
+     <div style={{marginInline:"auto",marginBottom:"12px"}} className="flex flex-col w-[90%] mb-3  sm:flex-row justify-between items-center gap-4  px-4 py-3 bg-white rounded-2xl shadow-sm border border-purple-300">
   <button
     onClick={() => setIsEdit(true)}
     className="bg-purple-600 text-white px-5 py-2 rounded-xl hover:bg-purple-400 transition-all text-sm font-medium"

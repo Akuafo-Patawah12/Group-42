@@ -33,14 +33,11 @@ const CustomerSidebar = () => {
   ];
 
   return (
-    <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} className="fixed left-2 top-8 h-screen   bg-stone-100">
-      {/* Sidebar Toggle Button */}
-      <div className="flex justify-center my-4">
-        <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
-      </div>
+    <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} style={{position:"fixed",background:"#eee"}} className="customer_sidebar z-3 left-2 top-18 h-screen   bg-stone-100">
+      
 
       {/* Sidebar Menu */}
-      <Menu theme="light" mode="inline" selectedKeys={[location.pathname]} style={{height:"80%",borderRadius:"10px",border:"1px solid #d6d3d1",boxShadow:"0 1px 2px 0 rgba(0, 0, 0, 0.05)"}} defaultSelectedKeys={["overview"]}>
+      <Menu theme="light" mode="inline" selectedKeys={[location.pathname]} style={{position:"relative",height:"80%",borderRadius:"10px",border:"1px solid #d6d3d1",boxShadow:"0 1px 2px 0 rgba(0, 0, 0, 0.05)"}} defaultSelectedKeys={["overview"]}>
         {menuItems.map((item) => (
           <Menu.Item 
            style={{
@@ -56,16 +53,18 @@ const CustomerSidebar = () => {
             <NavLink to={item.path}>{item.label}</NavLink>
           </Menu.Item>
         ))}
-      </Menu>
 
-      {/* Logout Button */}
-      <div className="absolute translate-x-[-50%] translate-y-[-50%] left-[50%] bottom-[100px] w-[90%] flex justify-center">
+        {/* Logout Button */}
+      <div className="absolute translate-x-[-50%] translate-y-[-50%] left-[50%] bottom-[10px] w-[90%] flex justify-center">
         <Tooltip title="Log Out">
           <Button type="primary"  className="bg-red-300 border text-red-500 border-red-400" icon={<LogoutOutlined />} onClick={logout} block={!collapsed}>
             {!collapsed && "Log Out"}
           </Button>
         </Tooltip>
       </div>
+      </Menu>
+
+      
     </Sider>
   );
 };

@@ -1,11 +1,18 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { DeleteOutlined, MessageOutlined, CopyOutlined } from '@ant-design/icons';
-import { Button,Form, Input, Table,Modal,message, Space, Tag } from 'antd';
+import { Button,Form, Input, Table,Modal,message,Layout, Space, Tag ,Row,Col,Card} from 'antd';
 import { motion } from 'framer-motion';
+import { Copy } from "lucide-react";
+
+
+
 import io from 'socket.io-client';
 import { jwtDecode } from 'jwt-decode';
 import OrderMessagePopup from './OrderMessagePopup';
+
+
+const { Content } = Layout;
 
 const Orders = () => {
   const accesstoken = localStorage.getItem('accesstoken');
@@ -74,7 +81,17 @@ const Orders = () => {
     setReceipient(receipient_id);
   };
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (selectedKeys) => {
+      setSelectedRowKeys(selectedKeys);
+    },
+  };
+  
   const columns = [
+    
+    
     {
       title: '#Order ID',
       dataIndex: '_id',
@@ -82,19 +99,20 @@ const Orders = () => {
       render: (text, record) => (
         <Space>
           <Link to={`/Orders/View_Order/${record.customer_id}`}>{text}</Link>
-          <CopyOutlined onClick={() => navigator.clipboard.writeText(record._id)} />
+          <Copy size={15} onClick={() => navigator.clipboard.writeText(record._id)} />
         </Space>
       ),
     },
     {
-      title: '#Client',
+      title: 'Shipping Mark',
       dataIndex: 'customerName',
       key: 'client',
     },
+    
     {
-      title: 'Product',
-      dataIndex: 'product',
-      key: 'product',
+      title: 'CBM',
+      dataIndex: 'cbm',
+      key: 'cbm',
     },
     {
       title: 'Quantity',
@@ -124,10 +142,16 @@ const Orders = () => {
       },
     },
     {
-      title: 'Arrival Time',
+      title: 'LoadingDate',
+      dataIndex: 'loading_date',
+      key: 'arrival_time',
+    },
+    {
+      title: 'ETA',
       dataIndex: 'arrivalTime',
       key: 'arrival_time',
     },
+
     {
       title: 'Actions',
       key: 'actions',
@@ -149,6 +173,39 @@ const Orders = () => {
     },
   ];
 
+  const handleBulkDelete = () => {
+    Modal.confirm({
+      title: "Are you sure you want to delete selected orders?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: () => {
+        if (selectedRowKeys.length === 0) return;
+  
+        socket.emit("bulkDeleteOrders", { orderIds: selectedRowKeys }, (response) => {
+          if (response.success) {
+            message.success("Orders deleted successfully");
+            setSelectedRowKeys([]);
+            // refetch or update your orders list here
+          } else {
+            message.error("Failed to delete orders");
+            console.error(response.error);
+          }
+        });
+      },
+    });
+  };
+  
+  
+  const handleAssignToContainer = () => {
+    // Example - assign to group logic
+    Modal.info({
+      title: "Assigning to group...",
+      content: `Assigning ${selectedRowKeys.length} orders.`,
+    });
+  };
+  
+
   const [form] = Form.useForm();
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -168,22 +225,47 @@ const Orders = () => {
       // Validation error
     }
   };
+  
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -100 }}
-      className='mt-[100px] w-full bg-stone-100 lg:w-[80%] ml-auto'
-    >
+    <Layout style={{marginTop:"100px"}}
+          className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
+    
       
-      <div className="flex flex-col w-[90%] mb-3 mx-auto sm:flex-row justify-between items-center gap-4  px-4 py-3 bg-white rounded-2xl shadow-sm border">
-  <button
+ <div style={{marginInline:"auto",marginBottom:"12px"}} className="flex flex-col w-[90%] mb-3  sm:flex-row justify-between items-center gap-4  px-4 py-3 bg-white rounded-2xl shadow-sm border border-purple-300">
+  <div className="flex gap-2 w-fit">
+  <Button
+    disabled={selectedRowKeys.length === 0}
     onClick={()=> setModalOpen(true)}
+    onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        backgroundColor: isHovered ? '#c084fc' : '#9333ea', // purple-400 or purple-600
+        color: 'white',
+        paddingLeft: '1.25rem',
+        paddingRight: '1.25rem',
+        paddingTop: '0.5rem',
+        paddingBottom: '0.5rem',
+        borderRadius: '0.75rem',
+        fontSize: '0.875rem', // text-sm
+        fontWeight: 500, // font-medium
+        transition: 'all 0.3s ease'
+      }}
     className="bg-purple-600 text-white px-5 py-2 rounded-xl hover:bg-purple-400 transition-all text-sm font-medium"
   >
     Start shipment
-  </button>
+  </Button>
+
+  {selectedRowKeys.length !== 0 &&
+  <Button
+    danger
+    disabled={selectedRowKeys.length === 0}
+    onClick={()=>handleBulkDelete()}
+  >
+    Delete Selected
+  </Button>}
+  </div>
 
   <input
     type="text"
@@ -194,8 +276,9 @@ const Orders = () => {
 </div>
 
 
+
 <Modal
-      title="Start Shipment"
+      title={`Start Shipment ( ${selectedRowKeys.length > 0 && `${selectedRowKeys.length} selected )`}`}
       open={modalOpen}
       onCancel={() => {
         form.resetFields();
@@ -221,17 +304,28 @@ const Orders = () => {
       </Form>
     </Modal>
 
-
+     <Content style={{ padding: "10px 50px" }}>
+             <Row gutter={[16, 16]}>
+               {/* Container Page Title */}
+               <Col span={24}>
+                 <Card title="Shipments Overview" bordered={false}>
       <Table
         columns={columns}
         dataSource={orders}
+        rowSelection={rowSelection}
         rowKey="_id"
         pagination={{ pageSize: 10 }}
+        scroll={{ x: 1200 }}
         bordered
       />
 
+      </Card>
+      </Col>
+      </Row>
+      </Content>
+
       <OrderMessagePopup msgPop={msgPop} sendMessage={handleSendMessage} />
-    </motion.div>
+    </Layout>
   );
 };
 

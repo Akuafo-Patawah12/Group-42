@@ -65,7 +65,7 @@ const Services = () => {
 
   {/* Overlay */}
   <div className="absolute z-30 w-full h-full bg-black/50 flex items-center justify-center">
-    <a href="/" className="text-white font-bold text-xl">Home /</a>
+    <a href="/" className="text-white font-bold text-xl">Home /</a><span className="text-purple-600 font-bold text-xl">Services</span>
   </div>
 </section>
 
