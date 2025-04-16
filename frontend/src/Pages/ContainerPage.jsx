@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useMemo,useRef } from "react";
 import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col, Tag, Space,message, Button,Select ,Typography,Spin} from "antd";
 import { SearchOutlined } from '@ant-design/icons';
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2,Copy } from "lucide-react";
 
 import io from "socket.io-client"
 
@@ -404,7 +404,16 @@ const ContainerPage = () => {
   // Columns for the table
   const columns = [
     
-    { title: "Container Number", dataIndex: "containerNumber", key: "containerNumber" },
+    { 
+      title: "Container Number",
+      dataIndex: "containerNumber",
+      key: "containerNumber",
+      render:(text,record)=> (
+        <Space>
+        <p>{text}</p>
+        <Copy size={15} onClick={() => navigator.clipboard.writeText(record.containerNumber)} />
+        </Space>
+      ) },
     {
       title: "Status",
       dataIndex: "status",

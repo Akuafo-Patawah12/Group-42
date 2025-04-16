@@ -4,6 +4,7 @@ import { DeleteOutlined, MessageOutlined, CopyOutlined } from '@ant-design/icons
 import { Button,Form, Input, Table,Modal,message,Layout, Space, Tag ,Row,Col,Card} from 'antd';
 import { motion } from 'framer-motion';
 import { Copy } from "lucide-react";
+import moment from "moment";
 
 
 
@@ -142,15 +143,17 @@ const Orders = () => {
       },
     },
     {
-      title: 'LoadingDate',
-      dataIndex: 'loading_date',
-      key: 'arrival_time',
+      title: 'Route',
+      dataIndex: 'route',
+      key: 'route',
     },
     {
       title: 'ETA',
-      dataIndex: 'arrivalTime',
-      key: 'arrival_time',
-    },
+      dataIndex: 'eta',
+      key: 'eta',
+      render: (text) => moment(text).format('MMMM D, YYYY'),
+    }
+    ,
 
     {
       title: 'Actions',
@@ -211,6 +214,13 @@ const Orders = () => {
 
   const onStart = (containerNumber) => {
     console.log("Start shipment for:", containerNumber);
+    socket.emit("start-shipment",{containerNumber,selectedRowKeys},(response)=>{
+      if (response.status==="ok"){
+        message.success("shipment started")
+      }else{
+        message.error("error starting shipments")
+      }
+    })
     // Send this to your backend or Socket.IO here
   };
 
