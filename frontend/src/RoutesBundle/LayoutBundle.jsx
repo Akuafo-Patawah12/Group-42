@@ -28,7 +28,7 @@ const LayoutBundle = () => {
   const location= useLocation()
   
   return (
-    <div >
+    <div style={{backgroundColor: "#f5f5f4"}}>
       <Header />
       <Sidebar />
       <AnimatePresence>

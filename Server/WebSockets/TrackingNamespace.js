@@ -67,13 +67,14 @@ Socket.on("track",async(data,callback)=>{
    
     try{
       console.log(data)
-      const Order = await shipment.find({ items: { $elemMatch: { trackingNo: data } } });
-      if(Order.length===0){
+      const order= await Order.findOne({tracking_no: data}).populate("shipmentId","port route")
+      console.log(order)
+      if(!order){
          callback({status: "error", message:"Your tracking id is not associated with any order"})
       }
-      console.log(Order)
-      callback({status: "ok",message:"Tracking"})
-      socket.emit("get_item_location",{route: Order[0].route,country: Order[0].selected_country})
+      console.log(order)
+      callback({status:"ok",message:"Tracking"})
+      Socket.emit("get_item_location",order)
       
     }catch(error){
         console.log(error)

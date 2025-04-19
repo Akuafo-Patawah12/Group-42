@@ -2,14 +2,16 @@ import React,{useState,useMemo,useEffect,useRef} from 'react'
 import {useSearchParams,useNavigate} from "react-router-dom"
 import "./Tracking.css"
 import io from "socket.io-client"
-import { message,Empty } from "antd"
-
+import { message,Empty,Modal,Spin } from "antd"
+import {toast} from "react-toastify"
+import { Package } from 'lucide-react';
 import {route1,route2,route3,route4,route5} from "../Data/RouteData"
 import  ShipIcon  from "../icons/Truck.svg"
 import  MapShipIcon  from "../icons/CargoShip.svg"
 import  Ship2Icon  from "../icons/image.svg"
 import { RightCircleFilled,ArrowRightOutlined, UpOutlined ,CheckOutlined  } from '@ant-design/icons'
-import Map, { Marker,  NavigationControl,Source,Layer } from "react-map-gl";
+import Map, { Marker,  NavigationControl,Source,Layer } from "react-map-gl/maplibre";
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { Form, Input, Button } from "antd";
 
 const Mapbox = () => {
@@ -25,6 +27,18 @@ const Mapbox = () => {
   const [country , setCountry] = useState("")
   const [lineGeoJSON, setLineGeoJSON] = useState(null);
   const [isModalOpen,setIsModalOpen]= useState(false)
+  const [isMoreInfo, setIsMoreInfo] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const handleOpen = () => {
+
+    setIsMoreInfo(true);
+    setLoading(true);
+    // Simulate a loading delay
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500); // 1.5 seconds
+  };
   
 useEffect(()=>{
 socket.on('connect',()=>{
@@ -33,8 +47,8 @@ socket.on('connect',()=>{
 
 socket.on('get_item_location',(data)=>{
   console.log("tracking order",data)
-  setRoute(data.route || "")
-  setCountry(data.country || "")
+  setRoute(data?.shipmentId?.route || "")
+  setCountry(data?.shipmentId?.country || "")
 })
 
 socket.on("connect_error",(error)=>{
@@ -243,36 +257,63 @@ const handleTrack = (values) => {
 useEffect(() => {
   if (track_id) {
    socket.emit("track",track_id,(response)=>{
-    response.status==="ok"  ? message.success(response.message)  : message.error(response.message);
+    if(response.status==="ok"){
+       toast.success("Tracking...")
+      }else{
+       toast.error(response.message)
+      }
   })
     console.log(`Sent track_id to backend: ${track_id}`);
   }
 }, [track_id]);
+
+function handTrack(){
+  if (track_id) {
+    socket.emit("track",track_id,(response)=>{
+     if(response.status==="ok"){
+        toast.success("Tracking...")
+       }else{
+        toast.error(response.message)
+       }
+   })
+  }
+}
   return (
     <>
 
-    <div className='mt-[100px] w-80%'>
-    
-      <h2>Track Your Order</h2>
-      <Form onFinish={handleTrack} layout="inline">
-        <Form.Item name="search" style={{ flex: 1 }}>
-          <Input
-            placeholder="Enter Tracking ID..."
-            allowClear
-            size="large"
-            onChange={handleSearch}
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" size="large">
-            Search
-          </Button>
-        </Form.Item>
-      </Form>
-      {track_id && <p>Tracking ID: {track_id}</p>}
+    <div style={{paddingTop:"100px"}}
+          className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
+    <div style={{marginInline:"auto"}} className="bg-white w-[95%]   p-6 rounded-2xl shadow-lg border border-stone-200">
+  <h2 className="text-xl flex justify-center gap-2 font-semibold text-center text-gray-700 pb-4 border-b border-stone-300">
+  <Package className=" text-gray-600" /> Track Your Shipment
+  </h2>
+
+  <section style={{marginTop:"16px"}} className="mt-4 flex">
+    <Form onFinish={handleTrack} layout="inline" className="flex flex-col gap-4 lg:flex-row "  style={{width:"100%"}}>
+      <Form.Item name="search" className=" m-0" style={{width:"100%"}}>
+        <Input
+          placeholder="Enter Tracking ID..."
+          allowClear
+          size="large"
+          onChange={handleSearch}
+          
+          className="w-full"
+        />
+      </Form.Item>
+
+      <Form.Item className="m-0" style={{width:"100%"}}>
+        <Button type="primary" htmlType="submit" size="large" style={{width:"100%",background:"var(--purple)"}} className="w-[100px] sm:w-auto">
+          Track
+        </Button>
+      </Form.Item>
+    </Form>
+  </section>
+</div>
+
+      
     </div>
   
-   {routesMap[route] ? <div>
+   {routesMap[route] ? <div className=' layout-shift w-full bg-stone-100 lg:w-[80%] '>
         <div className="headline">
         <div className="line_header">SHIPPING ROUTE FROM CHINA TO GHANA.</div>
          
@@ -281,17 +322,17 @@ useEffect(() => {
         <div className="line_map" ref={parent}>
         <div className="line_inner" >
           
-        <div  className="ship" style={{background:"yellow !important",position:"relative"}}><img src={ShipIcon} alt='ship' style={{ position: "absolute",top:"-40px", left: `${xPosition-3}px` ,width:"fit-content"}}/> 
+        <div  className="ship" style={{position:"relative"}}><div  style={{ position: "absolute",top:"-40px", left: `${xPosition-3}px` ,width:"fit-content"}}><Package/></div>  
          </div>
         <section className="line" style={{position:"relative"}} >
           
         
       {routesMap[route].map((port, index) => (
-        <div key={index} className="current_city" >
+        <div key={index} className="current_city"  >
         <div className="ship-cont">
       <div
         style={{
-          background: "var(--green)",
+          background: "var(--purple)",
           position: "relative",
           height: "30px",
           width: "30px",
@@ -329,21 +370,103 @@ useEffect(() => {
 
         </div>
        
-          <div style={{width:"fit-content",marginInline:"auto",paddingBlock:"10px"}}><a href='#Map' ><button className='route_button'><Ship2Icon /> ROUTE MAP <RightCircleFilled style={{color:"#A7C756",marginLeft:"10px"}}/> </button></a></div>
+          <div style={{display:"flex",gap:"5px",width:"fit-content",marginInline:"auto",paddingBlock:"10px"}}><a href='#Map' ><button className='route_button flex gap-1'><Package size={24} /> ROUTE MAP <RightCircleFilled style={{color:"var(--purple)",marginLeft:"10px"}}/> </button></a> <button onClick={() => handleOpen()} className=" text-white bg-purple-500 h-10 px-3 rounded-xl">More Info</button></div>
+        
+          <Modal
+        title="⛴ Port Stay Durations"
+        open={isMoreInfo}
+        onCancel={() => setIsMoreInfo(false)}
+        footer={null}
+        centered
+        width={700}
+      >
+
+{loading ? (
+          <div className="flex items-center justify-center py-10">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          
+        <div
+              
+              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
+            >
+              <h3 className="text-lg font-bold">{routesMap[route][0].countryPort}</h3>
+              <p className="text-gray-600">{routesMap[route][0].country}</p>
+              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][0].duration}</span>
+            </div>
+
+            <div
+              
+              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
+            >
+              <h3 className="text-lg font-bold">{routesMap[route][1].countryPort}</h3>
+              <p className="text-gray-600">{routesMap[route][1].country}</p>
+              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][1].duration}</span>
+            </div>
+
+            <div
+              
+              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
+            >
+              <h3 className="text-lg font-bold">{routesMap[route][2].countryPort}</h3>
+              <p className="text-gray-600">{routesMap[route][2].country}</p>
+              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][2].duration}</span>
+            </div>
+
+            <div
+              
+              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
+            >
+              <h3 className="text-lg font-bold">{routesMap[route][3].countryPort}</h3>
+              <p className="text-gray-600">{routesMap[route][3].country}</p>
+              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][3].duration}</span>
+            </div>
+
+            <div
+              
+              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
+            >
+              <h3 className="text-lg font-bold">{routesMap[route][4].countryPort}</h3>
+              <p className="text-gray-600">{routesMap[route][4].country}</p>
+              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][4].duration}</span>
+            </div>
+
+            <div
+              
+              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
+            >
+              <h3 className="text-lg font-bold">{routesMap[route][5].countryPort}</h3>
+              <p className="text-gray-600">{routesMap[route][5].country}</p>
+              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][5].duration}</span>
+            </div>
+          
+        </div>
+        <div className="text-sm text-gray-500 mt-2 border-t pt-4">
+          <strong>Note:</strong> Port stay durations are estimated. Delays may occur due to weather,
+          customs, or operational factors.
+        </div>
+        </>
+        )}
+      </Modal>
+
         <div style={{width:"95%",marginInline:"auto"}}>
         <Map
+        mapLib={import('maplibre-gl')}
       initialViewState={{
         latitude: routesMap[route][Index].Latitude,
         longitude: routesMap[route][Index].Longitude,
         zoom: 2,
       }}
       style={{ width: "100%", height:"400px",marginTop:"30px" }}
-      mapStyle="mapbox://styles/mapbox/streets-v11"
+      mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
       mapboxAccessToken= {import.meta.env.VITE_MAP_API_KEY}
       id="Map"
     >
       <Marker latitude={routesMap[route][Index].Latitude} longitude={routesMap[route][Index].Longitude}>
-        <div><MapShipIcon/></div>
+        <div><Package/></div>
       </Marker>
 
       <Marker longitude={routesMap[route][0].Longitude} latitude={routesMap[route][0].Latitude} color="blue">
@@ -420,8 +543,9 @@ useEffect(() => {
       )}
 
     </div>: 
-     <div style={{height:"400px",display:"flex",alignItems:"center",justifyContent:"center"}}>
-     <Empty description={<span style={{ fontSize: "16px", fontWeight: "500",marginLeft:"-25px" }}>No Data Available</span>} />
+     <div style={{paddingBlock:"100px",}}
+          className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
+     <Empty description={<span style={{ fontSize: "14px", fontWeight: "500",marginLeft:"-25px" }}>No Data Available</span>} />
      </div>
     }
   

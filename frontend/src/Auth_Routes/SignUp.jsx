@@ -55,7 +55,7 @@ const SignUp = () => {
     }
   return (
     
-        <div className='flex  justify-center items-center h-screen bg-gray-100 '>
+        <div className='flex  justify-center items-center h-[110vh] bg-gray-100 '>
             <section className='relative border-[1px]  w-full  overflow-hidden bg-white border-stone-300 shadow-2xl flex items-center flex-col h-full lg:flex-row gap-2 '>
             <div className='w-full   h-full  lg:overflow-hidden'>
                     <img src='../images/welcome.jpg' className='h-full w-full object-cover object-center' alt='sign'></img>
@@ -132,23 +132,7 @@ const SignUp = () => {
       {validation === '' ? '' : <Warning_icon size={18} />} {validation}
     </div>
 
-    {/* Account Type */}
-    <Form.Item className="w-[73%] mx-auto">
-      <Radio.Group
-        className="w-full flex justify-between"
-        onChange={(e) =>
-          setFormData({ ...formData, account_type: e.target.value })
-        }
-        value={formData.account_type}
-      >
-        <Radio value="Personal" className="w-[47%] border-2 border-gray-400 rounded-md pl-2 py-1">
-          <span className="text-gray-600 font-medium">Personal</span>
-        </Radio>
-        <Radio value="Business" className="w-[47%] border-2 border-gray-400 rounded-md pl-2 py-1">
-          <span className="text-gray-600 font-medium">Business</span>
-        </Radio>
-      </Radio.Group>
-    </Form.Item>
+  
 
     {/* Submit Button */}
     <Form.Item className="w-[73%] mx-auto">

@@ -15,7 +15,7 @@ const userFunc = require('./UsersNamespace');
 function initializeSocket(server) {   
 const io = socketIo(server, {   //Creating connect between server and User Interface  "Realtime WebApp"
     cors: {
-      origin:"http://localhost:5174",
+      origin:["http://localhost:5173","http://localhost:5174"],
       methods: ['GET','POST'],
       allowedHeaders: ['Content-Type'],
       credentials: true

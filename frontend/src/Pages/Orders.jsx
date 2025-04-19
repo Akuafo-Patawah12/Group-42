@@ -111,6 +111,14 @@ const Orders = () => {
     },
     
     {
+      title: 'Container No.',
+      dataIndex: 'containerNumber',
+      key: 'containerNumber',
+      render:(text)=>(
+        text === undefined ? <p>N/A</p> : <p>{text}</p>
+      )
+    },
+    {
       title: 'CBM',
       dataIndex: 'cbm',
       key: 'cbm',
@@ -239,7 +247,7 @@ const Orders = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Layout style={{marginTop:"100px"}}
+    <Layout style={{paddingTop:"100px"}}
           className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
     
       
@@ -318,7 +326,7 @@ const Orders = () => {
              <Row gutter={[16, 16]}>
                {/* Container Page Title */}
                <Col span={24}>
-                 <Card title="Shipments Overview" bordered={false}>
+                 <Card title="Shipments Overview" style={{border:"1px solid #ddd"}}>
       <Table
         columns={columns}
         dataSource={orders}

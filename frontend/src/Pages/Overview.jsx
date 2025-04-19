@@ -316,43 +316,51 @@ const CloseReport = () => {
     className=' layout-shift w-full bg-stone-100 pt-5 lg:w-[80%] '
     >
       {creatingOrder&&<span className='fixed top-[70px] z-2 -translate-x-[50%] -translate-y-[50%] left-[50%] bg-orange-200'>Creating Order...</span>}
-      <Card
-      style={{
-  width: '95%',
-  margin: '70px auto 0',
-  padding: '0.5rem',
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '1rem',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  borderRadius: '1rem',
-  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-}}
+      <div
+  style={{
+    width: '95%',
+    margin: '70px auto 0',
+    padding: '0.8rem',
+    display: 'grid',
+    background:"white",
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '1rem',
+    alignItems: 'center',
+    borderRadius: '1rem',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  }}
+>
+  {/* Title */}
+  <div>
+    <span className="font-bold text-md sm:text-xl">Shipments Overview</span>
+  </div>
 
-    >
-      {/* Title */}
-      <span className="font-bold text-lg sm:text-xl">Shipments Overview</span>
-
-      {/* Active Orders */}
-      <Badge count={active} size="small" offset={[5, -5]}>
-        <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center gap-2 text-sm">
-          <CarOutlined style={style} /> Active Orders
-        </span>
-      </Badge>
-
-      {/* Total Shipments */}
-      <Badge count={orders.length} size="small" offset={[5, -5]}>
-        <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center gap-2 text-sm">
-          <ShoppingCartOutlined style={style} /> Total Shipments
-        </span>
-      </Badge>
-
-      {/* Delivered Items */}
-      <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center gap-2 text-sm">
-        <ProductOutlined style={style} /> Delivered Items
+  {/* Active Orders */}
+  <div>
+    <Badge count={active} size="small" offset={[5, -5]}>
+      <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+        <CarOutlined style={style} /> Active Orders
       </span>
-    </Card>
+    </Badge>
+  </div>
+
+  {/* Total Shipments */}
+  <div>
+    <Badge count={orders.length} size="small" offset={[5, -5]}>
+      <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+        <ShoppingCartOutlined style={style} /> Total Shipments
+      </span>
+    </Badge>
+  </div>
+
+  {/* Delivered Items */}
+  <div>
+    <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+      <ProductOutlined style={style} /> Delivered Items
+    </span>
+  </div>
+</div>
+
       <div style={{marginInline:"auto",marginTop:"8px"}} className='flex  justify-between mt-2 bg-slate-200 w-[95%] mx-auto items-center py-4 rounded-2xl gap-2 '>
         <div className="flex flex-col px-[2%] w-full gap-3 md:flex-row">
         
@@ -376,8 +384,8 @@ const CloseReport = () => {
 
       {/* Actions */}
       <Space>
-        <Button type="primary" className="bg-[var(--purple)]">Personal Report</Button>
-        <Button type="primary" className="bg-[var(--purple)]" text-white onClick={() => setIsOpen(true)}>
+        <Button type="primary" style={{background:"var(--purple)"}}>Personal Report</Button>
+        <Button type="primary" style={{background:"var(--purple)"}} text-white onClick={() => setIsOpen(true)}>
           Request Quote
         </Button>
       </Space>

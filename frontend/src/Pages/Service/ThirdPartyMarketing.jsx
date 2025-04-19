@@ -1,119 +1,93 @@
-import React from "react";
+import {
+  ShoppingCart,
+  PackageSearch,
+  ShieldCheck,
+  Truck,
+  BadgeCheck,
+  Store,
+  Users,
+} from "lucide-react";
 
-const ThirdPartyMarketing = () => {
+export default function ThirdPartyMarketing() {
   return (
-    <div className="bg-gray-50 min-h-screen py-12 px-6 lg:px-24">
-      {/* Page Header */}
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Third-Party Marketing Services
-        </h1>
-        <p className="text-gray-600 text-lg">
-          Empower your business with our reliable third-party marketing solutions.
-        </p>
-      </header>
-
-      {/* Introduction Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          What Are Third-Party Marketing Services?
-        </h2>
-        <p className="text-gray-600 leading-relaxed">
-          Third-party marketing involves leveraging external expertise and resources to promote your business effectively. Our services focus on connecting your brand with the right audience through strategic partnerships, campaigns, and tailored marketing solutions.
-        </p>
+    <div className="font-sans text-gray-800 bg-white">
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-purple-100 to-white py-20 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            Smart Sourcing with Our Third-Party Marketplace
+          </h1>
+          <p className="text-lg text-gray-600 mb-8">
+            Discover trusted suppliers and connect directly—no middlemen, no transaction fees.
+          </p>
+          <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full font-medium transition">
+            Browse Suppliers
+          </button>
+        </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-blue-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-network-wired text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Extensive Network
-          </h3>
-          <p className="text-gray-600">
-            Access a broad network of partners and resources to amplify your brand reach.
+      {/* Features */}
+      <section className="py-16 px-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+          {[
+            {
+              icon: <Truck className="h-8 w-8 text-purple-600 mx-auto mb-4" />,
+              title: "Logistics Support",
+              desc: "Integrated freight services for seamless order fulfillment.",
+            },
+            {
+              icon: <BadgeCheck className="h-8 w-8 text-purple-600 mx-auto mb-4" />,
+              title: "Verified Suppliers",
+              desc: "We list only credible and screened vendors for your peace of mind.",
+            },
+            {
+              icon: <Users className="h-8 w-8 text-purple-600 mx-auto mb-4" />,
+              title: "Direct Connections",
+              desc: "Engage directly with sellers for custom deals and negotiations.",
+            },
+          ].map((item, i) => (
+            <div key={i} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+              {item.icon}
+              <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+              <p className="text-gray-600">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="py-20 px-6 bg-purple-50">
+        <div className="max-w-6xl mx-auto text-center mb-12">
+          <h2 className="text-3xl font-bold">Popular Categories</h2>
+          <p className="text-gray-600 mt-2">
+            Explore categories and find suppliers that match your needs.
           </p>
         </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-green-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-bullseye text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Targeted Campaigns
-          </h3>
-          <p className="text-gray-600">
-            Reach your ideal audience through customized marketing strategies.
-          </p>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-yellow-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-chart-line text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Measurable Results
-          </h3>
-          <p className="text-gray-600">
-            Track your campaign's success with real-time data and analytics.
-          </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+          {[Store, PackageSearch, ShoppingCart, Truck].map((Icon, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-full h-24 w-24 flex items-center justify-center mx-auto shadow hover:shadow-lg transition"
+            >
+              <Icon className="h-8 w-8 text-purple-600" />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Services Offered Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Our Third-Party Marketing Services Include:
-        </h2>
-        <ul className="list-disc list-inside text-gray-600 space-y-3">
-          <li>Partner Collaboration for Market Expansion</li>
-          <li>Social Media Marketing Campaigns</li>
-          <li>Email and Content Marketing</li>
-          <li>Affiliate Marketing Programs</li>
-          <li>Performance Analytics and Reporting</li>
-        </ul>
-      </section>
-
-      {/* Case Studies Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Case Studies</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Campaign for XYZ Retail
-            </h3>
-            <p className="text-gray-600">
-              Partnered with XYZ Retail to execute a social media campaign that
-              increased their online sales by 30%.
-            </p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Launching ABC Product
-            </h3>
-            <p className="text-gray-600">
-              Supported the launch of ABC's new product with targeted email
-              marketing, resulting in a 20% growth in customer base.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Call-to-Action Section */}
-      <section className="text-center bg-blue-500 text-white py-12 px-6 rounded-lg">
-        <h2 className="text-3xl font-bold mb-4">Boost Your Marketing Today</h2>
-        <p className="text-lg mb-6">
-          Contact us to learn more about how our third-party marketing services
-          can help grow your business.
-        </p>
-        <button className="bg-white text-blue-500 font-semibold px-6 py-3 rounded-full shadow hover:bg-gray-100 transition">
-          Get a Quote
+      {/* Call to Action */}
+      <section className="py-20 px-6 bg-purple-600 text-white text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">Join Our Trusted Network</h2>
+        <p className="text-lg mb-6">List your products or connect with vetted sellers across industries.</p>
+        <button className="bg-white text-purple-600 px-6 py-3 rounded-full font-medium hover:bg-purple-100 transition">
+          Become a Partner
         </button>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white text-center py-8">
+        <p className="text-sm">© {new Date().getFullYear()} Your Marketplace. All rights reserved.</p>
+      </footer>
     </div>
   );
-};
-
-export default ThirdPartyMarketing;
+}

@@ -1,5 +1,5 @@
 
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -12,14 +12,14 @@ const useLogout = () => {
   
         if (response.status === 200) {
           localStorage.removeItem("accesstoken");
-          message.success("Logged out successfully!");
+          toast.success("Logged out successfully!");
           navigate("/Login"); // Redirect to login page
         } else {
-          message.error("Logout failed. Please try again.");
+          toast.error("Logout failed. Please try again.");
         }
       } catch (error) {
         console.error("Logout error:", error);
-        message.error("An error occurred while logging out.");
+        toast.error("An error occurred while logging out.");
       }
     };
   

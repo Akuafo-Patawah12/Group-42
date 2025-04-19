@@ -3,6 +3,7 @@ import Header from '../Components/HeaderAndSidebar';
 import Loading from "../icons/Loading"
 import CustomerSidebar from '../Components/CustomerSidebar';
 import { Routes,Route } from 'react-router-dom';
+import UserProfile from '../Pages/UserProfile';
 
 
 const Overview= lazy(()=> import("../Pages/Overview"))
@@ -16,7 +17,7 @@ const LazyTrends= lazy(()=> import ("../Routes/Trends"))
 
 const CustomersLayout=()=>{
     return(
-        <div className="bg-stone-100 h-full">  
+        <div style={{backgroundColor: "#f5f5f4"}} className="bg-stone-100 h-full">  
             <Header/>
             <CustomerSidebar />
             <Routes>
@@ -32,7 +33,9 @@ const CustomersLayout=()=>{
              <ItemList/>
              </Suspense>} />
 
-             
+          <Route path="/Profile" element={<Suspense fallback={<Loading />}>
+                  <UserProfile />
+             </Suspense>} />
              
              <Route path='/Overview' element={<Suspense fallback={<Loading />}>
                   <Overview />

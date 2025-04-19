@@ -26,7 +26,6 @@ const CustomerSidebar = () => {
 
   const menuItems = [
     { key: "overview", label: "Overview", icon: <DatabaseOutlined className="text-purple-600"/>, path: "/Customer/Overview" },
-    
     { key: "tracking", label: "Tracking", icon: <CompassOutlined className="text-purple-600"/>, path: "/Customer/Tracking" },
     { key: "profile", label: "Profile", icon: <DatabaseOutlined className="text-purple-600"/>, path: "/Customer/Profile" },
     { key: "settings", label: "Settings", icon: <SettingOutlined className="text-purple-600"/>, path: "/Customer/Settings" },
@@ -37,7 +36,7 @@ const CustomerSidebar = () => {
       
 
       {/* Sidebar Menu */}
-      <Menu theme="light" mode="inline" selectedKeys={[location.pathname]} style={{position:"relative",height:"80%",borderRadius:"10px",border:"1px solid #d6d3d1",boxShadow:"0 1px 2px 0 rgba(0, 0, 0, 0.05)"}} defaultSelectedKeys={["overview"]}>
+      <Menu theme="light" mode="inline" selectedKeys={[location.pathname]} style={{position:"relative",height:"90%",borderRadius:"10px",border:"1px solid #d6d3d1",boxShadow:"0 1px 2px 0 rgba(0, 0, 0, 0.05)"}} defaultSelectedKeys={["overview"]}>
         {menuItems.map((item) => (
           <Menu.Item 
            style={{
@@ -57,7 +56,7 @@ const CustomerSidebar = () => {
         {/* Logout Button */}
       <div className="absolute translate-x-[-50%] translate-y-[-50%] left-[50%] bottom-[10px] w-[90%] flex justify-center">
         <Tooltip title="Log Out">
-          <Button type="primary"  className="bg-red-300 border text-red-500 border-red-400" icon={<LogoutOutlined />} onClick={logout} block={!collapsed}>
+          <Button type="primary" style={{background:"#f87171"}}  className="bg-red-300 border text-red-500 border-red-400" icon={<LogoutOutlined />} onClick={logout} block={!collapsed}>
             {!collapsed && "Log Out"}
           </Button>
         </Tooltip>

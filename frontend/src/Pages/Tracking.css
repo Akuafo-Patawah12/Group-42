@@ -72,7 +72,7 @@
 .line_map{
     width: 95%;
     border-radius: 5px;
-    background: url("../../public/images/Seaport.jpg") no-repeat;
+    background: url("../images/Seaport.jpg") no-repeat;
     background-size: cover;
     overflow-x: auto;
     margin-inline: auto;
@@ -110,12 +110,14 @@
     background: #222;
     height: 4px;
     margin-block: 20px;
+    margin-left: auto;
+    width: 80% !important;
     
     
 
     & span{
         position: relative;
-        background: #A7C756;
+        background: var(--purple);
         height: 30px;
         width: 30px;
         display: flex;
@@ -198,7 +200,7 @@
 }
 
 .route_button{
-    border: 2px solid #A7C756;
+    border: 2px solid var(--purple);
     margin-inline: auto;
     width: fit-content;
     padding: 5px;

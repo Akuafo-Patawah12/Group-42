@@ -56,6 +56,7 @@ const  orderList=(Socket,orderListNamespace,trackingNamespace,Users)=>{
               route:  '$shipmentDetails.route',         // example field
               port : '$shipmentDetails.port',
               eta: '$shipmentDetails.eta',
+              containerNumber: '$shipmentDetails.containerNumber',
               cbmRate: '$shipmentDetails.cbmRate',
               shipmentDate: '$shipmentDetails.createdAt',          // example field
             }

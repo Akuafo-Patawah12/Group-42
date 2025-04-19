@@ -130,13 +130,13 @@ const Services = () => {
 </section>
 
 {/* Image & Marketplace section */}
-<div className="flex flex-col lg:flex-row justify-between items-center gap-8 mt-20 px-4 md:px-10 max-w-7xl mx-auto">
+<div style={{marginTop:"80px"}} className="flex flex-col lg:flex-row justify-between items-center gap-8 mt-20 px-4 md:px-10 max-w-7xl mx-auto">
   <div className="w-full lg:w-1/2">
     <img src="../images/3d-render-freight-container-forklift.jpg" alt="Freight container" className="w-full rounded-xl shadow-md" />
   </div>
   <div className="w-full lg:w-1/2">
     <img src="../images/online-purchase-payment-commerce-concept-transformed.jpeg" alt="e-commerce" className="w-full rounded-xl shadow-md mb-4" />
-    <h3 className="text-lg font-semibold text-gray-800 mb-2">Third Party Marketplace</h3>
+    <h3 style={{marginBottom:"8px"}} className="text-lg font-semibold text-gray-800 mb-2">Third Party Marketplace</h3>
     <p className="text-sm text-gray-600">
       Connect buyers and sellers with secure transactions, powerful tools, and easy navigation to empower small businesses with a seamless e-commerce experience.
     </p>

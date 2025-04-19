@@ -504,7 +504,7 @@ const ContainerPage = () => {
 
 
   return (
-    <Layout style={{marginTop:"100px"}}
+    <Layout style={{paddingTop:"100px"}}
       className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
      
      <div style={{marginInline:"auto",marginBottom:"12px"}} className="flex flex-col w-[90%] mb-3  sm:flex-row justify-between items-center gap-4  px-4 py-3 bg-white rounded-2xl shadow-sm border border-purple-300">
@@ -707,7 +707,7 @@ const ContainerPage = () => {
         <Row gutter={[16, 16]}>
           {/* Container Page Title */}
           <Col span={24}>
-            <Card title="Containers Overview" bordered={false}>
+            <Card title="Containers Overview" style={{border:"1px solid #ddd"}}>
               <Table
                 columns={columns}
                 dataSource={containers}

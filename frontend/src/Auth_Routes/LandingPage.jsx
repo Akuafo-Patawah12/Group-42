@@ -3,7 +3,8 @@ import { Card,Table, Col, Row,Button, Typography, Space, Avatar,  Rate  } from '
 import { Link } from "react-router-dom"
 import { SafetyOutlined, TeamOutlined, CheckCircleOutlined,LeftOutlined, RightOutlined, GlobalOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
-import { Plane, Ship,TrendingUp,PackagePlus,Megaphone,Package, ShoppingCart, UserPlus, Home, PackageCheck,Truck, HomeIcon, StarIcon, ChevronLeft, ChevronRight  } from "lucide-react";
+import { Plane, Ship, Store,TrendingUp,PackagePlus,Megaphone,Package, ShoppingCart, UserPlus, Home, PackageCheck,Truck, HomeIcon, StarIcon, ChevronLeft, ChevronRight  } from "lucide-react";
+
 import "./LandingPage.css"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 const { Title, Paragraph } = Typography
@@ -248,46 +249,61 @@ const LandingPage = () => {
   }, []);
  
   return(
-    <div className="pb-12  px-2  bg-gray-50">
+    <div className="pb-12  px-2  ">
 
-<div className="grid grid-cols-4 grid-rows-2 gap-4">
+<div className="grid grid-cols-2   grid-rows-2 gap-4 md:grid-cols-3">
   {/* First image: spans 2 columns */}
-  <img
-    src="/images/img_2.jpg"
-    alt="Image 1"
-    className="col-span-2 w-full h-48 object-cover rounded-md"
-  />
 
-  {/* Normal images */}
-  <img
-    src="/images/img_3.jpg"
-    alt="Image 2"
-    className="w-full h-48 object-cover rounded-md"
-  />
-  <img
-    src="/images/procurement.jpg"
-    alt="Image 3"
-    className="w-full h-48 object-cover rounded-md"
-  />
+  <div className="col-span-2 bg-gray-100 py-4 rounded-3xl flex flex-col item-center row-span-2  w-full">
+    <h1 style={{marginBlock:"24px"}} className="text-2xl text-center  md:text-3xl font-bold text-gray-800 mb-6 leading-tight">
+         Smart <span className="text-purple-600">Logistics</span> &<br />
+         Strategic <span className="text-purple-600">Marketing</span> Solutions
+    </h1>
+    <p style={{margin:"0 auto",textAlign:"center"}} className=" font-bold text-stone-700 text-sm w-4/5 ">
+    Seamlessly connect products with people. We simplify global logistics while elevating your brand through strategic marketing—helping you move smarter and grow faster.
+    </p>
+    <button style={{margin:"20px auto"}}  className="bg-purple-500 text-purple-200 text-sm font-medium p-3 rounded-3xl ">Get a Quote</button>
+    <div style={{margin:"20px auto"}} className="bg-[url('/images/ad.svg')] bg-contain bg-no-repeat w-[80%] h-[300px]"></div>
+  </div>
 
-  {/* Normal images */}
-  <img
-    src="/images/Slider4.jpg"
-    alt="Image 4"
-    className="w-full h-48 object-cover rounded-md"
-  />
-  <img
-    src="/images/Air2.jpg"
-    alt="Image 5"
-    className="w-full h-48 object-cover rounded-md"
-  />
 
-  {/* Last image: spans 2 columns */}
-  <img
-    src="/images/Air.jpg"
-    alt="Image 6"
-    className="col-span-2 w-full h-48 object-cover rounded-md"
-  />
+  <div className="w-full flex flex-col items-center gap-5 justify-center col-span-1 row-span-1 bg-purple-200 rounded-2xl">
+   <h3 className="font-bold">Whatever the load we carry it.</h3>
+   <div className="bg-[url('/images/logistics_push.svg')] bg-contain bg-no-repeat h-[100px] w-[200px]"></div>
+   <div className="flex flex-wrap justify-center gap-6 ">
+      {[Plane, Ship, Truck, Store].map((Icon, index) => (
+        <div
+          key={index}
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-800 transition-shadow shadow-md hover:shadow-lg cursor-pointer"
+        >
+          <Icon className="h-4 w-4" />
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div className="w-full col-span-1 row-span-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white relative overflow-hidden shadow-lg hover:shadow-xl transition">
+  <div className="flex flex-col justify-between h-full">
+    <div>
+      <h3 className="text-xl font-bold mb-2">Book Your Freight Services</h3>
+      <p className="text-sm opacity-90">
+        Simplify your logistics. Schedule sea, air, or land freight in just a few clicks.
+      </p>
+    </div>
+
+    {/* Ship Illustration */}
+    <div className="mt-4 relative h-[120px] w-full bg-[url('/images/container_ship.svg')] bg-contain bg-no-repeat bg-center" />
+
+    {/* CTA Button */}
+    <button className="mt-4 bg-white text-purple-600 font-semibold px-4 py-2 rounded-full hover:bg-purple-100 transition self-start">
+      Book Now
+    </button>
+  </div>
+
+  {/* Decorative Glow or Gradient */}
+  <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-2xl pointer-events-none" />
+</div>
+
 </div>
 
 
@@ -528,15 +544,15 @@ const LandingPage = () => {
         
 
         <div className="flex gap-5 flex-col p-7 lg:flex-row">
-          <section className="w-full md:w-1/2 p-8 bg-gray-50 rounded-lg shadow-md">
+          <section className="w-full md:w-1/2 p-8 bg-white rounded-lg shadow-md">
   <h1 className="text-4xl font-bold text-gray-900 mb-4">
     34k+ <br /> Satisfied Customers
   </h1>
-  <p style={{marginBlock:"20px"}} className="text-gray-700 mb-6">
+  <p style={{marginBlock:"20px"}} className="text-gray-700 ">
     Our commitment to quality and customer service has helped us to serve over 34,000 customers worldwide.
     We strive to deliver outstanding products with exceptional support.
   </p>
-  <ul className="mb-6 space-y-2 text-md">
+  <ul style={{marginBlock:"20px"}} className="mb-6 space-y-2 text-md">
     <li className="flex items-center  gap-2">
       <span className="inline-block w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
       Outstanding Quality
@@ -593,7 +609,7 @@ const LandingPage = () => {
           {trustData.map((item, index) => (
             
               <motion.div key={index} custom={index} variants={fadeIn} initial="hidden" animate="visible">
-            <div className={`h-full shadow-md rounded-2xl p-3 ${index!==1 ? "bg-white":"bg-purple-500"}`}>
+            <div className={` shadow-md rounded-2xl p-3 ${index!==1 ? "bg-white":"bg-purple-500"}`}>
               <div className="w-full flex gap-3 items-center">
                 <p className="text-3xl p-2 rounded-full bg-stone-200 mr-4">{item.icon}</p>
                 <h2 level={4} className="mb-0 text-md text-stone-700 font-bold">{item.title}</h2>

@@ -1,121 +1,117 @@
-import React from "react";
+import { motion } from "framer-motion";
+import { ShoppingCart, PackageCheck, Globe, ShieldCheck } from "lucide-react";
 
-const Procurement = () => {
+export default function Procurement() {
   return (
-    <div className="bg-gray-50 min-h-screen py-12 px-6 lg:px-24">
-    <div className='relative h-[400px]'>
-                <section style={{position:"absolute",inset:"0",background:"rgb(0,0,0,0.3)",fontSize:"40px",fontWeight:"700",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}>
-                <h1 className="text-4xl font-bold text-gray-800 mb-4 text-center">
-          Free Procurement Services
-                </h1>
-                </section>
-            </div>
-      {/* Page Header */}
-      <header className="text-center mb-12">
-        
-        <p className="text-gray-600 text-lg">
-          Cost-effective procurement solutions to meet your business needs at no extra cost.
-        </p>
-      </header>
-
-      {/* Introduction Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          What Are Free Procurement Services?
-        </h2>
-        <p className="text-gray-600 leading-relaxed">
-          Free Procurement Services help businesses source, purchase, and manage the goods or services they need without incurring additional charges. We manage the entire procurement process efficiently, saving you both time and money, allowing you to focus on other core areas of your business.
-        </p>
+    <div className="bg-white text-gray-800">
+      {/* Hero Section */}
+      <section className="relative bg-[url('/images/procurement-bg.jpg')] bg-cover bg-center h-[80vh] flex items-center justify-center text-white">
+        <div className="absolute inset-0 bg-black bg-opacity-50" />
+        <motion.div
+          className="relative z-10 text-center px-6 max-w-3xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            Simplified <span className="text-yellow-400">Procurement</span> Solutions
+          </h1>
+          <p className="text-lg md:text-xl mb-6">
+            We handle the complexities of sourcing and procurement so you don’t have to. Fast, secure, and efficient.
+          </p>
+          <button className="bg-yellow-500 hover:bg-yellow-600 px-6 py-3 rounded-full text-white font-medium transition">
+            Start Sourcing
+          </button>
+        </motion.div>
       </section>
 
       {/* Benefits Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-blue-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-dollar-sign text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Cost-Free Solutions
-          </h3>
-          <p className="text-gray-600">
-            Get the procurement services you need without any additional costs or hidden fees.
-          </p>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-green-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-clipboard-check text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Streamlined Process
-          </h3>
-          <p className="text-gray-600">
-            Our experienced team simplifies the entire procurement process, ensuring timely deliveries and consistent quality.
-          </p>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-yellow-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-check-circle text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Quality Assurance
-          </h3>
-          <p className="text-gray-600">
-            We ensure the procurement of only high-quality products that meet your business's standards.
-          </p>
-        </div>
-      </section>
-
-      {/* Services Offered Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Our Free Procurement Services Include:
-        </h2>
-        <ul className="list-disc list-inside text-gray-600 space-y-3">
-          <li>Source and Procure Products/Services from Trusted Vendors</li>
-          <li>Negotiation with Suppliers for Competitive Pricing</li>
-          <li>Ensure Timely Deliveries with Real-Time Updates</li>
-          <li>Supplier Evaluation and Selection</li>
-          <li>Comprehensive Vendor Management</li>
-        </ul>
-      </section>
-
-      {/* Case Studies Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Case Studies</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Procurement for ABC Corporation
-            </h3>
-            <p className="text-gray-600">
-              Successfully handled procurement for ABC Corporation, securing high-quality office supplies at a significantly reduced cost.
-            </p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Procurement for XYZ Logistics
-            </h3>
-            <p className="text-gray-600">
-              Managed procurement for XYZ Logistics, ensuring timely and efficient sourcing of vehicle parts and equipment for their fleet.
-            </p>
+      <section className="py-20 px-6 md:px-20 bg-yellow-50">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-yellow-700 mb-10">Why Choose Our Procurement Service?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                icon: <ShoppingCart className="h-8 w-8 text-yellow-600" />,
+                title: "Sourcing Experts",
+                desc: "Our team sources top-quality products from verified global suppliers.",
+              },
+              {
+                icon: <PackageCheck className="h-8 w-8 text-yellow-600" />,
+                title: "Quality Assurance",
+                desc: "We inspect and verify all goods to ensure they meet your standards.",
+              },
+              {
+                icon: <Globe className="h-8 w-8 text-yellow-600" />,
+                title: "Global Reach",
+                desc: "We manage procurement from multiple international markets seamlessly.",
+              },
+              {
+                icon: <ShieldCheck className="h-8 w-8 text-yellow-600" />,
+                title: "Risk Management",
+                desc: "We handle supplier vetting, contracts, and compliance for you.",
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-2xl shadow-md p-6 text-center border hover:shadow-xl transition"
+                whileHover={{ scale: 1.03 }}
+              >
+                <div className="flex justify-center mb-4">{item.icon}</div>
+                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Call-to-Action Section */}
-      <section className="text-center bg-blue-500 text-white py-12 px-6 rounded-lg">
-        <h2 className="text-3xl font-bold mb-4">Maximize Your Business Potential with Free Procurement.</h2>
-        <p className="text-lg mb-6">
-          Let us handle your procurement needs, saving you time and money. Contact us today for a customized solution.
-        </p>
-        <button className="bg-white text-blue-500 font-semibold px-6 py-3 rounded-full shadow hover:bg-gray-100 transition">
-          Get a Quote
-        </button>
+      {/* How It Works Section */}
+      <section className="py-20 px-6 md:px-20 bg-white">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-10 text-gray-800">How Our Procurement Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-left">
+            {[
+              {
+                step: "1. Submit Your Request",
+                detail: "Let us know what products or services you need. Be as specific as possible.",
+              },
+              {
+                step: "2. We Source & Quote",
+                detail: "Our team finds the best suppliers, negotiates pricing, and provides a transparent quote.",
+              },
+              {
+                step: "3. Delivery & Handover",
+                detail: "Once approved, we handle purchasing, inspection, and delivery to your location.",
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="bg-yellow-100 p-6 rounded-xl border border-yellow-200 shadow-sm"
+                whileHover={{ y: -5 }}
+              >
+                <h4 className="text-lg font-semibold text-yellow-800 mb-2">{item.step}</h4>
+                <p className="text-gray-700">{item.detail}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Statement */}
+      <section className="py-16 px-6 md:px-20 bg-yellow-600 text-white text-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Procure With Confidence</h2>
+          <p className="text-lg max-w-2xl mx-auto">
+            Your business deserves stress-free procurement. We bring efficiency, transparency, and reliability to every step of the process.
+          </p>
+        </motion.div>
       </section>
     </div>
   );
-};
-
-export default Procurement;
+}

@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import { Form, Input, Button, Checkbox, Typography, message } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-
+import { toast } from 'react-toastify';
 
 
 
@@ -38,10 +38,7 @@ const Login = () => {
                     storing token into browsers local storage*/
             
                     // Show success message with SweetAlert2
-                    message.success(
-                         "Login successful",
-                       
-                    );
+                    toast.success("Login successful!");
                     
             
                     // Clear validation message
@@ -56,10 +53,7 @@ const Login = () => {
                     // Show success message with SweetAlert2
                     localStorage.setItem('user', res.data.user_name);
                     localStorage.setItem('accesstoken', res.data.accessToken);
-                    message.success(
-                      "Login successful",
-                    
-                 );
+                    toast.success("Login successful!");
             
                     // Clear validation message
                     seValidation(""); 
@@ -131,7 +125,7 @@ const Login = () => {
 
                 <Form
   onFinish={handleSubmit}
-  className="form w-[95%] border-l-2 border-r-2 border-stone-300 items-center justify-center absolute h-full pt-6 bg-white z-2 lg:w-[40%] top-0 right-[5%]"
+  className="form w-[95%] border-l-2 border-r-2 border-stone-300 h-auto items-center justify-center absolute h-full pt-6 bg-white z-2 lg:w-[40%] top-0 right-[5%]"
 >
    
   <div className="flex flex-col gap-4 mt-5 items-center" style={{marginTop:"30px"}}>

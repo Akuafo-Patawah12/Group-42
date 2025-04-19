@@ -29,7 +29,8 @@ const LogisticsReport = ({ order, onClose,visible,loading3 }) => {
             <Descriptions.Item label="Tracking No:"> {order.tracking_no || "N/A"}</Descriptions.Item>
             <Descriptions.Item label="Status:">{order.Status || "Pending"}</Descriptions.Item>
             <Descriptions.Item label="CBM">{order.cbm || "N/A"}</Descriptions.Item>
-            <Descriptions.Item label="Location:">{order.location || "Not Available"}</Descriptions.Item>
+            <Descriptions.Item label="Port">{order?.shipmentId?.port === undefined ? 'N/A' : order.shipmentId.port}</Descriptions.Item>
+            <Descriptions.Item label="Route:">{order?.shipmentId?.route === undefined ? 'N/A' : order.shipmentId.route }</Descriptions.Item>
             <Descriptions.Item label="Quantity:">{order.qty || "Unknown"}</Descriptions.Item>
             
             <Descriptions.Item label="Total Amount:">

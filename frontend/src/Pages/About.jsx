@@ -119,7 +119,7 @@ const About = () => {
     {/* Team Member 1 */}
     <div className="bg-white p-6 rounded-xl shadow-lg text-center">
   <img
-    src="/images/Me.jpg"
+    src="/images/dave.jpg"
     alt="Team Member 1"
     style={{ marginInline: "auto" }}
     className="w-30 h-30 object-cover rounded-full mb-4"
@@ -148,7 +148,7 @@ const About = () => {
     {/* Team Member 2 */}
     <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-xl transition duration-300">
       <img
-        src="/images/Me2.jpg"
+        src="/images/Micheal.jpg"
         alt="Team Member 2"
         style={{ marginInline: "auto" }}
         className="w-30 h-30 object-cover rounded-full mb-4"

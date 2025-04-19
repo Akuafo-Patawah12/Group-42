@@ -520,7 +520,8 @@ const TrendsCompo = () => {
             <button
               key={index}
               onClick={() => handleClick(item)}
-              className={`px-3 py-[6px] whitespace-nowrap text-xs font-medium rounded-xl border-2 ${
+              style={{fontSize:"13px"}}
+              className={`px-3 py-[6px] whitespace-nowrap  font-medium rounded-xl border-2 ${
                 selectedCategory === item
                   ? "bg-purple-500 text-white border-purple-500"
                   : "bg-stone-200 border-stone-300"

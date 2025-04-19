@@ -5,6 +5,7 @@ const route1 = [
       days: null,
       Latitude: 23.0848,
       Longitude: 113.4348,
+      duration: "1 day, 12 hours"
     },
     {
       country: "Sri Lanka",
@@ -12,6 +13,7 @@ const route1 = [
       days: 10,
       Latitude: 7.8731,
       Longitude: 80.2901,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Yemen",
@@ -19,6 +21,7 @@ const route1 = [
       days: 7,
       Latitude: 13.0888,
       Longitude: 46.3428,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Egypt",
@@ -26,6 +29,7 @@ const route1 = [
       days: 7,
       Latitude: 30.7882,
       Longitude: 31.5001,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Algeria",
@@ -33,6 +37,7 @@ const route1 = [
       days: 7,
       Latitude: 36.7666,   
       Longitude: 3.0586,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Sierra Leone",
@@ -40,6 +45,7 @@ const route1 = [
       days: 7,
       Latitude: 8.5000,
       Longitude: -14.5005,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Ghana",
@@ -47,6 +53,7 @@ const route1 = [
       days: 7,
       Latitude:5.7000,
       Longitude: 0.1000,
+      duration: "1 day, 12 hours"
     },
   ];
  
@@ -60,6 +67,7 @@ const route1 = [
       days: null,
       Latitude: 29.9457,
       Longitude: 121.7296,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Saudi Arabia",
@@ -67,6 +75,7 @@ const route1 = [
       days: 10,
       Latitude: 21.4858,
       Longitude: 39.1925,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Egypt",
@@ -74,6 +83,7 @@ const route1 = [
       days: 7,
       Latitude: 31.2653,
       Longitude: 32.3019,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Libya",
@@ -81,6 +91,7 @@ const route1 = [
       days: 7,
       Latitude: 32.8872,
       Longitude: 13.1913,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Morocco",
@@ -88,6 +99,7 @@ const route1 = [
       days: 7,
       Latitude: 35.8689,
       Longitude: -5.5014,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Guinea",
@@ -95,6 +107,7 @@ const route1 = [
       days: 7,
       Latitude: 9.5173,
       Longitude: -13.6985,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Ghana",
@@ -102,6 +115,7 @@ const route1 = [
       days: 7,
       Latitude: 5.6431,
       Longitude: 0.0100,
+      duration: "7 day, 12 hours"
     },
   ];
   
@@ -113,6 +127,7 @@ const route1 = [
       days: null,
       Latitude: 23.0848,
       Longitude: 113.4348,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Sri Lanka",
@@ -120,6 +135,7 @@ const route1 = [
       days: 10,
       Latitude: 6.9271,
       Longitude: 79.8612,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Tunisia",
@@ -127,6 +143,7 @@ const route1 = [
       days: 7,
       Latitude: 36.8190,
       Longitude: 10.2833,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Mauritania",
@@ -134,6 +151,7 @@ const route1 = [
       days: 7,
       Latitude: 18.0858,
       Longitude: -16.0300,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Guinea Bissau",
@@ -141,6 +159,7 @@ const route1 = [
       days: 7,
       Latitude: 11.8500,
       Longitude: -15.5833,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Cote D’Ivoire",
@@ -148,6 +167,7 @@ const route1 = [
       days: 7,
       Latitude: 5.3199,
       Longitude: -4.0127,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Ghana",
@@ -155,6 +175,7 @@ const route1 = [
       days: 7,
       Latitude: 5.6431,
       Longitude: 0.0100,
+      duration: "1 day, 12 hours"
     },
   ];
 
@@ -165,6 +186,7 @@ const route1 = [
       days: null,
       Latitude: 23.0848,
       Longitude: 113.4348,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Yemen",
@@ -172,6 +194,7 @@ const route1 = [
       days: 10,
       Latitude: 12.7794,
       Longitude: 45.0367,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Egypt",
@@ -179,6 +202,7 @@ const route1 = [
       days: 7,
       Latitude: 31.2156,
       Longitude: 29.9553,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Morocco",
@@ -186,6 +210,7 @@ const route1 = [
       days: 7,
       Latitude: 35.8689,
       Longitude: -5.5014,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Senegal",
@@ -193,6 +218,7 @@ const route1 = [
       days: 7,
       Latitude: 14.7133,
       Longitude: -17.4547,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Liberia",
@@ -200,6 +226,7 @@ const route1 = [
       days: 7,
       Latitude: 6.3133,
       Longitude: -10.8014,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Ghana",
@@ -207,6 +234,7 @@ const route1 = [
       days: 7,
       Latitude: 5.6431,
       Longitude: 0.0100,
+      duration: "7 day, 12 hours"
     },
   ];
 
@@ -217,6 +245,7 @@ const route1 = [
       days: null,
       Latitude: 29.9457,
       Longitude: 121.7296,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Saudi Arabia",
@@ -224,6 +253,7 @@ const route1 = [
       days: 10,
       Latitude: 6.9271,
       Longitude: 79.8612,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Egypt",
@@ -231,6 +261,7 @@ const route1 = [
       days: 7,
       Latitude: 29.9668,
       Longitude: 32.5498,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Algeria",
@@ -238,6 +269,7 @@ const route1 = [
       days: 7,
       Latitude: 36.7666,
       Longitude: 3.0586,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Spain (Canary Islands)",
@@ -245,6 +277,7 @@ const route1 = [
       days: 7,
       Latitude: 28.1333,
       Longitude: -15.4314,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Gambia",
@@ -252,6 +285,7 @@ const route1 = [
       days: 7,
       Latitude: 13.4549,
       Longitude: -16.5790,
+      duration: "7 day, 12 hours"
     },
     {
       country: "Ghana",
@@ -259,6 +293,7 @@ const route1 = [
       days: 7,
       Latitude: 5.6431,
       Longitude: 0.0100,
+      duration: "7 day, 12 hours"
     },
   ];
 

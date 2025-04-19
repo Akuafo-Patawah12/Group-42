@@ -281,7 +281,7 @@ const Clients = () => {
     animate={{ opacity: 1, perspective: 1000, rotateY: 0 ,y:0}}
     exit={{ opacity: 0 ,y:-100}}
     duration={{duration: 0.3}}
-     style={{marginTop:"100px"}}
+     style={{paddingTop:"100px"}}
       className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
         <div className='relative'>
             <Button primary onClick={openModal}>Add user</Button>

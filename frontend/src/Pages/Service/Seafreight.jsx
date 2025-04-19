@@ -1,111 +1,201 @@
-import React from "react";
+import { motion } from "framer-motion";
 
-const SeaFreight = () => {
+import { useEffect, useState } from "react";
+import {
+  Ship,
+   Globe,
+   Clock,
+   ShieldCheck,
+   Quote,
+   MapPin, CircleDot
+ } from "lucide-react";
+
+
+ 
+// Animated counter component
+function AnimatedCounter({ target, duration = 1500 }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = parseInt(target);
+    const increment = end / (duration / 16);
+
+    const counter = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        start = end;
+        clearInterval(counter);
+      }
+      setCount(Math.floor(start));
+    }, 16);
+
+    return () => clearInterval(counter);
+  }, [target, duration]);
+
+  return <span>{count.toLocaleString()}</span>;
+}
+
+
+
+
+
+export default function SeaFreight() {
+  const [activeTab, setActiveTab] = useState(0);
+  const features = [
+    {
+      title: "Global Reach",
+      description:
+        "We connect you to destinations across the world with our extensive air freight network.",
+      icon: Globe,
+      color: "bg-blue-100 text-blue-600",
+    },
+    {
+      title: "Speed & Reliability",
+      description:
+        "Fast transit times and reliable delivery schedules to meet your business needs.",
+      icon: Clock,
+      color: "bg-green-100 text-green-600",
+    },
+    {
+      title: "Secure Handling",
+      description:
+        "Professional cargo handling and monitoring to ensure your shipment's safety.",
+      icon: ShieldCheck,
+      color: "bg-yellow-100 text-yellow-600",
+    },
+  ];
+  const ActiveIcon = features[activeTab].icon;
   return (
-    <div className="bg-gray-50 min-h-screen py-12 px-6 lg:px-24">
-    <div className='relative h-[400px]'>
-                <section style={{position:"absolute",inset:"0",background:"rgb(0,0,0,0.3)",fontSize:"40px",fontWeight:"700",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}>
-                <h1 className="text-4xl font-bold text-gray-800 mb-4 text-center">
-          Sea Freight Services
-                </h1>
-                </section>
+    <div className="bg-white text-gray-800">
+      {/* Hero Section */}
+      <section className="relative  text-white">
+        <img src="/images/seafreight_hero_pic.jpg"  alt="sea_hero" className="w-full h-auto"/>
+        <div className="absolute flex items-center justify-center inset-0 bg-black/30" >
+        <motion.div
+          className="relative z-10 max-w-4xl text-center px-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 style={{marginBlock:"16px"}} className="text-4xl md:text-6xl font-bold mb-4">
+            Reliable & Efficient{" "}
+            <span className="text-purple-700">Sea Freight</span> Services
+          </h1>
+          <p style={{marginBlock:"24px"}} className="text-lg md:text-xl mb-6">
+            From port to port or door to door, we ensure safe and timely delivery
+            of your cargo across the globe.
+          </p>
+          <button className="bg-purple-700 hover:bg-blue-600 px-6 py-3 rounded-full text-white font-medium transition">
+            Get a Quote
+          </button>
+        </motion.div>
+        </div>
+      </section>
+
+      {/* CBM Rate Info */}
+      <section className="relative bg-gradient-to-br from-purple-100 to-purple-200 rounded-b-[10%] py-20 px-6 md:px-20">
+        <div className=" max-w-5xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-purple-900 mb-6">
+            Sea Freight Solutions
+          </h2>
+          <p style={{marginInline:"auto",marginBlock:"32px"}} className="text-lg text-gray-700 max-w-2xl mx-auto mb-8">
+            We offer reliable and cost-effective sea freight services across
+            international waters. Whether it's Full Container Load (FCL) or Less
+            than Container Load (LCL), we’ve got you covered.
+          </p>
+
+          <div style={{marginInline:"auto",marginBlock:"32px"}} className="bg-white rounded-2xl border-2 border-purple-300 shadow-md p-6 md:p-10 text-left max-w-3xl mx-auto">
+            <h3 style={{marginBlock:"16px"}} className="text-2xl font-semibold text-purple-800 mb-4">
+              Important Note:
+            </h3>
+            <p className="text-gray-700 leading-relaxed">
+              <span className="font-medium text-purple-600">CBM rates</span> (Cost
+              per Cubic Meter) may vary depending on the container size, route,
+              and cargo type. Our team ensures full transparency and helps you
+              get the most competitive rate for your shipment.
+            </p>
+
+            <div style={{marginTop:"24px"}} className=" p-4 bg-purple-50 rounded-lg border border-purple-200">
+              <p className="text-purple-800 font-medium">
+                Your shipments are in{" "}
+                <span className="font-bold">safe and reliable hands</span>. From
+                port to port, we handle every detail with care and precision.
+              </p>
             </div>
-      {/* Page Header */}
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Sea Freight Services</h1>
-        <p className="text-gray-600 text-lg">
-          Affordable and reliable sea freight solutions for global cargo transportation.
-        </p>
-      </header>
+          </div>
+        </div>
+      </section>
 
-      {/* Introduction Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Why Choose Our Sea Freight Services?
+      {/* Why Choose Us */}
+      <section style={{marginInline:"auto"}} className="py-20 bg-gray-50 w-fit">
+      <div className="max-w-5xl mx-auto text-center px-4">
+        <h2 style={{marginBlock:"16px"}} className="text-3xl font-bold text-gray-800 mb-4">
+          Why Choose Our Air Freight Services?
         </h2>
-        <p className="text-gray-600 leading-relaxed">
-          Our sea freight services are designed to provide flexible and cost-effective shipping options for businesses of all sizes. With a strong global network and expertise in maritime logistics, we ensure your cargo reaches its destination safely and on time. From full container loads (FCL) to less-than-container loads (LCL), we offer tailored solutions to meet your shipping needs.
+        <p style={{marginBlock:"16px",marginInline:"auto"}} className="text-gray-600 max-w-2xl mx-auto mb-10">
+        Our sea freight solutions are reliable, secure, and cost-effective. With global port access, expert handling, and end-to-end tracking, we ensure your cargo is delivered safely and efficiently across international waters.
         </p>
-      </section>
 
-      {/* Benefits Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-blue-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-ship text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">Global Coverage</h3>
-          <p className="text-gray-600">
-            Seamlessly connect to major ports worldwide for efficient cargo transport.
-          </p>
+        {/* Tabs */}
+        <section style={{marginInline:"auto"}}  className="flex justify-center items-center gap-4 lg:w-[90%]">
+        <div className="flex flex-col justify-center w-full gap-3 mb-10">
+          {features.map((feature, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveTab(index)}
+              className={`px-5 py-3 rounded-full font-medium text-sm transition-all duration-300 ${
+                index === activeTab
+                  ? "bg-purple-600 text-white shadow"
+                  : "bg-white text-gray-600 border border-gray-300 hover:bg-blue-50"
+              }`}
+            >
+              {feature.title}
+            </button>
+          ))}
         </div>
 
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-green-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-dollar-sign text-2xl"></i>
+        {/* Tab Content */}
+        <div className="bg-white rounded-xl shadow-lg max-w-3xl mx-auto p-8 transition-all duration-500">
+          <div
+            style={{marginInline:"auto"}}
+            className={`w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-6 text-3xl ${features[activeTab].color}`}
+          >
+            <ActiveIcon size={32} />
           </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">Cost-Effective</h3>
-          <p className="text-gray-600">
-            Competitive pricing for both small and large shipments, ensuring value for money.
-          </p>
+          <h3 style={{marginBlock:"12px"}} className="text-2xl font-semibold text-gray-800 mb-3">
+            {features[activeTab].title}
+          </h3>
+          <p className="text-gray-600">{features[activeTab].description}</p>
         </div>
+        </section>
+      </div>
+      
+    </section>
 
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-yellow-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-box-open text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">Flexible Options</h3>
-          <p className="text-gray-600">
-            From full container loads (FCL) to less-than-container loads (LCL), choose the option that suits your needs.
-          </p>
-        </div>
-      </section>
-
-      {/* Services Offered Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Our Sea Freight Services Include:
-        </h2>
-        <ul className="list-disc list-inside text-gray-600 space-y-3">
-          <li>Full Container Load (FCL) Shipping</li>
-          <li>Less-than-Container Load (LCL) Shipping</li>
-          <li>Port-to-Port and Door-to-Door Services</li>
-          <li>Customs Clearance and Documentation</li>
-          <li>Real-Time Tracking of Shipments</li>
-        </ul>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Client Testimonials</h2>
-        <div className="space-y-6">
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <p className="text-gray-600 italic">
-              "Their sea freight services were exceptional! They provided timely updates, and our goods arrived in perfect condition."
-            </p>
-            <p className="mt-4 text-right text-gray-800 font-semibold">- Emily Clark, Import Manager</p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <p className="text-gray-600 italic">
-              "Affordable and efficient! We saved significantly on shipping costs while ensuring safe delivery."
-            </p>
-            <p className="mt-4 text-right text-gray-800 font-semibold">- Liam Carter, Business Owner</p>
+      {/* Stats Section */}
+      <section className="bg-purple-600 text-white py-20">
+        <div className="max-w-6xl mx-auto text-center px-4">
+          <h2 className="text-3xl font-bold mb-12">
+            Trusted by Clients Worldwide
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {[
+              { label: "Shipments Delivered", value: 32000 },
+              { label: "Countries Covered", value: 65 },
+              { label: "Years Experience", value: 15 },
+            ].map((stat, i) => (
+              <div key={i} className="flex flex-col items-center">
+                <div className="text-5xl font-bold text-purple-300 mb-2">
+                  <AnimatedCounter target={stat.value} />
+                  {stat.label === "Countries Covered" ? "+" : ""}
+                </div>
+                <p className="text-lg font-medium">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </section>
-
-      {/* Call-to-Action Section */}
-      <section className="text-center bg-blue-500 text-white py-12 px-6 rounded-lg">
-        <h2 className="text-3xl font-bold mb-4">Ready to Ship by Sea?</h2>
-        <p className="text-lg mb-6">
-          Get in touch with us today and enjoy reliable sea freight solutions tailored to your needs.
-        </p>
-        <button className="bg-white text-blue-500 font-semibold px-6 py-3 rounded-full shadow hover:bg-gray-100 transition">
-          Get a Quote
-        </button>
       </section>
     </div>
   );
-};
-
-export default SeaFreight;
+}

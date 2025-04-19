@@ -8,7 +8,7 @@ const PrivacyPolicyPage = () => {
           Privacy Policy
         </h1>
         <p className="text-gray-700 mb-4">
-          Andy Logistics is committed to protecting your privacy. This Privacy
+          SF Ghana Logistics is committed to protecting your privacy. This Privacy
           Policy outlines how we collect, use, and safeguard your information.
         </p>
 

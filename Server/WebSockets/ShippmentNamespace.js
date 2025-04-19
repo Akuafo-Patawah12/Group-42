@@ -140,6 +140,15 @@ const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
         }
       });
 
+      Socket.on("get_Shipment",async()=>{
+        try{
+           const allShipment= await Order.find()
+           Socket.emit("fetched_Shipments", allShipment)
+        }catch(err){
+          console.log(err)
+        }
+      })
+
       Socket.on("disconnect",()=>{
         console.log("disconnect from shipment Namespace")
       })

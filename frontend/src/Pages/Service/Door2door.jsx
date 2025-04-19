@@ -1,119 +1,143 @@
-import React from "react";
+import { motion } from "framer-motion";
+import { Truck, Clock, ShieldCheck, MapPin } from "lucide-react";
 
-const Door2door = () => {
+export default function DoorToDoor() {
   return (
-    <div className="bg-gray-50 min-h-screen py-12 px-6 lg:px-24">
-    <div className='relative h-[400px]'>
-                <section style={{position:"absolute",inset:"0",background:"rgb(0,0,0,0.3)",fontSize:"40px",fontWeight:"700",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}>
-                <h1 className="text-4xl font-bold text-gray-800 mb-4 text-center">
-          Door To Door Delivery
-                </h1>
-                </section>
-            </div>
-      {/* Page Header */}
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Door-to-Door Delivery Services
-        </h1>
-        <p className="text-gray-600 text-lg">
-          Hassle-free, reliable door-to-door logistics solutions tailored for your needs.
-        </p>
-      </header>
-
-      {/* Introduction Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          What Are Door-to-Door Services?
-        </h2>
-        <p className="text-gray-600 leading-relaxed">
-          Door-to-door delivery services ensure a seamless logistics experience by managing the entire supply chain process, from pickup at your location to delivery at the final destination. With our expertise, we handle every detail so you can focus on growing your business.
-        </p>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-blue-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-truck text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            End-to-End Logistics
-          </h3>
-          <p className="text-gray-600">
-            From pick-up to delivery, we handle the entire journey of your shipment.
+    <div className="bg-white text-gray-800">
+      {/* Hero */}
+      <section className="relative h-[80vh] bg-[url('/images/delivery-truck.svg')] bg-contain bg-center bg-no-repeat flex items-center justify-center text-white">
+        <div className="absolute inset-0 bg-black/50" />
+        <motion.div
+          className="relative z-10 text-center max-w-3xl px-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            Door-to-Door <span className="text-yellow-400">Delivery</span>
+          </h1>
+          <p className="text-lg md:text-xl mb-6">
+            From pickup to final destination — we manage every step so you don’t have to.
           </p>
+          <button className="bg-yellow-500 hover:bg-yellow-600 px-6 py-3 rounded-full text-white font-medium transition">
+            Schedule Pickup
+          </button>
+        </motion.div>
+      </section>
+
+      <div className="relative isolate  bg-purple-100 text-white px-6 py-8 text-center  ">
+      <div className="max-w-6xl mx-auto text-center">
+          <h2 style={{marginBlock:"40px"}} className="text-4xl md:text-5xl font-bold text-purple-700 mb-10">
+            Why Door-to-Door?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                icon: <Truck className="h-8 w-8 text-yellow-600" />,
+                title: "End-to-End Logistics",
+                desc: "We handle everything — pickup, transit, customs, and drop-off.",
+              },
+              {
+                icon: <Clock className="h-8 w-8 text-yellow-600" />,
+                title: "Time-Saving",
+                desc: "No need to manage multiple logistics vendors. We streamline it all.",
+              },
+              {
+                icon: <ShieldCheck className="h-8 w-8 text-yellow-600" />,
+                title: "Secure Handling",
+                desc: "Your package is treated with care through every stage of delivery.",
+              },
+              {
+                icon: <MapPin className="h-8 w-8 text-yellow-600" />,
+                title: "Live Tracking",
+                desc: "Get real-time updates from pickup to doorstep.",
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-2xl shadow-md p-6 text-center border hover:shadow-xl transition"
+                whileHover={{ scale: 1.03 }}
+              >
+                <div className="flex justify-center mb-4">{item.icon}</div>
+                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-green-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-clock text-2xl"></i>
+  {/* Smooth 2-wave SVG */}
+  <svg
+    className="absolute -z-1 bottom-0 left-0 w-full h-[150px]"
+    viewBox="0 0 1440 100"
+    preserveAspectRatio="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0,60 C360,120 1080,0 1440,60 L1440,100 L0,100 Z"
+      fill="white"
+    />
+  </svg>
+</div>
+
+
+
+
+      
+      
+
+      {/* How it Works */}
+      <section className="py-20 px-6 md:px-20 bg-white">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-10 text-gray-800">
+            How It Works
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-left">
+            {[
+              {
+                step: "1. Book Pickup",
+                detail: "Schedule a pickup from your location with our simple form or app.",
+              },
+              {
+                step: "2. We Collect & Transport",
+                detail: "Our delivery partner arrives, collects your item, and ships it securely.",
+              },
+              {
+                step: "3. Delivered to Doorstep",
+                detail: "We handle customs clearance and drop the package right to the recipient’s door.",
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="bg-purple-100 p-6 rounded-xl border border-purple-200 shadow-sm"
+                whileHover={{ y: -5 }}
+              >
+                <h4 style={{marginBlock:"8px"}} className="text-lg font-semibold text-purple-800 mb-2">
+                  {item.step}
+                </h4>
+                <p className="text-gray-700">{item.detail}</p>
+              </motion.div>
+            ))}
           </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Time-Saving
-          </h3>
-          <p className="text-gray-600">
-            Save time with our streamlined process that eliminates the need for multiple providers.
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="py-16 px-6 md:px-20 bg-yellow-600 text-white text-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Reliable. Hassle-Free. Guaranteed.
+          </h2>
+          <p className="text-lg max-w-2xl mx-auto">
+            Join thousands who trust our door-to-door service for fast, worry-free deliveries across the globe.
           </p>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition duration-300">
-          <div className="flex justify-center items-center bg-yellow-500 text-white w-16 h-16 rounded-full mx-auto mb-4">
-            <i className="fas fa-map-marked-alt text-2xl"></i>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Nationwide Coverage
-          </h3>
-          <p className="text-gray-600">
-            Deliveries to and from any location, ensuring a broad coverage area.
-          </p>
-        </div>
-      </section>
-
-      {/* Services Offered Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Our Door-to-Door Services Include:
-        </h2>
-        <ul className="list-disc list-inside text-gray-600 space-y-3">
-          <li>Pick-Up and Delivery at Your Convenience</li>
-          <li>Customs Clearance for International Shipments</li>
-          <li>Real-Time Shipment Tracking</li>
-          <li>Warehousing and Storage Options</li>
-          <li>Flexible Delivery Scheduling</li>
-        </ul>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Client Testimonials</h2>
-        <div className="space-y-6">
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <p className="text-gray-600 italic">
-              "Their door-to-door service is top-notch! My shipment was picked up and delivered on time without any hassle."
-            </p>
-            <p className="mt-4 text-right text-gray-800 font-semibold">- Sarah Johnson, Business Owner</p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <p className="text-gray-600 italic">
-              "Excellent service! They handled everything from customs clearance to final delivery. Highly recommend."
-            </p>
-            <p className="mt-4 text-right text-gray-800 font-semibold">- James Brown, Logistics Manager</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Call-to-Action Section */}
-      <section className="text-center bg-blue-500 text-white py-12 px-6 rounded-lg">
-        <h2 className="text-3xl font-bold mb-4">Need Hassle-Free Door-to-Door Delivery?</h2>
-        <p className="text-lg mb-6">
-          Contact us now and experience a smooth, reliable logistics solution tailored to your needs.
-        </p>
-        <button className="bg-white text-blue-500 font-semibold px-6 py-3 rounded-full shadow hover:bg-gray-100 transition">
-          Get a Quote
-        </button>
+        </motion.div>
       </section>
     </div>
   );
-};
-
-export default Door2door;
+}
