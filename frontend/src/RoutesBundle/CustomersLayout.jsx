@@ -1,7 +1,8 @@
-import React,{lazy,Suspense} from 'react'
+import React,{lazy,Suspense,useState} from 'react'
 import Header from '../Components/HeaderAndSidebar';
 import Loading from "../icons/Loading"
 import CustomerSidebar from '../Components/CustomerSidebar';
+import Notification from "../Components/Notification"
 import { Routes,Route } from 'react-router-dom';
 import UserProfile from '../Pages/UserProfile';
 
@@ -16,10 +17,12 @@ const LazyTrends= lazy(()=> import ("../Routes/Trends"))
  
 
 const CustomersLayout=()=>{
+     const [open, setOpen] = useState(false);
     return(
         <div style={{backgroundColor: "#f5f5f4"}} className="bg-stone-100 h-full">  
-            <Header/>
+            <Header open={open} setOpen={setOpen}/>
             <CustomerSidebar />
+            <Notification open={open} setOpen={setOpen}/>
             <Routes>
              <Route path='/Tracking' element={<Suspense fallback={<Loading />}>
                   <Tracking />

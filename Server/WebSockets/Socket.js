@@ -2,7 +2,7 @@ const socketIo = require('socket.io');
 const Post= require('../DatabaseSchemas/PostSchema')
 const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
  const data= require("../DatabaseSchemas/userSchema")
- const Message=  require("./MessageNamespace")
+ const Message=  require("./NotificationsNamespace")
 const jwt= require('jsonwebtoken')
 const cookie= require('cookie');
 const orderList = require('./OrderListNamespace');
@@ -10,6 +10,7 @@ const Tracking = require('./TrackingNamespace');
 const PostFunction = require('./PostOrMainNamespace');
 const shipping= require("./ShippmentNamespace");
 const userFunc = require('./UsersNamespace');
+const notify = require("./NotificationsNamespace")
 
 
 function initializeSocket(server) {   
@@ -85,7 +86,8 @@ trackingNamespace.use((socket,next)=>{
 
 const onlineUsers = {}; // Store online users with socket IDs
 const lastActiveTimestamps = {}; // Store last active timestamps
-  
+const Users={}
+
   io.on('connection', (socket) => {  //
     try{
       setUser(socket)
@@ -134,16 +136,18 @@ usersNamespace.on("connection",(socket,callBack)=>{
 })
 
 notificationsNamespace.on('connection', (socket) => {
+  const userId=socket.user.id  // Extracting users id from socket
+  Users[userId]=socket.id 
   
   console.log('A user connected to the notifications namespace');
-
+  notify(socket)
 
   socket.on('disconnect', () => {
     
       console.log('User disconnected from the notifications namespace');
   });
 });
-   const Users={}
+   
 trackingNamespace.on("connection", async (socket) => {
   const userId=socket.user.id  // Extracting users id from socket
   Users[userId]=socket.id 
@@ -153,8 +157,9 @@ trackingNamespace.on("connection", async (socket) => {
 });
 
 orderListNamespace.on("connection",(socket)=>{
-
-    orderList(socket,orderListNamespace,trackingNamespace,Users)
+  const userId=socket.user.id  // Extracting users id from socket
+  Users[userId]=socket.id 
+    orderList(socket,notificationsNamespace,orderListNamespace,trackingNamespace,Users)
 })
 
 shippingNameSpace.on("connection",(socket)=>{

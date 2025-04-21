@@ -1,12 +1,13 @@
 
 import { Route, Routes,useLocation } from 'react-router-dom'
 
-import React,{lazy, Suspense} from "react"
+import React,{lazy, Suspense,useState} from "react"
 
 
 import Loading from '../icons/Loading'
 import {AnimatePresence} from "framer-motion"
 import Header from '../Components/HeaderAndSidebar';
+import Notification from "../Components/Notification"
 import Sidebar from '../Components/Sidebar';
 const Clients= lazy(()=> import('./../Pages/Clients'));
 const ViewIndividualOrder= lazy(()=>import( '../Pages/ViewIndividualOrder'))
@@ -26,11 +27,13 @@ const Notify = lazy(()=> import("../Routes/Notification"))
 
 const LayoutBundle = () => {
   const location= useLocation()
+  const [open, setOpen] = useState(false);
   
   return (
     <div style={{backgroundColor: "#f5f5f4"}}>
-      <Header />
+      <Header open={open} setOpen={setOpen}/>
       <Sidebar />
+      <Notification open={open} setOpen={setOpen}/>
       <AnimatePresence>
       <Routes location={location} key={location.pathname}>
       

@@ -147,7 +147,7 @@ const AirFreight = () => {
               setSelected(key);
               setCost(null);
             }}
-            className={`px-6 py-2 rounded-full font-semibold transition duration-200 ${
+            className={`px-6 py-2 rounded-full text-sm font-semibold transition duration-200 ${
               selected === key
                 ? "bg-purple-600 text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-blue-50"
@@ -194,7 +194,7 @@ const AirFreight = () => {
         <button
           onClick={handleCalculate}
           style={{marginTop:"20px"}}
-          className="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+          className="bg-purple-600 text-sm text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
         >
           Calculate Cost
         </button>

@@ -46,7 +46,7 @@ const Overview = () => {
         console.error('Invalid token:', error);
       }
     }
-  },[]);
+  },[socket]);
   
 
   useEffect(()=>{
@@ -195,7 +195,7 @@ function deleteOrder(order_id,customer_id){  //function to delete an order
 const [isOpen, setIsOpen] = useState(false);
 
 const [location,setLocation]= useState("")
-const [supplierNumber,setSupplierNumber] = useState("")
+const [suppliersNumber,setSupplierNumber] = useState("")
 const [description,setDescription]= useState("")
 
 const togglePopup = () => {
@@ -226,9 +226,9 @@ let active=activeOrders.length
  const handleSubmit = () => {
    
    setCreatingOrder(true)
-   console.log({Id:Id,location,description,supplierNumber,tracking_id: v4()})
+   console.log({Id:Id,location,description,suppliersNumber,tracking_id: v4()})
    setTimeout(()=>{
-     socket.emit("createOrder",{Id:Id,location,description,supplierNumber,tracking_id: v4()})
+     socket.emit("createOrder",{Id:Id,location,description,suppliersNumber,tracking_id: v4()})
    },1000)
    
    // Reset form
@@ -315,7 +315,32 @@ const CloseReport = () => {
     exit={{ opacity: 0 }}
     className=' layout-shift w-full bg-stone-100 pt-5 lg:w-[80%] '
     >
-      {creatingOrder&&<span className='fixed top-[70px] z-2 -translate-x-[50%] -translate-y-[50%] left-[50%] bg-orange-200'>Creating Order...</span>}
+      {creatingOrder && (
+  <div className="fixed top-[70px] left-1/2 transform -translate-x-1/2 z-50 bg-orange-100 text-orange-800 px-4 py-2 rounded-lg shadow-md flex items-center space-x-3">
+    <svg
+      className="animate-spin h-5 w-5 text-orange-800"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8z"
+      />
+    </svg>
+    <span>Creating Order...</span>
+  </div>
+)}
+
       <div
   style={{
     width: '95%',
@@ -447,8 +472,8 @@ const CloseReport = () => {
             <Input placeholder="Enter the product location" value={location} onChange={(e)=> setLocation(e.target.value)}/>
           </Form.Item>
           
-          <Form.Item label="Supplier Number" name="supplierNumber">
-            <Input placeholder="Enter supplier number (Optional)" value={supplierNumber} onChange={(e)=> setSupplierNumber(e.target.value)}/>
+          <Form.Item label="Supplier Number" name="suppliersNumber">
+            <Input placeholder="Enter supplier number (Optional)" value={suppliersNumber} onChange={(e)=> setSupplierNumber(e.target.value)}/>
           </Form.Item>
 
           <Form.Item

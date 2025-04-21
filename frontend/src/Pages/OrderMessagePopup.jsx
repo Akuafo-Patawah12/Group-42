@@ -1,102 +1,67 @@
 import { SendOutlined } from '@ant-design/icons'
 import React,{useState,useEffect} from 'react'
+import { PlusCircle, X } from "lucide-react";
 
 const OrderMessagePopup = (props) => {
-   const[message,setMessage]= useState("")
+  
 
-   const [emailData, setEmailData] = useState({
-    recipient: "",
-    subject: "",
-    message: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEmailData({ ...emailData, [name]: value });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!props.cbm) return;
+    props.onSave();
+    props.setCbm("");
+    props.setQty("")
+    props.setOpen(false);
   };
 
-  const handleSendEmail = () => {
-    if (!emailData.recipient || !emailData.subject || !emailData.message) {
-      alert("Please fill in all fields before sending.");
-      return;
-    }
-
-    // Simulate email sending (Replace with your email API logic)
-    alert(`Email sent to ${emailData.recipient} with subject "${emailData.subject}"`);
-     // Close the popup after sending
-    setEmailData({ recipient: "", subject: "", message: "" }); // Reset form
-  };
+  
 
    
     
   return (
     <>
-    {props.msgPop&&
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          {/* Popup Content */}
-          <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Send Email</h2>
+    {props.openCBM&&
+       <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm relative shadow-xl">
+            <button
+              onClick={() => props.setOpenCBM(false)}
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
+            >
+              <X size={20} />
+            </button>
 
-            {/* Recipient Email */}
-            <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-1">
-                To:
-              </label>
+            <h2 className="text-md font-semibold mb-4 text-purple-700">
+              Enter CBM & CTN Value
+            </h2>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
               <input
-                type="email"
-                name="recipient"
-                value={emailData.recipient}
-                onChange={handleChange}
-                placeholder="Recipient Email"
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+                type="number"
+                step="0.001"
+                value={props.cbm}
+                onChange={(e) => props.setCbm(e.target.value)}
+                placeholder="CBM e.g. 2.135"
+                style={{marginBlock:"10px"}}
+                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                required
               />
-            </div>
-
-            {/* Subject */}
-            <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-1">
-                Subject:
-              </label>
               <input
-                type="text"
-                name="subject"
-                value={emailData.subject}
-                onChange={handleChange}
-                placeholder="Email Subject"
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+                type="number"
+                step="0.001"
+                value={props.qty}
+                onChange={(e) => props.setQty(e.target.value)}
+                placeholder="CTN e.g. 2.135"
+                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                required
               />
-            </div>
-
-            {/* Message */}
-            <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-1">
-                Message:
-              </label>
-              <textarea
-                name="message"
-                value={emailData.message}
-                onChange={handleChange}
-                placeholder="Write your message..."
-                rows="5"
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
-              ></textarea>
-            </div>
-
-            {/* Buttons */}
-            <div className="flex justify-end space-x-3">
               <button
-                
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                type="submit"
+                style={{marginBlock:"20px 0"}}
+                className="w-full py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
               >
-                Cancel
+                Save Changes
               </button>
-              <button
-                onClick={handleSendEmail}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Send
-              </button>
-            </div>
+            </form>
           </div>
         </div>
       }

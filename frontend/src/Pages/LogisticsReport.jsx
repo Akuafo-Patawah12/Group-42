@@ -33,11 +33,13 @@ const LogisticsReport = ({ order, onClose,visible,loading3 }) => {
             <Descriptions.Item label="Route:">{order?.shipmentId?.route === undefined ? 'N/A' : order.shipmentId.route }</Descriptions.Item>
             <Descriptions.Item label="Quantity:">{order.qty || "Unknown"}</Descriptions.Item>
             
-            <Descriptions.Item label="Total Amount:">
-              {new Date(order.updatedAt).toLocaleString()}
-            </Descriptions.Item>
+            
             <Descriptions.Item label="Total Amount:">
             {order.totalAmount ? `$${order.totalAmount}` : "N/A"}
+            </Descriptions.Item>
+
+            <Descriptions.Item label="Updated At:">
+              {new Date(order.updatedAt).toLocaleString()}
             </Descriptions.Item>
           </Descriptions>
 

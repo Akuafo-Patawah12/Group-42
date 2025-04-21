@@ -1,4 +1,5 @@
 
+const notificationModel = require("../DatabaseSchemas/SupplyChain_Model/Notification");
 const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment");
 const User= require("../DatabaseSchemas/userSchema")
 
@@ -13,7 +14,7 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
         try {
             //Inserting new data received from clientside in to orders table
 
-            const order = new Order({customer_id:data.Id, description:data.items,location:data.location, tracking_no:data.tracking_id  });// creating new order
+            const order = new Order({customer_id:data.Id, description:data.items,location:data.location, tracking_no:data.tracking_id ,suppliersNumber });// creating new order
 
             await order.save();  // saving new order the database
             const user= await User.findById(data.Id) //select _id from the Users table where _id=data.id
@@ -25,7 +26,18 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
                 Status: order.Status, 
             };
             
-            
+            const admin = await User.find({account_type:"Business"})
+            admin.forEach((user)=>{
+                const socket_id= users[user._id]
+                const notify = new notificationModel({
+                    userId: user._id,
+                    message: `${user.username} requested a quote`
+                })
+                notify.save()
+                .then(()=>console.log("Admin notified"))
+                notificationsNamespace.to(socket_id).emit("notify",notify)
+            })
+
             Socket.emit("receive",sendOrder) //send this data the user connected to this namespace
             orderListNamespace.in("orderRoom").emit("receivedOrder", sendOrder); // Emit to all in "/order" room
                 orderListNamespace.in("orderRoom").emit("receiveOneOrder", sendOrder);

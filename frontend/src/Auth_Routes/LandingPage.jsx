@@ -283,7 +283,7 @@ const LandingPage = () => {
   </div>
 
   <div className="w-full col-span-1 row-span-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white relative overflow-hidden shadow-lg hover:shadow-xl transition">
-  <div className="flex flex-col justify-between h-full">
+  <div className="flex flex-col gap-2 justify-between h-full">
     <div>
       <h3 className="text-xl font-bold mb-2">Book Your Freight Services</h3>
       <p className="text-sm opacity-90">
@@ -322,10 +322,10 @@ const LandingPage = () => {
           <div className="flex items-center gap-4 py-6">
       {/* Avatars */}
       <div className="relative h-9 w-36">
-        <img src="/images/Air.jpg" alt="air" className="size-8 border-2 border-white rounded-full absolute left-0 z-10" />
-        <img src="/images/Air2.jpg" alt="air2" className="size-8 border-2 border-white rounded-full absolute left-5 z-20" />
-        <img src="/images/Air2.jpg" alt="air2" className="size-8 border-2 border-white rounded-full absolute left-10 z-30" />
-        <img src="/images/Air.jpg" alt="air" className="size-8 border-2 border-white rounded-full absolute left-[60px] z-40" />
+        <img src="/images/Air.jpg" loading="lazy" alt="air" className="size-8 border-2 border-white rounded-full absolute left-0 z-10" />
+        <img src="/images/Air2.jpg" loading="lazy" alt="air2" className="size-8 border-2 border-white rounded-full absolute left-5 z-20" />
+        <img src="/images/Air2.jpg" loading="lazy" alt="air2" className="size-8 border-2 border-white rounded-full absolute left-10 z-30" />
+        <img src="/images/Air.jpg" loading="lazy" alt="air" className="size-8 border-2 border-white rounded-full absolute left-[60px] z-40" />
       </div>
 
       {/* Star Rating and Text */}
@@ -371,7 +371,7 @@ const LandingPage = () => {
     <div className="relative w-full overflow-hidden rounded-xl shadow-lg">
       <div className="flex transition-transform duration-700" style={{ transform: `translateX(-${current * 100}%)` }}>
         {images.map((src, index) => (
-          <img key={index} src={src} alt={`Slide ${index}`} className="w-full flex-shrink-0 object-cover h-64 sm:h-80" />
+          <img key={index} src={src} loading="lazy" alt={`Slide ${index}`} className="w-full flex-shrink-0 object-cover h-64 sm:h-80" />
         ))}
       </div>
 
@@ -398,6 +398,7 @@ const LandingPage = () => {
   <div className="col-span-1 row-span-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl px-6 py-10 shadow-lg text-white flex flex-col justify-center">
     <img
       src="/images/digital_marketing.jpg"
+      loading="lazy"
       alt="Marketing"
       className="w-full max-w-full mx-auto rounded-xl shadow-2xl mb-6"
     />

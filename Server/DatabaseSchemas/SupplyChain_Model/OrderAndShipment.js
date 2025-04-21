@@ -17,13 +17,18 @@ const orderSchema= new Schema({
             default:"Pending"
         }
         ,
+        suppliersNumber: Number,
         description: String,
         location: String,
-        createdAt: {
+        updateAt:{
           type: Date,
           default: Date.now
         },
-        updateAt:Date
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+        
     })
 
 const shipmentSchema= new Schema({

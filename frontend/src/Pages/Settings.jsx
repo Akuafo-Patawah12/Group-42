@@ -30,165 +30,200 @@ const Settings = () => {
 },[socket,navigate])
 
 
-const [profile, setProfile] = useState({
-  name: "John Simons",
-  email: "john.simons@example.com",
-  phone: "+123 456 789",
-});
+const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [username, setUsername] = useState("JohnDoe");
+  const [newUsername, setNewUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
-const [password, setPassword] = useState({
-  currentPassword: "",
-  newPassword: "",
-  confirmPassword: "",
-});
+  const [email, setEmail] = useState("john@example.com");
+  const [newEmail, setNewEmail] = useState("");
 
-const [notifications, setNotifications] = useState({
-  email: true,
-  sms: false,
-  push: true,
-});
+  const [sessions, setSessions] = useState([
+    { id: 1, device: "Chrome on Windows", location: "Accra, Ghana", active: true },
+    { id: 2, device: "Safari on iPhone", location: "Kumasi, Ghana", active: true },
+  ]);
 
-const handleProfileChange = (e) => {
-  setProfile({ ...profile, [e.target.name]: e.target.value });
+  const handleUsernameUpdate = (e) => {
+    e.preventDefault();
+    if (newUsername.trim()) {
+      setUsername(newUsername);
+      setNewUsername("");
+      alert("Username updated successfully!");
+    }
+  };
+
+  const handlePasswordUpdate = (e) => {
+    e.preventDefault();
+    if (password && newPassword) {
+      setPassword("");
+      setNewPassword("");
+      alert("Password updated successfully!");
+    }
+  };
+
+  const handleEmailUpdate = (e) => {
+    e.preventDefault();
+    if (newEmail.trim()) {
+      setEmail(newEmail);
+      setNewEmail("");
+      alert("Email updated. A confirmation has been sent.");
+    }
+  };
+
+  const handleLogoutAllSessions = () => {
+    // Replace with backend API logic in real app
+    alert("Logged out from all devices!");
+    setSessions([]);
+  };
+
+  const handleRemoveAccount = () => {
+  if (confirm("Are you sure you want to delete your account? This action is irreversible.")) {
+    // Make API call or socket emit here
+    // Example: socket.emit("deleteAccount", { userId: decodedToken.id });
+    console.log("Account deletion triggered");
+  }
 };
-
-const handlePasswordChange = (e) => {
-  setPassword({ ...password, [e.target.name]: e.target.value });
-};
-
-const handleNotificationChange = (e) => {
-  setNotifications({ ...notifications, [e.target.name]: e.target.checked });
-};
-
 
   return (
     <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className='w-full bg-stone-100  lg:w-[80%] ml-auto'
-  >
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  style={{ minHeight: "100vh", paddingTop: "100px" }}
+  className="layout-shift w-full lg:w-[80%] px-6 bg-gradient-to-br from-purple-50 to-white"
+>
+  <h2 style={{marginBlock:"16px"}} className="text-xl font-bold text-purple-700 mb-8">Settings</h2>
+
+  {/* Notifications Toggle */}
+  <div className="mb-10 flex items-center justify-between bg-white p-4 rounded-xl shadow">
+    <span className="text-lg font-semibold text-gray-800">Receive Notifications</span>
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={notificationsEnabled}
+        onChange={() => setNotificationsEnabled(!notificationsEnabled)}
+      />
+      <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-purple-600 transition-all duration-300"></div>
+      <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-300 transform peer-checked:translate-x-full"></div>
+    </label>
+  </div>
+
+<div className="flex gap-5 justify-between py-5">
+  {/* Update Username */}
+  <form onSubmit={handleUsernameUpdate} className="mb-10 bg-white p-6 rounded-xl shadow">
+    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 mb-4">Update Username</h3>
+    <label style={{marginBlock:"8px"}} className="block text-sm  mb-2 font-medium text-gray-700">Current Username: {username}</label>
+    <input
+      type="text"
+      value={newUsername}
+      onChange={(e) => setNewUsername(e.target.value)}
+      placeholder="Enter new username"
+      style={{marginBlock:"16px"}}
+      className="w-full text-sm px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-purple-400"
+    />
+    <button
+      type="submit"
+      className="w-full text-sm py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+    >
+      Update Username
+    </button>
+  </form>
+
+  {/* Update Email */}
+  <form onSubmit={handleEmailUpdate} className="mb-10 bg-white p-6 rounded-xl shadow">
+    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Update Email</h3>
+    <label style={{marginBlock:"8px"}} className="block text-sm  font-medium text-gray-700">Current Email: {email}</label>
+    <input
+      type="email"
+      value={newEmail}
+      onChange={(e) => setNewEmail(e.target.value)}
+      placeholder="Enter new email"
+      style={{marginBlock:"16px"}}
+      className="w-full text-sm px-4 py-2 text-sm border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-purple-400"
+    />
+    <button
+      type="submit"
+      className="w-full text-sm py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+    >
+      Update Email
+    </button>
+  </form>
+  </div>
+
+  {/* Update Password */}
+  <form onSubmit={handlePasswordUpdate} className="mb-10 bg-white p-6 rounded-xl shadow">
+    <h3 style={{marginBlock:"16px"}} className="text-xl font-semibold text-purple-700 ">Change Password</h3>
+    <label style={{marginBlock:"8px"}} className="block  font-medium text-gray-700">Current Password</label>
+    <input
+      type="password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      placeholder="Current Password"
+      style={{marginBlock:"16px"}}
+      className="w-full text-sm px-4 py-2 border border-gray-300 rounded  focus:outline-none focus:ring-2 focus:ring-purple-400"
+    />
+
+    <label style={{marginBlock:"8px"}} className="block text-sm  font-medium text-gray-700">New Password</label>
+    <input
+      type="password"
+      value={newPassword}
+      onChange={(e) => setNewPassword(e.target.value)}
+      placeholder="New Password"
+      style={{marginBlock:"16px"}}
+      className="w-full text-sm px-4 py-2 border border-gray-300 rounded  focus:outline-none focus:ring-2 focus:ring-purple-400"
+    />
+
+    <button
+      type="submit"
+      className="w-full py-2 text-sm bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+    >
+      Update Password
+    </button>
+  </form>
+
+  
+<div className='flex py-5 justify-between gap-5'>
+  {/* Session Management */}
+  <div style={{marginBlock:"16px"}} className="mb-10 bg-white p-6 rounded-xl shadow">
+    <h3 style={{marginBlock:"16px"}} className="text-xl font-semibold text-purple-700 mb-4">Active Sessions</h3>
+    {sessions.length === 0 ? (
+      <p className="text-gray-500 text-sm">No active sessions.</p>
+    ) : (
+      <ul style={{marginBlock:"16px"}} className="flex flex-col gap-3 ">
+        {sessions.map((session) => (
+          <li key={session.id} className="bg-purple-50 p-3 text-sm rounded border border-purple-100">
+            <strong className="text-purple-700">{session.device}</strong> — {session.location}
+          </li>
+        ))}
+      </ul>
+    )}
+    <button
+      onClick={handleLogoutAllSessions}
+      className="w-full text-sm py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+    >
+      Log out of all sessions
+    </button>
+  </div>
+  {/* Remove Account */}
+<div className="mb-16 bg-white p-6 rounded-xl shadow border border-red-100">
+  <h3 style={{marginBlock:"16px"}} className="text-xl font-semibold text-red-600 text-sm mb-4">Danger Zone</h3>
+  <p style={{marginBlock:"16px"}} className="text-gray-600 text-sm mb-4">
+    Once you delete your account, there is no going back. Please be certain.
+  </p>
+  <button
+    onClick={handleRemoveAccount}
     
-    <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Settings</h1>
-        <p className="text-gray-600 text-lg">Manage your profile, account, and preferences.</p>
-      </header>
+    className="w-full text-sm py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+  >
+    Delete My Account
+  </button>
+</div>
+</div>
 
-      {/* Settings Sections */}
-      <div className="space-y-8">
-        {/* Profile Settings */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Profile Settings</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-gray-600 mb-1">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={profile.name}
-                onChange={handleProfileChange}
-                className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={profile.email}
-                onChange={handleProfileChange}
-                className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 mb-1">Phone</label>
-              <input
-                type="text"
-                name="phone"
-                value={profile.phone}
-                onChange={handleProfileChange}
-                className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-        </div>
+</motion.div>
 
-        {/* Password Management */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Password Management</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-gray-600 mb-1">Current Password</label>
-              <input
-                type="password"
-                name="currentPassword"
-                value={password.currentPassword}
-                onChange={handlePasswordChange}
-                className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 mb-1">New Password</label>
-              <input
-                type="password"
-                name="newPassword"
-                value={password.newPassword}
-                onChange={handlePasswordChange}
-                className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 mb-1">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={password.confirmPassword}
-                onChange={handlePasswordChange}
-                className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Notification Preferences */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Notification Preferences</h2>
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                name="email"
-                checked={notifications.email}
-                onChange={handleNotificationChange}
-                className="w-5 h-5 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label className="ml-3 text-gray-600">Email Notifications</label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                name="sms"
-                checked={notifications.sms}
-                onChange={handleNotificationChange}
-                className="w-5 h-5 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label className="ml-3 text-gray-600">SMS Notifications</label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                name="push"
-                checked={notifications.push}
-                onChange={handleNotificationChange}
-                className="w-5 h-5 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label className="ml-3 text-gray-600">Push Notifications</label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-  </motion.div>
   )
 }
 

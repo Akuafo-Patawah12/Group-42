@@ -1,7 +1,8 @@
 
+const notification = require("../DatabaseSchemas/SupplyChain_Model/Notification")
 const { Order,Shipment } = require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
 const data= require("../DatabaseSchemas/userSchema")
-const  orderList=(Socket,orderListNamespace,trackingNamespace,Users)=>{
+const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNamespace,Users)=>{
      
     console.log("connected to orderList")
     Socket.on("joinRoom",async(info)=>{
@@ -135,9 +136,26 @@ updatedOrders.forEach((order) => {
 await shipments.save();
 
 updatedOrders.forEach((order) => {
-    const recipientSocketId = Users[order.userId]; // Fetch user’s socket ID
+    const recipientSocketId = Users[order.customer_id]; // Fetch user’s socket ID
+    const notify = new notification({
+      userId: order.customer_id,
+      message: "Your shipment has started",
+    });
+
+    notify
+    .save()
+    .then(() => console.log("Notification saved"))
+    .catch((err) => console.log("Failed to save notification", err));
+
     if (recipientSocketId) {
-      Socket.to(recipientSocketId).emit("assignedToContainer", { containerId, updatedOrders });
+      console.log("socketid",recipientSocketId)
+
+      notificationsNamespace.to(recipientSocketId).emit("notify", {
+        id: containerNumber,
+        message: "Your shipment has started",
+        read: false,
+      });
+      Socket.to(recipientSocketId).emit("assignedToContainer", { containerNumber, updatedOrders });
     }
   });
 
@@ -145,12 +163,28 @@ updatedOrders.forEach((order) => {
     // Optional: Emit to others or log something
     console.log(`Shipment started for container: ${containerNumber}`);
     
-    Socket.emit("usersAssigned", { message: "Users successfully assigned!", container });
+    Socket.emit("usersAssigned", { message: "Users successfully assigned!", containerNumber });
   } catch (error) {
     console.error("Error starting shipment:", error);
     callback({ status: "error" });
   }
 });
+
+Socket.on("addCBM/CTN",async(data,callback)=>{
+  try{
+    console.log(data)
+    const order= await Order.findById(data.userId)
+    if (!order) return callback({status:"error",data:"Order does not exist"})
+    order.cbm=data.cbm;
+    order.qty=data.qty;
+    await order.save()
+
+    Socket.to(Users[data.userId]).emit("update_CBM/CTN",order)
+    callback({status:"ok",data: order})
+  }catch(err){
+    console.log(err)
+  }
+})
 
  return Socket;
 }

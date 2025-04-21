@@ -288,8 +288,9 @@ function handTrack(){
   <Package className=" text-gray-600" /> Track Your Shipment
   </h2>
 
-  <section style={{marginTop:"16px"}} className="mt-4 flex">
-    <Form onFinish={handleTrack} layout="inline" className="flex flex-col gap-4 lg:flex-row "  style={{width:"100%"}}>
+  <section style={{marginTop:"16px"}} className=" flex">
+    <Form onFinish={handleTrack} layout="inline" style={{width:"100%"}} className="track_form flex flex-col gap-4 md:flex-row "  >
+      <div className="w-full">
       <Form.Item name="search" className=" m-0" style={{width:"100%"}}>
         <Input
           placeholder="Enter Tracking ID..."
@@ -300,12 +301,14 @@ function handTrack(){
           className="w-full"
         />
       </Form.Item>
-
+      </div>
+      <div className="w-full">
       <Form.Item className="m-0" style={{width:"100%"}}>
-        <Button type="primary" htmlType="submit" size="large" style={{width:"100%",background:"var(--purple)"}} className="w-[100px] sm:w-auto">
+        <Button type="primary" htmlType="submit" size="large" style={{width:"100%",background:"var(--purple)",fontWeight:"semi-bold",fontSize:"14px"}} >
           Track
         </Button>
       </Form.Item>
+      </div>
     </Form>
   </section>
 </div>

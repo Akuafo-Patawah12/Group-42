@@ -4,17 +4,17 @@ const PrivacyPolicyPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-6 py-12">
       <div className="max-w-4xl bg-white shadow-md rounded-lg p-8">
-        <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
+        <h1 style={{marginBlock:"24px"}} className="text-3xl font-bold text-center text-purple-600 mb-6">
           Privacy Policy
         </h1>
-        <p className="text-gray-700 mb-4">
+        <p style={{marginBlock:"16px"}} className="text-gray-700 mb-4">
           SF Ghana Logistics is committed to protecting your privacy. This Privacy
           Policy outlines how we collect, use, and safeguard your information.
         </p>
 
         <div className="space-y-6">
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 style={{marginBlock:"8px"}} className="text-xl font-semibold text-gray-800 mb-2">
               1. Information We Collect
             </h2>
             <p className="text-gray-600">
@@ -27,7 +27,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 style={{marginBlock:"8px"}} className="text-xl font-semibold text-gray-800 mb-2">
               2. How We Use Your Information
             </h2>
             <p className="text-gray-600">
@@ -43,7 +43,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 style={{marginBlock:"8px"}} className="text-xl font-semibold text-gray-800 mb-2">
               3. Information Sharing
             </h2>
             <p className="text-gray-600">
@@ -61,7 +61,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 style={{marginBlock:"8px"}} className="text-xl font-semibold text-gray-800 mb-2">
               4. Data Security
             </h2>
             <p className="text-gray-600">
@@ -73,7 +73,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 style={{marginBlock:"8px"}} className="text-xl font-semibold text-gray-800 mb-2">
               5. Your Rights
             </h2>
             <p className="text-gray-600">
@@ -89,7 +89,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 style={{marginBlock:"8px"}} className="text-xl font-semibold text-gray-800 mb-2">
               6. Updates to This Policy
             </h2>
             <p className="text-gray-600">
@@ -100,7 +100,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 style={{marginBlock:"8px"}} className="text-xl font-semibold text-gray-800 mb-2">
               7. Contact Us
             </h2>
             <p className="text-gray-600">
@@ -108,9 +108,9 @@ const PrivacyPolicyPage = () => {
               please contact us:
             </p>
             <ul className="list-none text-gray-600">
-              <li>Email: privacy@andylogistics.com</li>
-              <li>Phone: +1 (123) 456-7890</li>
-              <li>Address: 123 Andy Street, Logistics City, TX</li>
+              <li>Email: sfghanalogistic24@gmail.com</li>
+              <li>Phone: +233201623251</li>
+              <li>Address: Kwei Okyerema St, Dzorwulu Accra</li>
             </ul>
           </section>
         </div>

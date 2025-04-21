@@ -1,15 +1,53 @@
-import { NavLink,Link } from "react-router-dom"
 
+import React from "react"
+import { NavLink,Link } from "react-router-dom"
+import { jwtDecode } from 'jwt-decode';
 import {  BellOutlined } from "@ant-design/icons";
 import {ShoppingCart,Grid} from "lucide-react"
-
+import io from "socket.io-client"
 
 
 
 import { Button, Space } from "antd";
 
-export default function Header() {
+export default function Header({open,setOpen}) {
+  const socket = io("http://localhost:4000/notify",{
+    transports:["websocket"],
+    withWredentials:true
+  })
   const user= localStorage.getItem('user');
+  const [unreadCount,setUnreadCount] = React.useState([])
+    const accesstoken = localStorage.getItem('accesstoken');
+    const decode = jwtDecode(accesstoken);
+
+    React.useEffect(()=>{
+      socket.emit('getUnreadNotifications', decode.id);
+    },[])
+
+  React.useEffect(()=>{
+     socket.on("connect",()=>{
+        console.log("web socket is active")
+     })
+
+     socket.on('unreadNotifications', (data) => {
+      setUnreadCount(data);
+    });
+
+     socket.on("notify",(data)=>{
+      console.log(data,"notified")
+       setUnreadCount(prev=> [data,...prev])
+     })
+
+     socket.on("disconnect",(reason)=>{
+        console.log(reason)
+     })
+
+     return()=>{
+       socket.off("connect")
+       socket.off("notify")
+       socket.off("diconnect")
+     }
+  },[socket])
  
   return (
      <header className={`header fixed  h-[60px] w-full float-none top-0 z-[44] flex justify-between border-b-[1px] items-center  border-stone-300 bg-white  `}>
@@ -25,14 +63,19 @@ export default function Header() {
           
         </NavLink>
 
-        <NavLink to={"/Notification"}>
+        <div to={"/Notification"} className={"relative"}>
           <Button
             icon={<BellOutlined />}
-            className="rounded-full size-8 flex justify-center items-center  bg-gray-200 font-medium"
+            onClick={()=>setOpen(!open)}
+            className="rounded-full  size-8 flex justify-center items-center  bg-gray-200 font-medium"
           />
+          {unreadCount.length > 0 && (
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+          {unreadCount.length}
+        </span>
+      )}
           
-          
-        </NavLink>
+        </div>
         <div className="rounded-full bg-gray-200  flex items-center justify-center  text-xs font-bold text-stone-600 py-1 pl-3 pr-1 gap-1">{user}<span className="size-7 flex items-center justify-center border-[3px] border-purple-400 rounded-full">{user[0]}</span></div>
       </Space>
       

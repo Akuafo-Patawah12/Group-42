@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Pencil } from "lucide-react";
 import { DeleteOutlined, MessageOutlined, CopyOutlined } from '@ant-design/icons';
 import { Button,Form, Input, Table,Modal,message,Layout, Space, Tag ,Row,Col,Card} from 'antd';
 import { motion } from 'framer-motion';
@@ -24,8 +25,10 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [checked, setChecked] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [msgPop, setMsgPop] = useState(false);
-  const [receipient, setReceipient] = useState('');
+  const [openCBM, setOpenCBM] = useState(false);
+  const [receipient,setReceipient] = useState("")
+  const [cbm, setCbm] = useState("");
+  const [qty,setQty] = useState("")
   
   useEffect(() => {
     socket.emit('joinRoom', { id: decode.id });
@@ -62,24 +65,26 @@ const Orders = () => {
     });
   }, [socket]);
 
-  const handleInputChange = (event) => setInputValue(event.target.value);
+  function save(){
+    socket.emit('addCBM/CTN', {
+      Sender_id: decode.id,
+      userId: receipient,
+      cbm,
+      qty
+    });
+  }
+
+  
 
   const handleDelete = (orderId, customerId) => {
     socket.emit('deleteOrder', { orderId, customerId });
   };
 
-  const handleSendMessage = (e, message) => {
-    e.preventDefault();
-    messageSocket.emit('sendMessage', {
-      Sender_id: decode.id,
-      receipient_id: receipient,
-      message,
-    });
-  };
+  
 
-  const messagePop = (receipient_id) => {
-    setMsgPop(!msgPop);
-    setReceipient(receipient_id);
+  const openCBMPop = (user_id) => {
+    setOpenCBM(!openCBM);
+    setReceipient(user_id);
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -169,8 +174,8 @@ const Orders = () => {
       render: (text, record) => (
         <Space size="middle">
           <Button
-            icon={<MessageOutlined />}
-            onClick={() => messagePop(record.customer_id)}
+            icon={<Pencil size={18} className="text-purple-700" />}
+            onClick={() => openCBMPop(record.customer_id)}
             type="link"
           />
           <Button
@@ -322,11 +327,11 @@ const Orders = () => {
       </Form>
     </Modal>
 
-     <Content style={{ padding: "10px 50px" }}>
+     <Content style={{ padding: "10px 50px",width:"100%" }}>
              <Row gutter={[16, 16]}>
                {/* Container Page Title */}
                <Col span={24}>
-                 <Card title="Shipments Overview" style={{border:"1px solid #ddd"}}>
+                 <Card title="Shipments Overview" style={{border:"1px solid #ddd",width:"100%"}}>
       <Table
         columns={columns}
         dataSource={orders}
@@ -342,7 +347,7 @@ const Orders = () => {
       </Row>
       </Content>
 
-      <OrderMessagePopup msgPop={msgPop} sendMessage={handleSendMessage} />
+      <OrderMessagePopup openCBM={openCBM} setOpenCBM={setOpenCBM} cbm={cbm} setCbm={setCbm} qty={qty} setQty={setQty} onSave={save} />
     </Layout>
   );
 };

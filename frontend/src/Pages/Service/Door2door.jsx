@@ -2,6 +2,17 @@ import { motion } from "framer-motion";
 import { Truck, Clock, ShieldCheck, MapPin } from "lucide-react";
 
 export default function DoorToDoor() {
+
+  const questions = [
+    "Wondering how to get goods delivered right to your doorstep?",
+    "Curious about customs clearance in door-to-door shipping?",
+    "Not sure what documents are needed for home delivery?",
+    "Want to know how long door-to-door delivery takes?",
+  ];
+
+  const answer =
+    "Our Door-to-Door service ensures your goods are picked up from the supplier and delivered directly to your address. We handle everything—from pickup, customs clearance, documentation, to last-mile delivery—so you don’t have to worry about a thing. Fast, reliable, and fully tracked.";
+
   return (
     <div className="bg-white text-gray-800">
       {/* Hero */}
@@ -24,6 +35,29 @@ export default function DoorToDoor() {
           </button>
         </motion.div>
       </section>
+
+
+      <section className="max-w-7xl mx-auto px-6 py-10">
+      <h2 className="text-2xl font-bold text-center mb-8 text-purple-700">
+        Common Questions About Door-to-Door Shipments
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {questions.map((q, idx) => (
+          <div
+            key={idx}
+            className="bg-purple-50 border-l-4 border-purple-400 rounded-xl p-4 shadow hover:shadow-md transition"
+          >
+            <p className="text-sm font-medium text-gray-700">{q}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-white border border-purple-100 rounded-xl shadow-md p-6 text-gray-700">
+        <h3 className="text-lg font-semibold text-purple-600 mb-2">Answer:</h3>
+        <p className="text-sm leading-relaxed">{answer}</p>
+      </div>
+    </section>
 
       <div className="relative isolate  bg-purple-100 text-white px-6 py-8 text-center  ">
       <div className="max-w-6xl mx-auto text-center">

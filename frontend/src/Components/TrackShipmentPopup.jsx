@@ -1,24 +1,19 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom"
 import { Modal, Input, Button, Typography, Alert, Space } from "antd";
 
 const { Title, Text } = Typography;
 
 const TrackShipmentPopup = ({open,trackRef}) => {
     const [setIsOpen,isOpen] = open
+    const navigate = useNavigate()
   
   const [trackingId, setTrackingId] = useState("");
-  const [shipmentStatus, setShipmentStatus] = useState(null);
+  
 
   const handleTrackShipment = () => {
     // Simulate API call to fetch shipment status
-    if (trackingId) {
-      setShipmentStatus({
-        id: trackingId,
-        status: "In Transit",
-        estimatedDelivery: "2025-01-15",
-      });
-    }
+    navigate(`/Customer/Tracking/?track_id=${trackingId}`)
   };
 
   return (
@@ -30,7 +25,7 @@ const TrackShipmentPopup = ({open,trackRef}) => {
       onCancel={() => {
         setIsOpen(false);
         setTrackingId("");
-        setShipmentStatus(null);
+        
       }}
       footer={null}
       title="Track Your Shipment"
@@ -64,24 +59,12 @@ const TrackShipmentPopup = ({open,trackRef}) => {
           Track
         </Button>
 
-        {shipmentStatus && (
-          <div style={{ background: "#f5f5f5", padding: 12, borderRadius: 6 }}>
-            <p>
-              <Text strong>Tracking ID:</Text> {shipmentStatus.id}
-            </p>
-            <p>
-              <Text strong>Status:</Text> {shipmentStatus.status}
-            </p>
-            <p>
-              <Text strong>Estimated Delivery:</Text> {shipmentStatus.estimatedDelivery}
-            </p>
-          </div>
-        )}
+        
 
         <Button danger block onClick={() => {
           setIsOpen(false);
           setTrackingId("");
-          setShipmentStatus(null);
+          
         }}>
           Close
         </Button>
