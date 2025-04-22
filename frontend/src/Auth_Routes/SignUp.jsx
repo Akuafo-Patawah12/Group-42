@@ -153,7 +153,8 @@ const SignUp = () => {
       Already signed up?{' '}
       <Link
         to="/Login"
-        className="text-blue-500 font-medium hover:underline decoration-2"
+        style={{color:"var(--purple)"}}
+        className=" font-medium hover:underline decoration-2"
       >
         Login
       </Link>

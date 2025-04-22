@@ -15,8 +15,9 @@ export default function DoorToDoor() {
 
   return (
     <div className="bg-white text-gray-800">
+    <div className="absolute top-0 w-full h-[400px] bg-purple-500"></div>
       {/* Hero */}
-      <section className="relative h-[80vh] bg-[url('/images/delivery-truck.svg')] bg-contain bg-center bg-no-repeat flex items-center justify-center text-white">
+      <section style={{marginInline:"auto",marginTop:"100px"}} className="relative  h-[80vh] w-[90%] bg-[url('/images/delivery-truck.svg')] bg-contain bg-center bg-no-repeat flex items-center justify-center text-white md:w-[70%]">
         <div className="absolute inset-0 bg-black/50" />
         <motion.div
           className="relative z-10 text-center max-w-3xl px-6"
@@ -37,25 +38,99 @@ export default function DoorToDoor() {
       </section>
 
 
-      <section className="max-w-7xl mx-auto px-6 py-10">
-      <h2 className="text-2xl font-bold text-center mb-8 text-purple-700">
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8">
+  
+
+<svg width="12" height="400" viewBox="0 0 12 400" xmlns="http://www.w3.org/2000/svg" className="absolute top-45 left-8 md:hidden ">
+  <defs>
+    <pattern id="longRopePattern" patternUnits="userSpaceOnUse" width="12" height="40">
+      <path
+        d="M6 0 Q10 10 6 20 Q2 30 6 40"
+        stroke="var(--purple)"
+        strokeWidth="3"
+        fill="none"
+      />
+    </pattern>
+  </defs>
+  <rect width="12" height="700" fill="url(#longRopePattern)" />
+</svg>
+
+<svg width="12" height="400" viewBox="0 0 12 400" xmlns="http://www.w3.org/2000/svg" className="absolute top-45 right-8 md:hidden ">
+  <defs>
+    <pattern id="longRopePattern" patternUnits="userSpaceOnUse" width="12" height="40">
+      <path
+        d="M6 0 Q10 10 6 20 Q2 30 6 40"
+        stroke="var(--purple)"
+        strokeWidth="3"
+        fill="none"
+      />
+    </pattern>
+  </defs>
+  <rect width="12" height="700" fill="url(#longRopePattern)" />
+</svg>
+
+
+      <div></div>
+      <h2 style={{marginBlock:"50px"}} className="text-3xl font-bold text-center text-purple-700 mb-16">
         Common Questions About Door-to-Door Shipments
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Desktop Layout */}
+      <div className="hidden  md:grid grid-cols-5 gap-4 relative min-h-[500px] ">
+        {/* Left questions */}
+        <div className="flex flex-col gap-24 items-start col-span-1">
+          <div className="bg-purple-50 border-l-4 border-purple-400 rounded-xl p-4 shadow w-60 text-sm font-medium text-gray-700">
+            {questions[0]}
+          </div>
+          <div className="bg-purple-50 border-l-4 border-purple-400 rounded-xl p-4 shadow w-60 text-sm font-medium text-gray-700">
+            {questions[1]}
+          </div>
+        </div>
+
+        {/* Answer in center */}
+        <div className="col-span-3 flex justify-center items-center relative">
+          <div className="bg-white border border-purple-100 rounded-2xl shadow-xl p-6 w-[350px] text-center transition duration-300 ease-in-out hover:shadow-2xl z-10">
+            <h3 className="text-lg font-semibold text-purple-600 mb-2">Answer</h3>
+            <p className="text-sm text-gray-700">{answer}</p>
+          </div>
+
+          {/* Curved SVG Lines */}
+          <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+            {/* Left to center */}
+            <path d="M 100 40 C 220 40, 300 150, 390 250" stroke="#9333ea" strokeWidth="2" fill="none" />
+            <path d="M 100 290 C 220 290, 300 300, 390 300" stroke="#9333ea" strokeWidth="2" fill="none" />
+            {/* Right to center */}
+            <path d="M 880 40 C 760 40, 670 150, 580 250" stroke="#9333ea" strokeWidth="2" fill="none" />
+            <path d="M 880 290 C 760 290, 670 300, 580 300" stroke="#9333ea" strokeWidth="2" fill="none" />
+          </svg>
+        </div>
+
+        {/* Right questions */}
+        <div className="flex flex-col gap-24 items-end col-span-1">
+          <div className="bg-purple-50 border-l-4 border-purple-400 rounded-xl p-4 shadow w-60 text-sm font-medium text-gray-700 text-right">
+            {questions[2]}
+          </div>
+          <div className="bg-purple-50 border-l-4 border-purple-400 rounded-xl p-4 shadow w-60 text-sm font-medium text-gray-700 text-right">
+            {questions[3]}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden flex flex-col gap-6 isolate">
         {questions.map((q, idx) => (
           <div
             key={idx}
-            className="bg-purple-50 border-l-4 border-purple-400 rounded-xl p-4 shadow hover:shadow-md transition"
+            className="bg-purple-50 border-l-4 border-purple-400 rounded-xl p-4 shadow text-sm font-medium text-gray-700"
           >
-            <p className="text-sm font-medium text-gray-700">{q}</p>
+            {q}
           </div>
         ))}
-      </div>
 
-      <div className="bg-white border border-purple-100 rounded-xl shadow-md p-6 text-gray-700">
-        <h3 className="text-lg font-semibold text-purple-600 mb-2">Answer:</h3>
-        <p className="text-sm leading-relaxed">{answer}</p>
+        <div className="bg-white border border-purple-100 rounded-2xl shadow-xl p-6 text-center transition duration-300 ease-in-out hover:shadow-2xl">
+          <h3 className="text-lg font-semibold text-purple-600 mb-2">Answer</h3>
+          <p className="text-sm text-gray-700">{answer}</p>
+        </div>
       </div>
     </section>
 

@@ -51,12 +51,15 @@ const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNames
               _id: 1,
               customer_id: 1,
               Status: 1,
+              cbm: 1,
+              qty: 1,
               createdAt: 1,
               customerName: '$userDetails.username',
               containerNumber: '$shipmentDetails.containerNumber', // example field
               route:  '$shipmentDetails.route',         // example field
               port : '$shipmentDetails.port',
               eta: '$shipmentDetails.eta',
+
               containerNumber: '$shipmentDetails.containerNumber',
               cbmRate: '$shipmentDetails.cbmRate',
               shipmentDate: '$shipmentDetails.createdAt',          // example field
@@ -173,12 +176,13 @@ updatedOrders.forEach((order) => {
 Socket.on("addCBM/CTN",async(data,callback)=>{
   try{
     console.log(data)
-    const order= await Order.findById(data.userId)
+    const order= await Order.findById(data.order_id)
     if (!order) return callback({status:"error",data:"Order does not exist"})
     order.cbm=data.cbm;
     order.qty=data.qty;
     await order.save()
-
+    
+    
     Socket.to(Users[data.userId]).emit("update_CBM/CTN",order)
     callback({status:"ok",data: order})
   }catch(err){

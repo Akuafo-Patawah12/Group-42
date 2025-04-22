@@ -7,6 +7,7 @@
 
 
 
+
 *{
   margin: 0;
 }
@@ -26,6 +27,7 @@ body{
   --green: #a0c444;
   --color: #f0dbf7;
 }
+
 
 .hero {
   
@@ -184,6 +186,8 @@ animation: water 4s ease-in-out infinite;
 .customer_sidebar{
   display:none;
 }
+
+
 
 @media (min-width:768px){
   .layout-shift{

@@ -88,73 +88,79 @@ console.log(category)
     navigate(-1); // Navigates to the previous page
   } 
     return(
-        <div className='w-full px-[5%] bg-stone-100 pt-24 lg:w-[80%] ml-auto'>
-            <div className="flex justify-between">
-            <button  onClick={handleGoBack} className="p-2 bg-stone-400 rounded-lg mb-3"><LeftOutlined /> Back</button>
-            <h3 className="font-bold text-2xl">Products Overview</h3>
-            </div>
-            {post ? (
-        <div  className='flex relative border-[1px] bg-white border-purple-200  shadow-sm rounded-xl overflow-hidden  hover:shadow-2xl '>
-
-          <section className='flex justify-center items-center h-[300px] bg-stone-100 w-full '>
-                
-                <LazyLoadImage  
-                   src={post.img_vid} 
-                   alt={post.caption} 
-                   effect="blur" 
-                   
-                   height={300}
-                   style={{height:"100%"}}
-                   onError={console.log("failed to upload image")}
-                />
+      <div style={{paddingTop:"100px"}}
+          className='layout-shift  w-full bg-stone-100 px-3 lg:w-[80%] px-0 '>
+      <div style={{marginBlock:"0 24px"}} className="flex items-center justify-between ">
+        <button onClick={handleGoBack} className="flex items-center gap-2 px-3 py-2 bg-stone-300 hover:bg-stone-400 rounded-lg shadow-sm">
+          <LeftOutlined /> <span className="text-sm font-bold">Back</span>
+        </button>
+        <h3 className="text-xl font-semibold text-stone-800">Product Overview</h3>
+      </div>
+    
+      {post ? (
+        <div className="flex flex-col lg:flex-row gap-6 p-6 bg-white border border-purple-200 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+          {/* Product Image */}
+          <section className="flex justify-center items-center w-full lg:w-1/2 bg-stone-100 rounded-xl overflow-hidden">
+            <LazyLoadImage
+              src={post.img_vid}
+              alt={post.caption}
+              effect="blur"
+              className="object-contain h-[300px] w-full"
+              onError={() => console.log("failed to upload image")}
+            />
           </section>
-          <div className=" bg-gradient-to-r px-[2.5%] py-3 gap-3 flex flex-col from-white via-gray-200 to-white w-full">
-            <div className=" p-3 bg-white rounded flex  border-2 border-purple-400 ">
-              <section className="flex justify-between items-center w-full">
-                 <button className="rounded-[50%] text-white bg-purple-500 size-7">A</button>
-                 <span className="font-medium text-sm">Andrew Patawah</span>
-                 <button title="View profile"><EyeFilled/></button>
-                 
-              </section>
-              
-
-            </div>
-
-            
-
-              <div className=" p-3 bg-white flex rounded  border-2 border-purple-400 ">
-              <section>
-              <span className='font-medium text-xs bg-stone-200 w-[80px]'>Category <RefIcon/> #{post.category}</span>
-              <div><h3>Price</h3><h3>${post.price} <span className="p-1 bg-purple-100 rounded-lg">negotiable</span></h3></div>
-              <div className="mt-2">
-                <h3 className="font-medium text-sm">Product description</h3>
-              <span className='text-sm text-stone-500 pl-2 border-l-2 ml-2 border-purple-400'>{post.caption}</span>
-              </div> 
-              </section>
-            </div>
-
-
-            <div className=" p-3 bg-white border-2 rounded border-purple-400 ">
-              <h3 className="font-medium mb-2 text-sm">Social media handles</h3>
-              <section className="flex justify-between">
-                 
-                 <span className="flex gap-2"><FacebookOutlined className="text-2xl"/><WhatsAppOutlined className="text-2xl"/><WechatOutlined className="text-2xl"/></span>
-                 <button className="bg-[var(--purple)] p-2 text-sm rounded text-white" onClick={showEmailSender}>Send mail</button>
-                 
-              </section>
+    
+          {/* Product Info */}
+          <div className="flex flex-col gap-5 w-full lg:w-1/2">
+            {/* Owner Info */}
+            <div className="flex items-center justify-between bg-white border-2 border-purple-400 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-purple-500 text-white flex items-center justify-center w-8 h-8">A</div>
+                <span className="font-medium text-sm">Andrew Patawah</span>
               </div>
+              <button title="View profile">
+                <EyeFilled className="text-lg text-purple-500 hover:text-purple-700" />
+              </button>
+            </div>
+    
+            {/* Category & Description */}
+            <div className="bg-white border-2 border-purple-400 rounded-xl px-4 py-3 space-y-3">
+              <span className="text-xs font-medium bg-stone-200 inline-block px-2 py-1 rounded">Category <RefIcon /> #{post.category}</span>
+              <div>
+                <h3 className="font-medium text-sm">Price</h3>
+                <h3 className="text-lg font-semibold text-purple-600">${post.price} <span className="ml-2 text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded">Negotiable</span></h3>
+              </div>
+              <div>
+                <h3 className="font-medium text-sm mb-1">Product Description</h3>
+                <p className="text-xs font-medium text-stone-500 border-l-4 pl-3 border-purple-400">{post.caption}</p>
+              </div>
+            </div>
+    
+            {/* Social Handles */}
+            <div className="bg-white border-2 border-purple-400 rounded-xl px-4 py-3">
+              <h3 className="text-sm font-medium mb-2">Social Media Handles</h3>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-3 text-2xl text-purple-600">
+                  <FacebookOutlined />
+                  <WhatsAppOutlined />
+                  <WechatOutlined />
+                </div>
+                <button onClick={showEmailSender} className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm">
+                  Send Mail
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      
       ) : (
-        <p>Loading post...</p>
+        <p className="text-center text-gray-500 my-10">Loading post...</p>
       )}
-
-      
-      <Modal 
-        title="Contact Us" 
-        open={sender} 
-        onOk={handleOk} 
+    
+      {/* Email Modal */}
+      <Modal
+        title="Contact Us"
+        open={sender}
+        onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
       >
@@ -166,46 +172,37 @@ console.log(category)
           </Button>
         </form>
       </Modal>
-      <div className='mt-5 shadow-md w-full py-5 rounded-lg bg-white' >
-      <h1 className="text-2xl font-bold mb-4">Products in "Books & Stationery"</h1>
-      {products.length > 0 ? (
-        <div className="mt-5 w-[95%] shadow-md py-5 px-[3%] rounded-lg bg-white mx-auto columns-1 md:columns-2 lg:columns-3 space-y-4">
-          {products.map((product,index) => (
-            <div key={index} className='relative w-[250px] border-2 bg-white border-purple-500 mt-4 shadow-sm rounded-2xl overflow-hidden break-inside-avoid   hover:shadow-2xl'>
-            <section className='flex justify-center items-center bg-stone-100 w-full'>
-                
-                <LazyLoadImage  
-                   src={product.img_vid} 
-                   alt={product.caption} 
-                   effect="blur" 
-                   
-                   style={{height:"100%"}}
-                   onError={console.log("failed to upload image")}
-                />
-          </section>
-          <div className=" bg-gradient-to-r from-white via-gray-200 to-white w-full">
-
-          <div className=' mt-1 flex flex-col w-[85%] mx-auto '>
-            <span className='font-medium text-xs bg-stone-200 w-[80px]'>#{product.category}</span>
-            <span className='text-sm text-stone-500'>{product.caption}</span>
+    
+      {/* Related Products Section */}
+      <div style={{marginBlock:"30px"}} className="mt-10 bg-white p-6 rounded-xl shadow-md">
+        <h1 style={{marginBlock:"16px"}} className="text-lg font-semibold mb-4">Products in "Books & Stationery"</h1>
+        {products.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.map((product, index) => (
+              <div key={index} className="border-2 border-purple-400 bg-white rounded-2xl p-4 hover:shadow-xl transition-all">
+                <div className="bg-stone-100 h-[200px] rounded-lg overflow-hidden flex justify-center items-center">
+                  <LazyLoadImage
+                    src={product.img_vid}
+                    alt={product.caption}
+                    effect="blur"
+                    className="object-contain h-full"
+                    onError={() => console.log("failed to upload image")}
+                  />
+                </div>
+                <div className="mt-3 space-y-2">
+                  <span className="text-xs font-medium bg-stone-200 px-2 py-1 inline-block rounded">#{product.category}</span>
+                  <p className="text-sm text-stone-600">{product.caption}</p>
+                  <div className="text-right font-bold text-purple-700">${product.price}</div>
+                </div>
+              </div>
+            ))}
           </div>
-        <div className='flex items-center justify-around h-[100px]'>
-          
-       
-        
-        <br/>
-        <span>${product.price}</span></div>
-        </div>
-        </div>
-          
-          ))}
-        </div>
-      ) : (
-        <p>No products found in this category.</p>
-      )}
+        ) : (
+          <p className="text-gray-500 text-center">No products found in this category.</p>
+        )}
+      </div>
     </div>
-
-        </div>
+    
     )
 }
 

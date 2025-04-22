@@ -9,6 +9,7 @@ import {route1,route2,route3,route4,route5} from "../Data/RouteData"
 import  ShipIcon  from "../icons/Truck.svg"
 import  MapShipIcon  from "../icons/CargoShip.svg"
 import  Ship2Icon  from "../icons/image.svg"
+import Ship from "../icons/Ship"
 import { RightCircleFilled,ArrowRightOutlined, UpOutlined ,CheckOutlined  } from '@ant-design/icons'
 import Map, { Marker,  NavigationControl,Source,Layer } from "react-map-gl/maplibre";
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -48,7 +49,7 @@ socket.on('connect',()=>{
 socket.on('get_item_location',(data)=>{
   console.log("tracking order",data)
   setRoute(data?.shipmentId?.route || "")
-  setCountry(data?.shipmentId?.country || "")
+  setCountry(data?.shipmentId?.port || "")
 })
 
 socket.on("connect_error",(error)=>{
@@ -112,92 +113,92 @@ const trackingId = searchParams.get("tracking_id");
 
       
 
-const [xPosition, setXposition] = useState(0);
-const [bound, setBound] = useState(0);
-const [Index,setIndex] = useState(0)
-const [scroll,setScroll] = useState(0)
-
-function Scroll() {
-  if (parent.current) {
-    const { scrollLeft, scrollTop } = parent.current;
-
-    // Check if horizontal scroll changed
-    if (scrollLeft !== scroll) {
-      setScroll(scrollLeft);
-    }
-
-    // Prevent vertical scrolling
-    if (scrollTop !== 0) {
-      parent.current.scrollTop = 0;
-    }
-  }
-}
-useEffect(() => {
-  const element= parent.current
-  if (!element) return;
-  
-  element.addEventListener('scroll', Scroll); // Add scroll event listener
-  
-  return () => {
-    
-    element.removeEventListener('scroll', Scroll); // Cleanup on unmount
-    
-  };
-}, [scroll,xPosition]);
-
-const countRef = useRef(null);
-
-// Function to update bound when the country is found
-const updateBound = () => {
-  if (!pRefs.current) return;
-
-  pRefs.current.forEach((p) => {
-    const foundIndex = pRefs.current.findIndex(p => p && p.innerHTML.trim() === country);
-    setIndex(foundIndex);
-
-    if (p && p.innerHTML.trim() === country) {
-      const rect = p.getBoundingClientRect();
-      const newBound = Math.round(rect.left + scroll); // Adjust for scroll
-      setBound(newBound);
-
-      // Immediately update position to match the new bound
+      const [xPosition, setXposition] = useState(0);
+      const [bound, setBound] = useState(0);
+      const [Index,setIndex] = useState(0)
+      const [scroll,setScroll] = useState(0)
       
-
-      // Reset animation if already running
-      if (countRef.current) clearInterval(countRef.current);
-
-      countRef.current = setInterval(() => {
-        setXposition((previousNumber) => {
-          if (previousNumber === newBound) {
-            clearInterval(countRef.current);
-            return previousNumber;
+      function Scroll() {
+        if (parent.current) {
+          const { scrollLeft, scrollTop } = parent.current;
+      
+          // Check if horizontal scroll changed
+          if (scrollLeft !== scroll) {
+            setScroll(scrollLeft);
           }
-
-          return previousNumber < newBound ? previousNumber + 1 : previousNumber - 1;
-        });
-    },10)
-    }
-    })
-    return()=>{
-      clearInterval(countRef.current)
-    }
-    }
-
-
-// Runs when country or index changes
-useEffect(() => {
-  updateBound();
-}, [country, Index]);
-
-// Runs when window is resized
-useEffect(() => {
-  const handleResize = () => {
-    updateBound(); // Ensure updated position on resize
-  };
-  window.addEventListener("resize", handleResize);
-
-  return () => window.removeEventListener("resize", handleResize);
-},[xPosition]);
+      
+          // Prevent vertical scrolling
+          if (scrollTop !== 0) {
+            parent.current.scrollTop = 0;
+          }
+        }
+      }
+      useEffect(() => {
+        const element= parent.current
+        if (!element) return;
+        
+        element.addEventListener('scroll', Scroll); // Add scroll event listener
+        
+        return () => {
+          
+          element.removeEventListener('scroll', Scroll); // Cleanup on unmount
+          
+        };
+      }, [scroll,xPosition]);
+      
+      const countRef = useRef(null);
+      
+      // Function to update bound when the country is found
+      const updateBound = () => {
+        if (!pRefs.current) return;
+      
+        pRefs.current.forEach((p) => {
+          const foundIndex = pRefs.current.findIndex(p => p && p.innerHTML.trim() === country);
+          setIndex(foundIndex);
+      
+          if (p && p.innerHTML.trim() === country) {
+            const rect = p.getBoundingClientRect();
+            const newBound = Math.round(rect.left + scroll); // Adjust for scroll
+            setBound(newBound);
+      
+            // Immediately update position to match the new bound
+            
+      
+            // Reset animation if already running
+            if (countRef.current) clearInterval(countRef.current);
+      
+            countRef.current = setInterval(() => {
+              setXposition((previousNumber) => {
+                if (previousNumber === newBound) {
+                  clearInterval(countRef.current);
+                  return previousNumber;
+                }
+      
+                return previousNumber < newBound ? previousNumber + 1 : previousNumber - 1;
+              });
+          },10)
+          }
+          })
+          return()=>{
+            clearInterval(countRef.current)
+          }
+          }
+      
+      
+      // Runs when country or index changes
+      useEffect(() => {
+        updateBound();
+      }, [country, Index]);
+      
+      // Runs when window is resized
+      useEffect(() => {
+        const handleResize = () => {
+          updateBound(); // Ensure updated position on resize
+        };
+        window.addEventListener("resize", handleResize);
+      
+        return () => window.removeEventListener("resize", handleResize);
+      },[xPosition]);
 
 
 
@@ -325,7 +326,7 @@ function handTrack(){
         <div className="line_map" ref={parent}>
         <div className="line_inner" >
           
-        <div  className="ship" style={{position:"relative"}}><div  style={{ position: "absolute",top:"-40px", left: `${xPosition-3}px` ,width:"fit-content"}}><Package/></div>  
+        <div  className="ship" style={{position:"relative"}}><div  style={{ position: "absolute",top:"-40px", left: `${xPosition-3}px` ,width:"fit-content"}}><Ship/></div>  
          </div>
         <section className="line" style={{position:"relative"}} >
           
@@ -373,87 +374,66 @@ function handTrack(){
 
         </div>
        
-          <div style={{display:"flex",gap:"5px",width:"fit-content",marginInline:"auto",paddingBlock:"10px"}}><a href='#Map' ><button className='route_button flex gap-1'><Package size={24} /> ROUTE MAP <RightCircleFilled style={{color:"var(--purple)",marginLeft:"10px"}}/> </button></a> <button onClick={() => handleOpen()} className=" text-white bg-purple-500 h-10 px-3 rounded-xl">More Info</button></div>
+        <div className="flex flex-wrap items-center justify-center gap-4 py-4">
+  <a href="#Map">
+    <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white shadow border hover:shadow-md transition duration-300">
+      <Package size={20} className="text-purple-600" />
+      <span className="font-medium text-sm text-gray-800">ROUTE MAP</span>
+      <RightCircleFilled style={{ color: "var(--purple)" }} />
+    </button>
+  </a>
+
+  <button
+    onClick={handleOpen}
+    className="px-4 text-sm font-medium py-2 h-10 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition duration-300 shadow"
+  >
+    More Info
+  </button>
+</div>
+
         
-          <Modal
-        title="⛴ Port Stay Durations"
-        open={isMoreInfo}
-        onCancel={() => setIsMoreInfo(false)}
-        footer={null}
-        centered
-        width={700}
-      >
-
-{loading ? (
-          <div className="flex items-center justify-center py-10">
-            <Spin size="large" />
+<Modal
+  title="⛴ Port Stay Durations"
+  open={isMoreInfo}
+  onCancel={() => setIsMoreInfo(false)}
+  footer={null}
+  centered
+  width={700}
+  bodyStyle={{
+    maxHeight: '70vh', // This controls scroll height
+    overflowY: 'auto',
+    padding: '24px',
+    backgroundColor: '#f9fafb',
+    borderRadius: '16px',
+  }}
+>
+  {loading ? (
+    <div className="flex items-center justify-center py-10">
+      <Spin size="large" />
+    </div>
+  ) : (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {routesMap[route].map((port, index) => (
+          <div
+            key={index}
+            className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition duration-200 ease-in-out"
+          >
+            <h3 className="text-lg font-semibold text-gray-800">{port.countryPort}</h3>
+            <p className="text-gray-500">{port.country}</p>
+            <span className="text-sm text-purple-600 mt-2">🕒 {port.duration}</span>
           </div>
-        ) : (
-          <>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          
-        <div
-              
-              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
-            >
-              <h3 className="text-lg font-bold">{routesMap[route][0].countryPort}</h3>
-              <p className="text-gray-600">{routesMap[route][0].country}</p>
-              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][0].duration}</span>
-            </div>
+        ))}
+      </div>
 
-            <div
-              
-              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
-            >
-              <h3 className="text-lg font-bold">{routesMap[route][1].countryPort}</h3>
-              <p className="text-gray-600">{routesMap[route][1].country}</p>
-              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][1].duration}</span>
-            </div>
+      <div className="text-sm text-gray-500 mt-6 border-t pt-4">
+        <strong>Note:</strong> Port stay durations are estimated. Delays may occur due to weather,
+        customs, or operational factors.
+      </div>
+    </>
+  )}
+</Modal>
 
-            <div
-              
-              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
-            >
-              <h3 className="text-lg font-bold">{routesMap[route][2].countryPort}</h3>
-              <p className="text-gray-600">{routesMap[route][2].country}</p>
-              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][2].duration}</span>
-            </div>
-
-            <div
-              
-              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
-            >
-              <h3 className="text-lg font-bold">{routesMap[route][3].countryPort}</h3>
-              <p className="text-gray-600">{routesMap[route][3].country}</p>
-              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][3].duration}</span>
-            </div>
-
-            <div
-              
-              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
-            >
-              <h3 className="text-lg font-bold">{routesMap[route][4].countryPort}</h3>
-              <p className="text-gray-600">{routesMap[route][4].country}</p>
-              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][4].duration}</span>
-            </div>
-
-            <div
-              
-              className="border border-gray-200 rounded-lg p-4 flex flex-col bg-gray-50 hover:shadow-md transition"
-            >
-              <h3 className="text-lg font-bold">{routesMap[route][5].countryPort}</h3>
-              <p className="text-gray-600">{routesMap[route][5].country}</p>
-              <span className="text-sm text-blue-600 mt-2">🕒 {routesMap[route][5].duration}</span>
-            </div>
-          
-        </div>
-        <div className="text-sm text-gray-500 mt-2 border-t pt-4">
-          <strong>Note:</strong> Port stay durations are estimated. Delays may occur due to weather,
-          customs, or operational factors.
-        </div>
-        </>
-        )}
-      </Modal>
 
         <div style={{width:"95%",marginInline:"auto"}}>
         <Map

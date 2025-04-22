@@ -2,6 +2,7 @@ const router= require("express").Router()
 const {SignUp,login, updatePassword,logout}= require("./Routes/Authentication")
 const forgetPassword = require("./Routes/Nodemailer")
 const {rateLimit}= require("express-rate-limit")
+const { updateEmail,settings_updatePassword,logoutAllSessions, deleteAccount } = require("./Routes/Settings")
 
 
 const limiter = rateLimit({
@@ -22,5 +23,9 @@ router.post("/Login",limiter, login)
 router.put("/updatePassword/:id",updatePassword)
 router.post("/forgetPassword",forgetPassword)
 router.post("/logout", logout)
+router.put("/update_email", updateEmail)
+router.put("/password", settings_updatePassword);
+router.post("/logout-all", logoutAllSessions);
+router.delete("/delete-account", deleteAccount);
 
 module.exports= router

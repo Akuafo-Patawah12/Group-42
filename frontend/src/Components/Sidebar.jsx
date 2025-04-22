@@ -28,10 +28,10 @@ const Sidebar = () => {
   
   const menuItems = [
     { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={20}/>, path: "/L/Dashboard" },
-    { key: "user", label: "Users", icon: <User size={20}/>, path: "/L/Clients" },
-    { key: "shipments", label: "Shipments", icon: <Truck size={20}/>, path: "/L/Orders" },
-    { key: "containers", label: "Containers", icon: <Package size={20}/>, path: "/L/containers" },
-    { key: "settings", label: "Settings", icon: <Settings size={20}/>, path: "/L/Settings" },
+    { key: "user", label: "Users", icon: <User size={20} style={{color:"#333"}}/>, path: "/L/Clients" },
+    { key: "shipments", label: "Shipments", icon: <Truck size={20} style={{color:"#333"}}/>, path: "/L/Orders" },
+    { key: "containers", label: "Containers", icon: <Package size={20} style={{color:"#333"}}/>, path: "/L/containers" },
+    { key: "settings", label: "Settings", icon: <Settings size={20} style={{color:"#333"}}/>, path: "/L/Settings" },
   ];
 
   return (
@@ -52,7 +52,7 @@ const Sidebar = () => {
                 icon={<span className="text-purple-600">
                 {item.icon}
                 </span>}>
-                <NavLink to={item.path}>{item.label}</NavLink>
+                <NavLink to={item.path} style={{color:"#333"}}>{item.label}</NavLink>
               </Menu.Item>
             ))}
 

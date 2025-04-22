@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react";
 import { DeleteOutlined, MessageOutlined, CopyOutlined } from '@ant-design/icons';
 import { Button,Form, Input, Table,Modal,message,Layout, Space, Tag ,Row,Col,Card} from 'antd';
 import { motion } from 'framer-motion';
-import { Copy } from "lucide-react";
+import { Copy ,Edit,Trash2} from "lucide-react";
 import moment from "moment";
 
 
@@ -12,6 +12,7 @@ import moment from "moment";
 import io from 'socket.io-client';
 import { jwtDecode } from 'jwt-decode';
 import OrderMessagePopup from './OrderMessagePopup';
+import { toast } from 'react-toastify';
 
 
 const { Content } = Layout;
@@ -23,12 +24,12 @@ const Orders = () => {
   const messageSocket = useMemo(() => io('http://localhost:4000/message', { transports: ['websocket'] }), []);
   
   const [orders, setOrders] = useState([]);
-  const [checked, setChecked] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+
   const [openCBM, setOpenCBM] = useState(false);
   const [receipient,setReceipient] = useState("")
   const [cbm, setCbm] = useState("");
   const [qty,setQty] = useState("")
+  const [order_id,setOrder_id] = useState("")
   
   useEffect(() => {
     socket.emit('joinRoom', { id: decode.id });
@@ -70,8 +71,23 @@ const Orders = () => {
       Sender_id: decode.id,
       userId: receipient,
       cbm,
-      qty
-    });
+      qty,
+      order_id
+    },
+    (response) => {
+      if (response.status === "ok") {
+        toast.success("CBM & CTN updated")
+        setOrders(prev =>
+          prev.map(order =>
+            order._id === response.data._id ? response.data : order
+          )
+        );
+      }else{
+         toast.error("Failed to add cbm/ctn")
+      }
+    }
+    
+  );
   }
 
   
@@ -82,9 +98,10 @@ const Orders = () => {
 
   
 
-  const openCBMPop = (user_id) => {
+  const openCBMPop = (user_id,order_id) => {
     setOpenCBM(!openCBM);
     setReceipient(user_id);
+    setOrder_id(order_id)
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -127,11 +144,17 @@ const Orders = () => {
       title: 'CBM',
       dataIndex: 'cbm',
       key: 'cbm',
+      render:(record)=>(
+        record === undefined ? <p>N/A</p> : <p>{record}</p>
+      )
     },
     {
       title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
+      dataIndex: 'qty',
+      key: 'qty',
+      render:(record)=>(
+        record === undefined ? <p>N/A</p> : <p>{record}</p>
+      )
     },
     {
       title: 'Status',
@@ -174,12 +197,12 @@ const Orders = () => {
       render: (text, record) => (
         <Space size="middle">
           <Button
-            icon={<Pencil size={18} className="text-purple-700" />}
-            onClick={() => openCBMPop(record.customer_id)}
+            icon={<Edit size={18} className="text-purple-700" />}
+            onClick={() => openCBMPop(record.customer_id,record._id)}
             type="link"
           />
           <Button
-            icon={<DeleteOutlined />}
+            icon={<Trash2 size={18}/>}
             onClick={() => handleDelete(record._id, record.customer_id)}
             type="link"
             danger

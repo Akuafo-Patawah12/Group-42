@@ -126,7 +126,7 @@ const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
           callback({ status: "error", message: "Failed to create container." });
         }
       });
-    
+      
     
       Socket.on("fetchContainers", async (callback) => {
         try {
@@ -149,11 +149,24 @@ const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
         }
       })
 
+
+
+      Socket.on("getOrdersByShipment", async (shipmentId) => {
+        try {
+          const orders = await Order.find({ shipmentId }).populate("customer_id");
+          Socket.emit("ordersByShipment", { shipmentId, orders });
+        } catch (err) {
+          Socket.emit("ordersByShipment", { shipmentId, error: "Failed to fetch orders" });
+        }
+      });
+      
+
       Socket.on("disconnect",()=>{
         console.log("disconnect from shipment Namespace")
       })
       
     return Socket
 }
+
 
 module.exports=shipping

@@ -1,12 +1,16 @@
 import React,{useState,useMemo,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import {motion } from "framer-motion"
+import { jwtDecode } from 'jwt-decode'
 import io from "socket.io-client"
 const Settings = () => {
   const socket = useMemo(() =>io("http://localhost:4000",{
     transports: ['websocket'],
   }),[])
   const navigate= useNavigate()
+
+  const accesstoken = localStorage.getItem('accesstoken');
+    const decode = jwtDecode(accesstoken);
   useEffect(()=>{
     socket.on('connect',()=>{
         console.log("Connected to server")
@@ -53,23 +57,59 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     }
   };
 
-  const handlePasswordUpdate = (e) => {
+  const handlePasswordUpdate = async (e) => {
     e.preventDefault();
+  
     if (password && newPassword) {
-      setPassword("");
-      setNewPassword("");
-      alert("Password updated successfully!");
+      try {
+        await fetch("/api/user/password", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: decode.id, // Adjust based on auth
+            password,
+            newPassword,
+          }),
+        });
+  
+        setPassword("");
+        setNewPassword("");
+        alert("Password updated successfully!");
+      } catch (error) {
+        console.error("Password update error:", error);
+        alert("Failed to update password.");
+      }
     }
   };
+  
 
-  const handleEmailUpdate = (e) => {
+  const handleEmailUpdate = async (e) => {
     e.preventDefault();
     if (newEmail.trim()) {
-      setEmail(newEmail);
-      setNewEmail("");
-      alert("Email updated. A confirmation has been sent.");
+      try {
+        await fetch("/api/user/update_email", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: decode.id, // Adjust based on your auth logic
+            newEmail,
+          }),
+        });
+  
+        setEmail(newEmail);
+        setNewEmail("");
+        alert("Email updated. A confirmation has been sent.");
+      } catch (err) {
+        console.error(err);
+        alert("Failed to update email.");
+      }
     }
   };
+  
 
   const handleLogoutAllSessions = () => {
     // Replace with backend API logic in real app
@@ -90,8 +130,8 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   initial={{ opacity: 0 }}
   animate={{ opacity: 1 }}
   exit={{ opacity: 0 }}
-  style={{ minHeight: "100vh", paddingTop: "100px" }}
-  className="layout-shift w-full lg:w-[80%] px-6 bg-gradient-to-br from-purple-50 to-white"
+  style={{ minHeight: "100vh", paddingTop: "70px" }}
+  className="layout-shift w-full lg:w-[80%] px-6 bg-stone-100"
 >
   <h2 style={{marginBlock:"16px"}} className="text-xl font-bold text-purple-700 mb-8">Settings</h2>
 
@@ -125,7 +165,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     />
     <button
       type="submit"
-      className="w-full text-sm py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+      className="w-full text-sm py-2 border-2 text-purple-500 border-purple-300 bg-purple-200 rounded hover:bg-purple-700 transition"
     >
       Update Username
     </button>
@@ -145,7 +185,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     />
     <button
       type="submit"
-      className="w-full text-sm py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+      className="w-full text-sm py-2 border-2 text-purple-500 border-purple-300 bg-purple-200 rounded hover:bg-purple-700 transition"
     >
       Update Email
     </button>
@@ -154,8 +194,8 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   {/* Update Password */}
   <form onSubmit={handlePasswordUpdate} className="mb-10 bg-white p-6 rounded-xl shadow">
-    <h3 style={{marginBlock:"16px"}} className="text-xl font-semibold text-purple-700 ">Change Password</h3>
-    <label style={{marginBlock:"8px"}} className="block  font-medium text-gray-700">Current Password</label>
+    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Change Password</h3>
+    <label style={{marginBlock:"8px"}} className="block text-sm font-medium text-gray-700">Current Password</label>
     <input
       type="password"
       value={password}
@@ -177,7 +217,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
     <button
       type="submit"
-      className="w-full py-2 text-sm bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+      className="w-full py-2 text-sm border-2 text-purple-500 border-purple-300 bg-purple-200  rounded hover:bg-purple-400 text-white transition"
     >
       Update Password
     </button>
@@ -187,7 +227,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 <div className='flex py-5 justify-between gap-5'>
   {/* Session Management */}
   <div style={{marginBlock:"16px"}} className="mb-10 bg-white p-6 rounded-xl shadow">
-    <h3 style={{marginBlock:"16px"}} className="text-xl font-semibold text-purple-700 mb-4">Active Sessions</h3>
+    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Active Sessions</h3>
     {sessions.length === 0 ? (
       <p className="text-gray-500 text-sm">No active sessions.</p>
     ) : (
@@ -201,21 +241,21 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     )}
     <button
       onClick={handleLogoutAllSessions}
-      className="w-full text-sm py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+      className="w-full text-sm py-2 text-red-500 bg-red-200 border-2 border-red-300  rounded hover:bg-red-500 transition"
     >
       Log out of all sessions
     </button>
   </div>
   {/* Remove Account */}
 <div className="mb-16 bg-white p-6 rounded-xl shadow border border-red-100">
-  <h3 style={{marginBlock:"16px"}} className="text-xl font-semibold text-red-600 text-sm mb-4">Danger Zone</h3>
-  <p style={{marginBlock:"16px"}} className="text-gray-600 text-sm mb-4">
+  <h3 style={{marginBlock:"16px"}} className=" font-semibold text-red-500 text-sm mb-4">Danger Zone</h3>
+  <p style={{marginBlock:"16px"}} className="text-gray-600 text-sm ">
     Once you delete your account, there is no going back. Please be certain.
   </p>
   <button
     onClick={handleRemoveAccount}
     
-    className="w-full text-sm py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+    className="w-full text-sm py-2 text-red-500 bg-red-200 border-2 border-red-300 rounded hover:bg-red-700 transition"
   >
     Delete My Account
   </button>

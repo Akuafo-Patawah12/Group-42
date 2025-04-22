@@ -5,9 +5,9 @@ import { Empty } from "antd";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PostLoader from '../../icons/PostLoader';
 import { ImageLoader } from '../../icons/ButtonLoader';
-const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,posts}) => {
-       const[online,setOnline]=onLineProps 
-     const[loader,setLoader,handleImageLoad]=loaders 
+const TrendsPosts = ({loading,loadedImages,viewProduct,loaders,posts}) => {
+        
+     const[handleImageLoad]=loaders 
    const item={rating: 4}
   
   return (
@@ -28,19 +28,29 @@ const TrendsPosts = ({loading,viewProduct,loaders,setLike,likePost,onLineProps,p
   </section>
 
   {/* Image Section */}
-  <section className="flex justify-center items-center bg-stone-100 w-full ">
-    { online ? (
-      <LazyLoadImage
-        src={post.img_vid}
-        alt={post.caption}
-        effect="blur"
-        afterLoad={handleImageLoad}
-        className="w-full h-full object-cover"
-        onError={() => console.log("failed to upload image")}
-      />
-    ) : (
-      <ImageLoader />
-    )}
+  <section className="flex justify-center min-h-[150px] items-center bg-stone-100 w-full ">
+  
+  {loadedImages[post._id] ? (
+            <LazyLoadImage
+              src={post.img_vid}
+              alt={post.caption}
+              effect="blur"
+              afterLoad={() => handleImageLoad(post._id)}
+              className="w-full h-full object-cover"
+              onError={() => console.log(`Failed to load image for post ${post._id}`)}
+            />
+          ) : (
+            <LazyLoadImage
+              src={post.img_vid}
+              alt={post.caption}
+              effect="blur"
+              afterLoad={() => handleImageLoad(post._id)}
+              className="hidden"
+              onError={() => console.log(`Failed to load image for post ${post._id}`)}
+            />
+          )}
+          {!loadedImages[post._id] && <ImageLoader />}
+        
   </section>
 
   {/* Info Section */}

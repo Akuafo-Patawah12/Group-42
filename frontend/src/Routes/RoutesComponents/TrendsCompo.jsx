@@ -281,13 +281,16 @@ const TrendsCompo = () => {
     
   
       //Select image from file explorer
+        const [imagePreview,setImagePreview] = useState(null)
         const [image, setImage] = useState(null);
       let pic=useRef()
       const handleFile = (file) => {
         if (file && file.type.startsWith('image/')) {
           setImage(file);
           const objectUrl = URL.createObjectURL(file);
-          pic.current.src = objectUrl;
+          
+          setImagePreview(objectUrl)
+          pic.current.src = imagePreview;
         }
       };
     
@@ -360,31 +363,14 @@ const TrendsCompo = () => {
     // Handle input change
     
 
-    const[loader,setLoader]= React.useState(true)
-  const handleImageLoad = () => {
-    setLoader(false);
+    const [loadedImages, setLoadedImages] = useState({});
+  const handleImageLoad = (id) => {
+    setLoadedImages((prev) => ({ ...prev, [id]: true }));
   };
   
-  const [online, setOnline] = useState(navigator.onLine);
 
-  useEffect(() => {
-    const onlineFunction = () => {
-      setOnline(true);
-    };
+
     
-    const offlineFunction = () => {
-      setOnline(false);
-    };
-  
-    window.addEventListener("online", onlineFunction);
-    window.addEventListener("offline", offlineFunction);
-  
-    // Clean up event listeners on component unmount
-    return () => {
-      window.removeEventListener("online", onlineFunction);
-      window.removeEventListener("offline", offlineFunction);
-    };
-  }, []);
 
 
   
@@ -469,7 +455,16 @@ const TrendsCompo = () => {
       {/* Search Bar */}
       <div className="flex items-center w-full sm:w-auto flex-grow sm:">
       <AutoComplete
-        options={filteredOptions.map((item) => ({ value: item }))}
+      options={filteredOptions.map((item) => ({
+  value: item,
+  label: (
+    <div className="flex items-center gap-2">
+      <SearchOutlined size={16} className="text-purple-600" />
+      <span>{item}</span>
+    </div>
+  )
+}))}
+
         onSelect={(value) => setSearchTerm(value)}
         onSearch={handleSearch}
         value={searchTerm}
@@ -558,7 +553,7 @@ const TrendsCompo = () => {
        
           {/*list the post one after the order using the map function*/}
         <TrendsPosts posts={[...filteredPosts]}  viewProduct={viewProduct}
-         loading={loadingProgress}  onLineProps={[online,setOnline]} loaders={[loader,setLoader,handleImageLoad]} />
+         loading={loadingProgress}  loadedImages={loadedImages} loaders={[handleImageLoad]} />
       
 
       {/* create a post popup menu*/}
@@ -575,6 +570,7 @@ const TrendsCompo = () => {
         popUp={openDialog}
         setOpenDialog={setOpenDialog}
         price={[price, setPrice]}
+        imagePreview={imagePreview}
          premium={[isPremium, setIsPremium]}
         selectCat={[selectedCategory,setSelectedCategory]}
         setCaption={setCaption}

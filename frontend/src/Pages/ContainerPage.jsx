@@ -1,11 +1,11 @@
 import React, { useState, useEffect,useMemo,useRef } from "react";
-import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col, Tag, Space,message, Button,Select ,Typography,Spin} from "antd";
+import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col,Empty, Tag, Space,message, Button,Select ,Typography,Spin} from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import { Edit, Trash2,Copy } from "lucide-react";
 
 import io from "socket.io-client"
 
-
+const { Search } = Input;
 const { Content } = Layout;
    const { Option } = Select;
 const { Text } = Typography;
@@ -30,6 +30,9 @@ const ContainerPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [modal_open, set_modal_open] = useState(false);
+const [selectedShipmentId, setSelectedShipmentId] = useState(null); 
+
   useEffect(() => {
     if (!search) {
       setFilteredContainers(containers); // Reset if search is empty
@@ -61,22 +64,22 @@ const ContainerPage = () => {
     };
   
     const statusOptions = ["All","Pending", "In Transit", "Delivered"]; 
-    const [filterStatus, setFilterStatus] = useState("All");
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
+    
     const [permission,setPermission] = useState(false)
      const [selectedRoute, setSelectedRoute] = useState(null);
      const [selectedCountry, setSelectedCountry] = useState(null);
     const [shipmentStatus, setShipmentStatus] = useState(null);
     const[cbmRate,setCbmRate] = useState(null)
     const[containerNumber,setContainerNumber] = useState()
+    const [shipmentOrders,setShipmentOrders] = useState([])
     
     const [eta,setEta] = useState()
     const[isEdit,setIsEdit]= useState(false)
     const [loadingDate,setLoadingDate] = useState()
     const [creatingOrder,setCreatingOrder]= useState(false);
-    const [assignedOrder_id,setAssignedOrder_id]= useState([])
-    const [containerid,setContainerId] = useState(null)
+   
     const [orderInfo,setOrderInfo] = useState(
       {
         fullname:"",
@@ -105,6 +108,7 @@ const ContainerPage = () => {
 
       socket.emit("fetchContainers", (response) => {
         if (response.status === "ok") {
+          console.log(response.containers)
           setContainers(response.containers);
         } else {
           setError(response.message);
@@ -194,6 +198,17 @@ const ContainerPage = () => {
       socket.off("disconnect")
     };
   }, [socket]);
+
+  useEffect(() => {
+    socket.on("ordersByShipment", ({ shipmentId, orders }) => {
+      if (shipmentId === selectedShipmentId) {
+        setShipmentOrders(orders);
+        setIsModalOpen(true);
+      }
+    });
+  
+    return () => socket.off("ordersByShipment");
+  }, [selectedShipmentId]);
 
   useEffect(() => {
     socket1.on("connect",()=>{
@@ -445,48 +460,50 @@ const ContainerPage = () => {
     },
     {
       title: "Assigned Shipments",
-     
       key: "assignedOrders",
-      render: (_,orders) =>
-         <div >
-        {orders.assignedOrders.length > 0 ? (
-          
-          <>
-          <Tag style={{float:"left"}}>{orders.assignedOrders.length}</Tag> 
-          
-          </>
-        ) : (
-          <Tag color="gray">No shipments</Tag>
-        )}
-       
-        </div>,
-    },
+      render: (_, orders) => (
+        <div>
+          {orders.assignedOrders.length > 0 ? (
+            <div className="flex gap-px">
+              <Tag style={{ float: "left" }}>{orders.assignedOrders.length}</Tag>
+              <button
+  onClick={() => {
+    const shipmentId = orders._id;
+    setSelectedShipmentId(shipmentId);
+    set_modal_open(true);
+    socket.emit("getOrdersByShipment", shipmentId);
+  }}
+  className=" px-2 text-xs  bg-purple-200 border-1 border-purple-300 hover:bg-purple-700 text-stone-500 font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-200"
+>
+  
+  View 
+</button>
+
+            </div>
+          ) : (
+            <Tag color="gray">No shipments</Tag>
+          )}
+        </div>
+      )
+    }
+    ,
     {
       title: "Actions",
       key: "actions",
       render: (_,container) =>
         <div style={{ display: "flex", gap: "3px" }}>
-  <Button 
-    size="small" 
-    type="primary" 
-    onClick={() => {
-      handleOpen3();
-      setOrderInfo({ ...orderInfo, container_id: container._id });
-    }}
-  >
-    Add Order
-  </Button>
+  
 
   <Button 
     size="small" 
     type="default" 
-    style={{fontSize:"12px"}}
+    style={{fontSize:"12px",border:"none"}}
     onClick={() => {
       handleEditContainer();
       setContainerIds(container._id);
     }}
   >
-    <Edit />
+    <Edit size={18}/>
   </Button>
 
   <Button 
@@ -494,10 +511,65 @@ const ContainerPage = () => {
     type="danger" 
     onClick={()=> deleteContainer(container._id)}
   >
-    <Trash2 style={{ color:"red"}}/>
+    <Trash2 style={{ color:"red"}} size={18}/>
   </Button>
 </div>
 ,
+    },
+  ];
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredOrders = useMemo(() => {
+    return shipmentOrders.filter(order =>
+      [order.tracking_no, order.Status, order.location]
+        .join(" ")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, shipmentOrders]);
+
+  const AssignedShipments= [
+    {
+      title: "Tracking No",
+      dataIndex: "tracking_no",
+      key: "tracking_no",
+      render: text => <strong>{text}</strong>,
+    },
+    {
+      title: "Quantity",
+      dataIndex: "qty",
+      key: "qty",
+    },
+    {
+      title: "CBM",
+      dataIndex: "cbm",
+      key: "cbm",
+    },
+    {
+      title: "Status",
+      dataIndex: "Status",
+      key: "Status",
+      render: status => {
+        const color =
+          status === "Delivered"
+            ? "green"
+            : status === "in-Transit"
+            ? "blue"
+            : "orange";
+        return <Tag color={color}>{status}</Tag>;
+      },
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      ellipsis: true,
     },
   ];
 
@@ -524,8 +596,39 @@ const ContainerPage = () => {
     className="w-full sm:w-72 px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
   />
 </div>
+   
 
+   <Modal
+  title="📦 Orders in this Shipment"
+  open={modal_open}
+  onCancel={() => set_modal_open(false)}
+  footer={null}
+  centered
+  width={900}
+>
+  <Space direction="vertical" style={{ width: "100%" }}>
+        <Search
+          placeholder="Search by tracking number, status, or location"
+          allowClear
+          enterButton={<SearchOutlined />}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
 
+        {filteredOrders.length > 0 ? (
+          <Table
+            columns={AssignedShipments}
+            dataSource={filteredOrders.map(order => ({
+              ...order,
+              key: order._id,
+            }))}
+            pagination={{ pageSize: 5 }}
+            bordered
+          />
+        ) : (
+          <Empty description="No orders match your search." />
+        )}
+      </Space>
+</Modal>
     <Modal title="Add container" open={isEdit} onCancel={() => setIsEdit(false)} footer={null}>
       <Form layout="vertical">
         
@@ -589,12 +692,12 @@ const ContainerPage = () => {
         {selectedRoute && (
           <div style={{ marginBottom: "15px" }}>
             <label style={{ fontWeight: "600", display: "block", marginBottom: "5px" }}>
-              Select Country in Route {selectedRoute}:
+              Select Port in Route {selectedRoute}:
             </label>
             <Select
               style={{ width: "100%",height:"40px" }}
               onChange={(country) => setSelectedCountry(country)}
-              placeholder="Select Country"
+              placeholder="Select Port"
               value={selectedCountry}
             >
               {routes[selectedRoute].map((country) => (

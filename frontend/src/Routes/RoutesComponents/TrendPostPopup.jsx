@@ -36,7 +36,7 @@ const TrendPostPopup = (props) => {
       footer={null}
       centered
       width={600}
-      title={<span className="font-bold text-xl ">Add Product</span>}
+      title={<span className="font-bold text-lg ">Add Product</span>}
       closeIcon={<CloseOutlined />}
     >
       {currentSlide === 0 ? (
@@ -44,6 +44,7 @@ const TrendPostPopup = (props) => {
         <div onDrag={props.handleDragOver} onDrop={props.handleDrop} onClick={() => document.getElementById("fileInput").click()} className="w-full h-48 border-2 border-dashed border-purple-500 flex justify-center items-center rounded-lg mb-4 overflow-hidden">
         <img
           ref={props.picRef}
+          src={props.imagePreview}
           alt="Preview"
           className={`max-w-full ${props.image ?"block":"hidden"} max-h-full object-contain`}
         />
@@ -71,51 +72,101 @@ const TrendPostPopup = (props) => {
       )}
     </div>
       ) : (
-        <div className="space-y-4 px-4 py-4 max-h-[300px] rounded-xl overflow-auto border border-stone-200">
-          <div>
-            <label>Product Category</label>
-            <Select
-              style={{ width: '100%' }}
-              placeholder="Choose a category"
-              value={props.selectCat[0]}
-              onChange={handleCategoryChange}
-            >
-              {categories.map((cat, i) => <Option key={i} value={cat}>{cat}</Option>)}
-            </Select>
-          </div>
+        <div className="space-y-6 p-6 max-h-[350px] rounded-2xl overflow-auto border border-gray-200 shadow-sm bg-white">
+  {/* Category */}
+  <div style={{marginBlock:"8px"}} className="space-y-1">
+    <label className="block text-sm font-semibold text-gray-700">Product Category</label>
+    <Select
+      style={{ width: '100%' }}
+      placeholder="Choose a category"
+      value={props.selectCat[0]}
+      onChange={handleCategoryChange}
+      size="large"
+      className="rounded-lg"
+    >
+      {categories.map((cat, i) => (
+        <Option key={i} value={cat}>{cat}</Option>
+      ))}
+    </Select>
+  </div>
 
-          <div>
-            <label>Price ($)</label>
-            <Input
-              type="number"
-              value={props.price[0]}
-              onChange={(e) => props.price[1](e.target.value)}
-              placeholder="Enter price"
-            />
-          </div>
+  {/* Price */}
+  <div style={{marginBlock:"8px"}} className="space-y-1">
+    <label className="block text-sm font-semibold text-gray-700">Price ($)</label>
+    <Input
+      type="number"
+      value={props.price[0]}
+      onChange={(e) => props.price[1](e.target.value)}
+      placeholder="Enter price"
+      size="large"
+      className="rounded-lg"
+    />
+  </div>
 
-          <div>
-            <label>Select Product Condition</label>
-            <Radio.Group onChange={handleConditionChange} value={productCondition}>
-              <Radio value="Second Hand">Second Hand</Radio>
-              <Radio value="Slightly Used">Slightly Used</Radio>
-              <Radio value="New">New</Radio>
-            </Radio.Group>
-          </div>
+  {/* Product Condition */}
+  <div style={{marginBlock:"8px"}} className="space-y-2">
+  <label style={{ fontWeight: 600, color: "#374151", fontSize: "14px" }}>
+    Product Condition
+  </label>
 
-          <div>
-            <Checkbox 
-              checked={props.premium[0]} 
-              onChange={(e) => props.premium[1](e.target.checked)}
-            >
-              Promote as Premium Ad
-            </Checkbox>
-            <Input placeholder="Add your website URL (Optional)" className="mt-2" />
-          </div>
-        </div>
+  <Radio.Group
+    onChange={handleConditionChange}
+    value={productCondition}
+    style={{ display: "flex" }}
+  >
+    {["Second Hand", "Slightly Used", "New"].map((value) => {
+      const isSelected = productCondition === value;
+      return (
+        <Radio.Button
+          key={value}
+          value={value}
+          style={{
+           
+            padding: "8px 18px",
+            border: isSelected ? "1px solid #9333ea" : "1px solid #e5e7eb",
+            backgroundColor: isSelected ? "#f5f3ff" : "#fff",
+            color: isSelected ? "#9333ea" : "#374151",
+            fontWeight: isSelected ? "500" : "400",
+            
+            cursor: "pointer",
+            transition: "all 0.25s ease",
+            fontSize: "14px",
+            textAlign: "center",
+            minWidth: "120px",
+            lineHeight:"1rem",
+            textTransform: "capitalize",
+          }}
+        >
+          {value}
+        </Radio.Button>
+      );
+    })}
+  </Radio.Group>
+  </div>
+
+  {/* Premium Ad */}
+  <div style={{marginBlock:"8px"}} className="space-y-2">
+  <Checkbox 
+      checked={props.premium[0]} 
+      onChange={(e) => props.premium[1](e.target.checked)}
+      className="text-gray-700 font-medium"
+    >
+      Promote as Premium Ad
+    </Checkbox>
+
+    {props.premium[0] && (
+      <Input 
+        placeholder="Add your website URL (Optional)" 
+        size="large" 
+        className="rounded-lg transition-all duration-300 ease-in-out"
+      />
+    )}
+  </div>
+</div>
+
       )}
 
-      <div className="flex justify-between items-start mt-4 ">
+      <div style={{marginTop:"25px"}} className="flex justify-between items-start mt-4 ">
         <TextArea
           rows={2}
           value={props.cap}
@@ -124,11 +175,11 @@ const TrendPostPopup = (props) => {
           style={{ width: '60%', resize: 'none' }}
         />
 
-        <div className="space-y-2">
+        <div  className="flex gap-2">
           <Button className="mr-1" onClick={() => slide(currentSlide === 0 ? 1 : 0)}>
             {currentSlide === 0 ? 'Add Feature' : 'Back'}
           </Button>
-          <Button type="primary" onClick={props.send} className="bg-purple-500 hover:bg-purple-600">
+          <Button type="primary" style={{background:"var(--purple)"}} onClick={props.send} className="bg-purple-500 hover:bg-purple-600">
             Post
           </Button>
         </div>
