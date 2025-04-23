@@ -5,12 +5,14 @@ const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
  const Message=  require("./NotificationsNamespace")
 const jwt= require('jsonwebtoken')
 const cookie= require('cookie');
+const util= require("util")
 const orderList = require('./OrderListNamespace');
 const Tracking = require('./TrackingNamespace');
 const PostFunction = require('./PostOrMainNamespace');
 const shipping= require("./ShippmentNamespace");
 const userFunc = require('./UsersNamespace');
 const notify = require("./NotificationsNamespace")
+const { resolve } = require("path");
 
 
 function initializeSocket(server) {   
@@ -20,7 +22,9 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
       methods: ['GET','POST'],
       allowedHeaders: ['Content-Type'],
       credentials: true
-    }
+    },
+    autoConnect: true,
+    
   });
   
   
@@ -31,49 +35,57 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
   const messageNamespace= io.of("/message")
   const usersNamespace= io.of("/users")
 
-
-  function middleware(socket,next){
-    const cookieHeader = socket.request.headers.cookie; //getting http only cookies from socket
-    
-    if (!cookieHeader) {  //checking of the cookie exist in the headers
-      
-      return next(new Error('No cookies found'));
-    }
   
-    if (cookieHeader) {
-      const cookies = cookie.parse(cookieHeader); // Parse cookies from the header
-      const token = cookies.refreshToken; // Extract the refresh token
-      if (!token) return next(new Error('Refresh token expired'));
+              
+         
+            
+         
 
-       //decoding the token to extract user information
-      jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => { 
-        if (err) return next(new Error("Token can't be decoded"));
-        socket.user = user; // Attach user to the socket
-        next(); //proceed if there's no error
+  const verifyToken = util.promisify(jwt.verify);
+
+  async function middleware(socket, next) {
+    try {
+      const cookieHeader = socket.request.headers.cookie;
+      console.log("Cookie Header:", cookieHeader);
+  
+      if (!cookieHeader) {
+        return next(new Error("Refresh token expired"));
+      }
+  
+      const cookies = cookie.parse(cookieHeader);
+      const token = cookies.refreshToken;
+  
+      if (!token) {
+        return next(new Error("Refresh token expired"));
+      }
+  
+      const user = await verifyToken(token, process.env.REFRESH_TOKEN_SECRET).catch((err) => {
+        console.error("JWT Verification Error:", err.message);
+        throw new Error("Refresh token expired");
       });
-    } else {
-      next(new Error('Authentication error'));
+  
+      console.log("Verified User:", user);
+      socket.user = user;
+      next();
+    } catch (err) {
+      console.error("Socket Middleware Error:", err.message);
+      return next(new Error("Refresh token expired")); // This triggers connect_error on client
     }
   }
-  io.use((socket, next) => {
-      middleware(socket,next)
-  });
+  
 
-  usersNamespace.use((socket,next) =>{
-    middleware(socket,next)
-  })
 
-  notificationsNamespace.use((socket,next)=>{
-      middleware(socket,next)
-  })
+  io.use(middleware)
 
-  orderListNamespace.use((socket,next)=>{
-    middleware(socket,next)
-})
+  usersNamespace.use(middleware)
 
-trackingNamespace.use((socket,next)=>{
-  middleware(socket,next)
-})
+  notificationsNamespace.use(middleware)
+
+  orderListNamespace.use(middleware)
+    
+  shippingNameSpace.use(middleware)
+
+trackingNamespace.use(middleware)
   
   const users={}  // Object to store online users socket ID
   
@@ -82,7 +94,7 @@ trackingNamespace.use((socket,next)=>{
     users[userId]=socket.id 
   }
   // List of namespace or path in socket.io
-
+  
 
 const onlineUsers = {}; // Store online users with socket IDs
 const lastActiveTimestamps = {}; // Store last active timestamps
@@ -133,6 +145,7 @@ const Users={}
 usersNamespace.on("connection",(socket,callBack)=>{
     console.log("connected to usersNamespace")
     userFunc(socket,callBack)
+    
 })
 
 notificationsNamespace.on('connection', (socket) => {
@@ -141,7 +154,7 @@ notificationsNamespace.on('connection', (socket) => {
   
   console.log('A user connected to the notifications namespace');
   notify(socket)
-
+ 
   socket.on('disconnect', () => {
     
       console.log('User disconnected from the notifications namespace');
@@ -152,26 +165,28 @@ trackingNamespace.on("connection", async (socket) => {
   const userId=socket.user.id  // Extracting users id from socket
   Users[userId]=socket.id 
   console.log(Users)
-
+ 
     Tracking(socket,orderListNamespace,notificationsNamespace,Users)
 });
 
 orderListNamespace.on("connection",(socket)=>{
   const userId=socket.user.id  // Extracting users id from socket
   Users[userId]=socket.id 
+  
     orderList(socket,notificationsNamespace,orderListNamespace,trackingNamespace,Users)
 })
 
 shippingNameSpace.on("connection",(socket)=>{
     shipping(socket,trackingNamespace,orderListNamespace,Users)
     console.log(users)
+    
 })
 
 
 messageNamespace.on("connection",async(socket)=>{
   console.log("connected to message namespace")
    Message(socket)
-
+   
 })
 
 return io;

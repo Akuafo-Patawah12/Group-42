@@ -45,7 +45,6 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
       <Link to="/Services/AirFreight">Air Freight</Link>
       <Link to="/Services/SeaFreight">Sea Freight</Link>
       <Link to="/Services/Procurement">Procurement</Link>
-      <Link to="/Services/Door2door">Door to Door</Link>
       <Link to="/Services/Groupage">Groupage</Link>
       <Link to="/Services/Marketing">Shop with Us</Link>
     </div>

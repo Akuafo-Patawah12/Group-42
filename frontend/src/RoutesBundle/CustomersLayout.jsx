@@ -5,6 +5,7 @@ import CustomerSidebar from '../Components/CustomerSidebar';
 import Notification from "../Components/Notification"
 import { Routes,Route } from 'react-router-dom';
 import UserProfile from '../Pages/UserProfile';
+import CustomerMobileSidebar from '../Components/CustomerMobileSidebar';
 
 
 const Overview= lazy(()=> import("../Pages/Overview"))
@@ -18,10 +19,15 @@ const LazyTrends= lazy(()=> import ("../Routes/Trends"))
 
 const CustomersLayout=()=>{
      const [open, setOpen] = useState(false);
+      const [openMobileSidebar, setOpenMobileSidebar] = useState(false);
+          const toggleDrawer = () => setOpenMobileSidebar(!open);
     return(
         <div style={{backgroundColor: "#f5f5f4"}} className="bg-stone-100 h-full">  
-            <Header open={open} setOpen={setOpen}/>
+            <Header open={open} setOpen={setOpen} toggleDrawer={toggleDrawer}/>
             <CustomerSidebar />
+              
+                  
+                  <CustomerMobileSidebar toggle={[openMobileSidebar, setOpenMobileSidebar]}/>
             <Notification open={open} setOpen={setOpen}/>
             <Routes>
              <Route path='/Tracking' element={<Suspense fallback={<Loading />}>

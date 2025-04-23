@@ -161,6 +161,10 @@ const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
       });
       
 
+      Socket.on("editOrderStatus",async(data)=>{
+        console.log(data)
+      })
+
       Socket.on("disconnect",()=>{
         console.log("disconnect from shipment Namespace")
       })

@@ -16,7 +16,7 @@ const Footer=()=>{
     
     return(
         <footer  className="bg-stone-800">
-            <main style={{marginInline:"auto",paddingBlock:"100px"}} className="grid grid-cols-3 w-[95%]  sm:gap-4">
+            <main style={{marginInline:"auto",paddingBlock:"100px"}} className="grid grid-cols-3 w-[95%] gap-6  ">
                 <section className=" col-span-3  md:col-span-1 lg:col-span-1">
                     <img src="/images/sfgl_logo.jpg" style={{width:"40px",marginBottom:"20px"}} alt="logo" className=" rounded-full "/>
                     <p className="text-md text-gray-50" > Your reliable logistics provider specializing in seamless transportation.</p>

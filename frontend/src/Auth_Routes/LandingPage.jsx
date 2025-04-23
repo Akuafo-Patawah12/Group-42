@@ -407,7 +407,7 @@ const LandingPage = () => {
       More than logistics—gain access to built-in tools, analytics, and marketing exposure to grow your business.
     </p>
     <button  className="bg-white text-indigo-600 font-semibold px-6 py-3 rounded-full mt-6 mx-auto hover:bg-gray-100 transition">
-      Learn More
+      <Link to="/Services/Marketing" className="block w-full h-full">Learn More</Link>
     </button>
   </div>
 

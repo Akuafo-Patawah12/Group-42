@@ -11,7 +11,7 @@ const useLogout = () => {
         const response = await axios.post("http://localhost:4000/logout", { withCredentials: true });
   
         if (response.status === 200) {
-          localStorage.removeItem("accesstoken");
+       
           toast.success("Logged out successfully!");
           navigate("/Login"); // Redirect to login page
         } else {

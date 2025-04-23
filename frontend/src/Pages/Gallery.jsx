@@ -11,13 +11,13 @@ const GalleryPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-6">
+    <div className="min-h-screen bg-gray-100 py-10 px-6">
       <div className="max-w-7xl mx-auto">
-        <h1 style={{marginBlock:"30px"}} className="text-4xl font-bold text-center text-purple-600 mb-8">
+        <h1 style={{marginBlock:"15px"}} className="text-4xl font-bold text-center text-purple-600 mb-8">
           Gallery
         </h1>
-        <p style={{marginBlock:"0 20px"}} className="text-gray-600 text-center mb-12">
-          Explore the visuals of Andy Logistics' operations, showcasing our
+        <p sty le={{marginBlock:"0 20px"}} className="text-gray-600 text-center mb-12">
+          Explore the visuals of SF Ghana Logistics operations, showcasing our
           expertise in transportation, warehousing, and supply chain management.
         </p>
 

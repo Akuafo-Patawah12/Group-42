@@ -125,7 +125,7 @@ const Login = () => {
 
                 <Form
   onFinish={handleSubmit}
-  className="form w-[95%] border-l-2 border-r-2 border-stone-300 h-auto items-center justify-center absolute h-full pt-6 bg-white z-2 lg:w-[40%] top-0 right-[5%]"
+  className="form  border-l-2 border-r-2 border-stone-300 h-full items-center justify-center absolute  pt-6 bg-white z-2 lg:w-[40%] top-0 right-[5%]"
 >
    
   <div className="flex flex-col gap-4 mt-5 items-center" style={{marginTop:"30px"}}>

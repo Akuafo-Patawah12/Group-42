@@ -13,6 +13,7 @@ import io from 'socket.io-client';
 import { jwtDecode } from 'jwt-decode';
 import OrderMessagePopup from './OrderMessagePopup';
 import { toast } from 'react-toastify';
+import SessionExpiredModal from '../Components/SessionExpiredModal';
 
 
 const { Content } = Layout;
@@ -20,8 +21,16 @@ const { Content } = Layout;
 const Orders = () => {
   const accesstoken = localStorage.getItem('accesstoken');
   const decode = jwtDecode(accesstoken);
-  const socket = useMemo(() => io('http://localhost:4000/orderList', { transports: ['websocket'] }), []);
-  const messageSocket = useMemo(() => io('http://localhost:4000/message', { transports: ['websocket'] }), []);
+  const socket = useMemo(() => io('http://localhost:4000/orderList',
+     { 
+      transports: ['websocket'],
+      withCredentials:true ,
+      reconnectionAttempts: 2,
+      reconnectionDelay: 1000,
+      timeout: 5000,
+    
+    }), []);
+  const messageSocket = useMemo(() => io('http://localhost:4000/message', { transports: ['websocket'],withCredentials:true }), []);
   
   const [orders, setOrders] = useState([]);
 
@@ -30,25 +39,38 @@ const Orders = () => {
   const [cbm, setCbm] = useState("");
   const [qty,setQty] = useState("")
   const [order_id,setOrder_id] = useState("")
+  const [visible,setVisible] = useState(false)
   
-  useEffect(() => {
+
+  useEffect(()=>{
+    socket.connect();
     socket.emit('joinRoom', { id: decode.id });
+    socket.emit("verify-token");
     socket.emit('clientOrders');
+  },[])
+
+  useEffect(() => {
+    
     messageSocket.on('connection', () => console.log('connected to the message namespace'));
     messageSocket.on('disconnect', (reason) => console.log(reason));
 
     return () => {
       messageSocket.off('connection');
-      socket.off('connect');
-      socket.off('receivedOrder');
-      socket.off('orderDeleted');
-      socket.off('SendShippment');
-      socket.off('disconnect');
-      socket.off('getAllOrders');
+      
     };
   }, [socket, messageSocket, decode.id]);
 
   useEffect(() => {
+    socket.on("connect",()=>{
+      
+      console.log("socket connected")
+    })
+
+    socket.on("token-expired", () => {
+      console.log("Session expired");
+      setVisible(true);
+    });
+
     socket.on('getAllOrders', (data) => {
       setOrders(data);
     });
@@ -64,6 +86,38 @@ const Orders = () => {
     socket.on('SendShippment', (data) => {
       setOrders((prev) => prev.map((order) => (order._id === data.order_id ? { ...order, Status: data.status } : order)));
     });
+
+    socket.on("connect_error", (err)=>{
+              console.log(err)
+              if (err.message.includes("Refresh token expired")) {
+                
+                  setVisible(true)
+              
+            
+             }else if(err.message.includes("403: Unauthorized")) {
+                setTimeout(()=>{
+                
+              },1000)
+            }  
+              
+              
+           
+            });
+
+            socket.on("disconnect",(reason)=>{
+              console.log(reason)
+            })
+
+            return()=>{
+              socket.off("connect_error")
+              socket.off('connect');
+              socket.off("token-expired")
+      socket.off('receivedOrder');
+      socket.off('orderDeleted');
+      socket.off('SendShippment');
+      socket.off('disconnect');
+      socket.off('getAllOrders');
+            }
   }, [socket]);
 
   function save(){
@@ -350,11 +404,11 @@ const Orders = () => {
       </Form>
     </Modal>
 
-     <Content style={{ padding: "10px 50px",width:"100%" }}>
-             <Row gutter={[16, 16]}>
+     <div style={{ padding: "10px 0",width:"90%",marginInline:"auto" }}>
+             
                {/* Container Page Title */}
-               <Col span={24}>
-                 <Card title="Shipments Overview" style={{border:"1px solid #ddd",width:"100%"}}>
+               
+                 <Card title="Shipments Overview" style={{border:"1px solid #ddd",width:"100%"}} className="w-full">
       <Table
         columns={columns}
         dataSource={orders}
@@ -366,10 +420,10 @@ const Orders = () => {
       />
 
       </Card>
-      </Col>
-      </Row>
-      </Content>
-
+     
+      
+      </div>
+       <SessionExpiredModal visible={visible}/>
       <OrderMessagePopup openCBM={openCBM} setOpenCBM={setOpenCBM} cbm={cbm} setCbm={setCbm} qty={qty} setQty={setQty} onSave={save} />
     </Layout>
   );

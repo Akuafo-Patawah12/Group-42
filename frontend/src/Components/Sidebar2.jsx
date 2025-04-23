@@ -32,10 +32,11 @@ const Sidebar2 = ({ popUp2 }) => {
         className="site-layout-background"
         style={{
           position: 'fixed',
-          top: "80px",
+          top: 0,
           bottom: 0,
           left: 0,
-          zIndex: 30,
+          zIndex: 1000,
+          paddingTop:"40px",
           backgroundColor: '#fff',
           overflow: 'auto',
           width: 300, // Set the width to 80% of the screen

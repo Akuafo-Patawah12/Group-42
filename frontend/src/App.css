@@ -123,13 +123,13 @@ input {
     transform:translate(-50%, -50%);
     left: 50%;
     top:50%;
-    width: 60%;
+    width: 95%;
   }
 }
 
 @media (max-width: 999px) {
   .form{
-    width: 70% !important;
+    width: 70% ;
     
   }
 }
@@ -193,10 +193,17 @@ animation: water 4s ease-in-out infinite;
   .layout-shift{
      margin-left: auto;
   }
+  
+
+  
+}
+@media (min-width:1020px){
   .customer_sidebar{
     display:block;
   }
 }
+
+
 
 
 

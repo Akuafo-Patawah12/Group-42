@@ -14,6 +14,7 @@ import io from "socket.io-client"
 import {BarChartOutlined , CarOutlined, DatabaseOutlined,  ProductOutlined, ShoppingCartOutlined, WarningOutlined } from '@ant-design/icons'
 import TrackingSub from './TrackingSub'
 import LogisticsReport from './LogisticsReport'
+import SessionExpiredModal from '../Components/SessionExpiredModal';
 
 const Overview = () => {
    
@@ -21,14 +22,16 @@ const Overview = () => {
 
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  
+  const [visible,setVisible] = useState(false)
 
   const[orders,setOrders]=useState([]) //the array that stores alll the specific clients orders
   const socket = useMemo(() =>io("http://localhost:4000/Tracking",{
     transports: ['websocket'],
   }),[])
 
-
+  useEffect(()=>{
+    socket.connect();
+  },[])
      
  const[Id,setId]= useState("") //id extracted from access token
  const [creatingOrder,setCreatingOrder]= useState(false);
@@ -111,6 +114,20 @@ const Overview = () => {
         console.log(reasons)
       })
       
+    socket.on("connect_error", (err)=>{
+                  console.log(err)
+                   if (err.message.includes("Refresh token expired")) {
+                                  
+                                    setVisible(true) 
+                              
+                               }
+                else if(err.message.includes("No cookies found")){
+                  setTimeout(()=>{
+                  setVisible(true)
+                },1000)
+                  
+               }
+                });
     
     return()=>{
         socket.off('connect');
@@ -493,7 +510,7 @@ const CloseReport = () => {
       </Modal>
   
 
-
+      <SessionExpiredModal visible={visible}/>
       {selectedOrder && <LogisticsReport order={selectedOrder} loading3={loading3} visible={isVisible} onClose={CloseReport} />} 
       <TrackingSub orders={[...filteredOrders]} setSelectedOrder={setSelectedOrder} handleOpen={handleOpen} filterOrders={filterOrders} selectedFilter={selectedFilter} deleteOrder={deleteOrder} pending={pending} transit={transit}/>
     </motion.div>

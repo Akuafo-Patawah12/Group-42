@@ -177,9 +177,9 @@ const TrendPostPopup = (props) => {
 
         <div  className="flex gap-2">
           <Button className="mr-1" onClick={() => slide(currentSlide === 0 ? 1 : 0)}>
-            {currentSlide === 0 ? 'Add Feature' : 'Back'}
+            {currentSlide === 0 ? 'Next' : 'Previous'}
           </Button>
-          <Button type="primary" style={{background:"var(--purple)"}} onClick={props.send} className="bg-purple-500 hover:bg-purple-600">
+          <Button type="primary" disabled={props.cap==="" || props.imagePreview===null  || props.price[0]===""} style={{background:"var(--purple)"}} onClick={props.send} className="bg-purple-500 hover:bg-purple-600">
             Post
           </Button>
         </div>

@@ -2,7 +2,8 @@ import React, { useState, useEffect,useMemo,useRef } from "react";
 import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col,Empty, Tag, Space,message, Button,Select ,Typography,Spin} from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import { Edit, Trash2,Copy } from "lucide-react";
-
+import {toast} from "react-toastify"
+import SessionExpiredModal from "../Components/SessionExpiredModal";
 import io from "socket.io-client"
 
 const { Search } = Input;
@@ -32,6 +33,7 @@ const ContainerPage = () => {
   const [search, setSearch] = useState("");
   const [modal_open, set_modal_open] = useState(false);
 const [selectedShipmentId, setSelectedShipmentId] = useState(null); 
+const [visible,setVisible] = useState(false)
 
   useEffect(() => {
     if (!search) {
@@ -46,7 +48,7 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
   }, [search, containers]); 
 
   useEffect(() => {
-    
+    socket.connect()
       socket1.emit("joinRoom", "adminRoom");
       socket.emit("get_all_container");
 
@@ -161,24 +163,19 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
 
     socket.on("connect_error", (err)=>{
           console.log(err)
-          if (err.message.includes("404: Refresh token not found")) {
+           if (err.message.includes("Refresh token expired")) {
+                          
+                            setVisible(true)
+                        
+                      
+                       } else if (err.message.includes("401: Invalid refresh token")) {
             setTimeout(()=>{
-            setIsModalOpen(true)
-          },1000)
-        
-         }else if(err.message.includes("403: Unauthorized")) {
-            setTimeout(()=>{
-            setPermission(true)
-          },1000)
-            
-         } else if (err.message.includes("401: Invalid refresh token")) {
-            setTimeout(()=>{
-              setIsModalOpen(true)
+              setVisible(true)
             },1000)
           }
         else if(err.message.includes("No cookies found")){
           setTimeout(()=>{
-          setIsModalOpen(true)
+          setVisible(true)
         },1000)
           
        }
@@ -321,68 +318,27 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
     setIsEdit(false);
   };
 
-  const [isModalVisible3, setIsModalVisible3] = useState(false);
-
-  const handleOpen3 = () => setIsModalVisible3(true);
-  const handleClose3 = () => setIsModalVisible3(false);
-  
-
-  const validateForm = () => {
-    // Check if any orderInfo field is empty
-    for (const key in orderInfo) {
-      if (!orderInfo[key].trim()) {
-        message.warning(`Please fill in the ${key.replace("_", " ")}`);
-        return false;
-      }
-    }
-  
-    // Validate each item in the items array
-    for (let i = 0; i < items.length; i++) {
-      const { trackingNo, cbm, ctn } = items[i];
-  
-      if (!trackingNo.trim()) {
-        message.warning(`Tracking number is required for item ${i + 1}`);
-        return false;
-      }
-  
-      if (!cbm.trim() || isNaN(cbm) || Number(cbm) <= 0) {
-        message.warning(`Valid CBM is required for item ${i + 1}`);
-        return false;
-      }
-  
-      if (!ctn.trim() || isNaN(ctn) || Number(ctn) <= 0) {
-        message.warning(`Valid CTN is required for item ${i + 1}`);
-        return false;
-      }
-    }
-  
-    return true;
-  };
-  
+ 
    
-    const handleSubmit1 = () => {
-      if (!validateForm()) return;
-     
-      setCreatingOrder(true)
-      setTimeout(()=>{
-        socket1.emit("createOrder",{items,...orderInfo},(response) => {
-          if (response.status === "ok") {
-            setCreatingOrder(false)
-            handleClose3()
-            
+    
+    const [containerId,setContainerIds] = useState(null)
+     const [isEditContainer,setIsEditContainer] = useState(false)
 
-          } else {
-            setCreatingOrder(false)
-            message.error(response.message);
-          }})
-      },1000)
-      
-    };
+    const editShipment =()=>{
 
-    function editOrderStatus(){
-        socket1.emit("editOrderStatus",{containerId,selectedRoute,selectedCountry,shipmentStatus},(response)=>{
+      if ( !selectedCountry || !shipmentStatus ) {
+        message("All fields are required");
+        return;
+      }
+      console.log("Sending update:", {
+        containerId,
+        selectedRoute,
+        selectedCountry,
+        shipmentStatus,
+      });
+        socket.emit("editOrderStatus",{containerId,selectedRoute,selectedCountry,shipmentStatus},(response)=>{
           if (response.status === "ok") {
-            message.success(response.message);
+            toast.success(response.message);
             setIsEditContainer(false)
             const data= response.data;
             setContainers(prev =>
@@ -393,13 +349,12 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
               })
             )
           } else {
-            message.error(response.message);
+            toast.error(response.message);
           }})
     }
 
   
-     const [containerId,setContainerIds] = useState(null)
-     const [isEditContainer,setIsEditContainer] = useState(false)
+     
 
      const handleEditContainer = () => {
       setIsEditContainer(true);
@@ -629,51 +584,72 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
         )}
       </Space>
 </Modal>
-    <Modal title="Add container" open={isEdit} onCancel={() => setIsEdit(false)} footer={null}>
-      <Form layout="vertical">
-        
-        {/* Select Route */}
-        <div style={{ marginBottom: "15px" }}>
-        
+    <Modal
+  title="Add container"
+  open={isEdit}
+  onCancel={() => setIsEdit(false)}
+  footer={null}
+  styles={{ maxHeight: "60vh", overflowY: "auto" }} // 🔥 Scrollable body
+>
+  <Form layout="vertical">
+    {/* All form content wrapped in one scrollable area */}
 
-        {/* Container Number Input */}
-        <Form.Item
-          label="Container Number"
-          name="containerNumber"
-          value={containerNumber}
-          onChange={(e)=> setContainerNumber(e.target.value)}
-          rules={[{ required: true, message: "Please enter container number!" }]}
-        >
-          <Input placeholder="Enter Container Number" type="number" />
-        </Form.Item>
+    <Form.Item
+      label="Container Number"
+      name="containerNumber"
+      rules={[{ required: true, message: "Please enter container number!" }]}
+    >
+      <Input
+        placeholder="Enter Container Number"
+        type="number"
+        value={containerNumber}
+        onChange={(e) => setContainerNumber(e.target.value)}
+      />
+    </Form.Item>
 
-        <Form.Item label="Loading Date" name="loadingDate" rules={[{ required: true, message: "Please select a loading date!" }]}>
-        <DatePicker 
-          style={{ width: "100%" }} 
-          value={loadingDate} 
-          onChange={(date) => setLoadingDate(date)}
-          format="YYYY-MM-DD"
-        />
-      </Form.Item>
+    <Form.Item
+      label="Loading Date"
+      name="loadingDate"
+      rules={[{ required: true, message: "Please select a loading date!" }]}
+    >
+      <DatePicker
+        style={{ width: "100%" }}
+        value={loadingDate}
+        onChange={(date) => setLoadingDate(date)}
+        format="YYYY-MM-DD"
+      />
+    </Form.Item>
 
-      {/* ETA Input */}
-      <Form.Item label="ETA (Estimated Time of Arrival)" name="eta" rules={[{ required: true, message: "Please select ETA!" }]}>
-        <DatePicker 
-          style={{ width: "100%" }} 
-          value={eta} 
-          onChange={(date) => setEta(date)}
-          format="YYYY-MM-DD"
-        />
-      </Form.Item>
+    <Form.Item
+      label="ETA (Estimated Time of Arrival)"
+      name="eta"
+      rules={[{ required: true, message: "Please select ETA!" }]}
+    >
+      <DatePicker
+        style={{ width: "100%" }}
+        value={eta}
+        onChange={(date) => setEta(date)}
+        format="YYYY-MM-DD"
+      />
+    </Form.Item>
 
-      <Form.Item label="CBM Rate" name="cbmRate" rules={[{ required: true, message: "Please enter CBM rate!" }]}>
-        <Input type="number" step="0.01" value={cbmRate} onChange={(e)=> setCbmRate(e.target.value)} placeholder="Enter CBM Rate" />
-      </Form.Item>
+    <Form.Item
+      label="CBM Rate"
+      name="cbmRate"
+      rules={[{ required: true, message: "Please enter CBM rate!" }]}
+    >
+      <Input
+        type="number"
+        step="0.01"
+        value={cbmRate}
+        onChange={(e) => setCbmRate(e.target.value)}
+        placeholder="Enter CBM Rate"
+      />
+    </Form.Item>
 
-        <div style={{ marginBottom: "16px" }}>
-      <Text strong>Select Route:</Text>
+    <Form.Item label="Select Route">
       <Select
-        style={{ width: "100%", height: "40px", marginTop: "5px" }}
+        style={{ width: "100%", height: "40px" }}
         placeholder="Select Route"
         value={selectedRoute}
         onChange={handleRouteChange}
@@ -684,36 +660,28 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
           </Option>
         ))}
       </Select>
-    </div>
-        </div>
+    </Form.Item>
 
+    {selectedRoute && (
+      <Form.Item label={`Select Port in Route ${selectedRoute}`}>
+        <Select
+          style={{ width: "100%", height: "40px" }}
+          onChange={(country) => setSelectedCountry(country)}
+          placeholder="Select Port"
+          value={selectedCountry}
+        >
+          {routes[selectedRoute].map((country) => (
+            <Option key={country} value={country}>
+              {country}
+            </Option>
+          ))}
+        </Select>
+      </Form.Item>
+    )}
 
-        {/* Select Country (Only if Route is selected) */}
-        {selectedRoute && (
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontWeight: "600", display: "block", marginBottom: "5px" }}>
-              Select Port in Route {selectedRoute}:
-            </label>
-            <Select
-              style={{ width: "100%",height:"40px" }}
-              onChange={(country) => setSelectedCountry(country)}
-              placeholder="Select Port"
-              value={selectedCountry}
-            >
-              {routes[selectedRoute].map((country) => (
-                <Select.Option key={country} value={country}>
-                  {country}
-                </Select.Option>
-              ))}
-            </Select>
-          </div>
-        )}
-
-        {/* Select Shipment Status (Applies to all selected shipments) */}
-        <div style={{ marginBottom: "15px" }}>
-      <Text strong>Update Status:</Text>
+    <Form.Item label="Update Status">
       <Select
-        style={{ width: "100%", marginTop: "5px" }}
+        style={{ width: "100%" }}
         onChange={(status) => setShipmentStatus(status)}
         placeholder="Select Status"
         value={shipmentStatus}
@@ -724,22 +692,27 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
           </Option>
         ))}
       </Select>
-    </div>
-      </Form>
+    </Form.Item>
+  </Form>
 
-      
+  {/* 🔒 Fixed Footer */}
+  <div style={{ position: "sticky", bottom: 0, background: "#fff", paddingTop: "12px" }}>
+    <Button
+      type="primary"
+      style={{ width: "100%", height: "40px",background:"var(--purple)" }}
+      onClick={handleSave}
+      disabled={!selectedRoute || !selectedCountry || !shipmentStatus}
+    >
+      Save Changes
+    </Button>
+  </div>
+</Modal>
 
-      <Button type="primary" style={{ marginTop: "10px",height:"40px", width: "100%" }} 
-      onClick={ handleSave  }
-      disabled={!selectedRoute || !selectedCountry || !shipmentStatus}>
-        Save Changes
-      </Button>
-    </Modal>
     
 
   {/* Edit Container Modal */}
   <Modal title="Edit container" open={isEditContainer} onCancel={() => setIsEditContainer(false)} footer={null}>
-     <Form>
+     <Form layout="vertical"> 
       <div style={{ marginBottom: "16px" }}>
       <Text strong>Select Route:</Text>
       <Select
@@ -796,9 +769,11 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
       </Select>
     </div>
 
-     <Button type="primary" style={{ marginTop: "10px",height:"40px", width: "100%" }}
+     <Button type="primary" style={{ marginTop: "10px",height:"40px", width: "100%",background:"var(--purple)" }}
       disabled={!selectedRoute || !selectedCountry || !shipmentStatus}
-      onClick={editOrderStatus}>Save change</Button>
+      htmlType="submit"
+      onClick={editShipment}
+      >Save change</Button>
       </Form>
 
       
@@ -806,7 +781,7 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
       
     </Modal>
 
-      <Content style={{ padding: "10px 50px" }}>
+      <Content style={{ padding: "10px 0",width:"90%",marginInline:"auto" }}>
         <Row gutter={[16, 16]}>
           {/* Container Page Title */}
           <Col span={24}>
@@ -828,6 +803,8 @@ const [selectedShipmentId, setSelectedShipmentId] = useState(null);
           </Col>
         </Row>
       </Content>
+
+      <SessionExpiredModal visible={visible}/>
     </Layout>
   );
 };

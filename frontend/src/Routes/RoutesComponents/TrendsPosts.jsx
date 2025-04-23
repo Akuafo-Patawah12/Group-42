@@ -35,7 +35,7 @@ const TrendsPosts = ({loading,loadedImages,viewProduct,loaders,posts}) => {
               src={post.img_vid}
               alt={post.caption}
               effect="blur"
-              afterLoad={() => handleImageLoad(post._id)}
+              onLoad={() => handleImageLoad(post._id)}
               className="w-full h-full object-cover"
               onError={() => console.log(`Failed to load image for post ${post._id}`)}
             />
@@ -44,7 +44,7 @@ const TrendsPosts = ({loading,loadedImages,viewProduct,loaders,posts}) => {
               src={post.img_vid}
               alt={post.caption}
               effect="blur"
-              afterLoad={() => handleImageLoad(post._id)}
+              onLoad={() => handleImageLoad(post._id)}
               className="hidden"
               onError={() => console.log(`Failed to load image for post ${post._id}`)}
             />
@@ -101,7 +101,7 @@ const TrendsPosts = ({loading,loadedImages,viewProduct,loaders,posts}) => {
             </svg>
           ))}
         </div>
-        <span className="text-sm font-semibold text-gray-800 mt-1">${post.price}</span>
+        <span className="text-sm font-semibold text-gray-800 mt-1">₵{post.price}</span>
       </div>
     </div>
   </div>

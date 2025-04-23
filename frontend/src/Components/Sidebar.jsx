@@ -25,6 +25,18 @@ const Sidebar = () => {
 
   axios.defaults.withCredentials = true;
 
+
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth > 768);
+  
+    React.useEffect(() => {
+      const handleResize = () => {
+        setIsMobile(window.innerWidth > 768);
+      };
+  
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+  
   
   const menuItems = [
     { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={20}/>, path: "/L/Dashboard" },
@@ -35,6 +47,8 @@ const Sidebar = () => {
   ];
 
   return (
+    <>
+    {isMobile &&
     <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} style={{position:"fixed",background:"#eee"}} className="customer_sidebar z-3 left-2 top-18 h-screen   bg-stone-100">
           
     
@@ -67,7 +81,8 @@ const Sidebar = () => {
           </Menu>
     
           
-        </Sider>
+        </Sider>}
+        </>
   );
 };
 

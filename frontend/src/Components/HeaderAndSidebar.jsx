@@ -3,14 +3,14 @@ import React from "react"
 import { NavLink,Link } from "react-router-dom"
 import { jwtDecode } from 'jwt-decode';
 import {  BellOutlined } from "@ant-design/icons";
-import {ShoppingCart,Grid} from "lucide-react"
+import {ShoppingCart,Menu} from "lucide-react"
 import io from "socket.io-client"
 
 
 
 import { Button, Space } from "antd";
 
-export default function Header({open,setOpen}) {
+export default function Header({open,setOpen,toggleDrawer}) {
   const socket = io("http://localhost:4000/notify",{
     transports:["websocket"],
     withWredentials:true
@@ -19,9 +19,10 @@ export default function Header({open,setOpen}) {
   const [unreadCount,setUnreadCount] = React.useState([])
     const accesstoken = localStorage.getItem('accesstoken');
     const decode = jwtDecode(accesstoken);
-
+    
     React.useEffect(()=>{
-      socket.emit('getUnreadNotifications', decode.id);
+      
+      socket.emit('getUnreadNotifications', decode?.id);
     },[])
 
   React.useEffect(()=>{
@@ -57,6 +58,7 @@ export default function Header({open,setOpen}) {
         <NavLink to={"/Customer/Trends"}>
           <Button
             icon={<ShoppingCart size={15}/>}
+            title="Marketplace"
             className="rounded-full size-8 flex justify-center items-center bg-gray-200  font-medium"
           />
            
@@ -67,6 +69,7 @@ export default function Header({open,setOpen}) {
           <Button
             icon={<BellOutlined />}
             onClick={()=>setOpen(!open)}
+            title="Notification"
             className="rounded-full  size-8 flex justify-center items-center  bg-gray-200 font-medium"
           />
           {unreadCount.length > 0 && (
@@ -76,10 +79,11 @@ export default function Header({open,setOpen}) {
       )}
           
         </div>
-        <div className="rounded-full bg-gray-200  flex items-center justify-center  text-xs font-bold text-stone-600 py-1 pl-3 pr-1 gap-1">{user}<span className="size-7 flex items-center justify-center border-[3px] border-purple-400 rounded-full">{user[0]}</span></div>
+        <div className="rounded-full bg-gray-200  flex items-center justify-center  text-xs font-bold text-stone-600 py-1 pl-1 pr-1 gap-1 md:pl-3"><span title={user} className="hidden md:block">{user}</span><span title={user} className="size-7 flex items-center justify-center border-[3px] border-purple-400 rounded-full">{user[0]}</span></div>
+        <button title="Menu" className="border-0 bg-white lg:hidden"><Menu size={24} xlinkTitle="Menu"  onClick={()=> toggleDrawer()}/></button>
       </Space>
       
-
+      
     </nav>
     </header>
   )

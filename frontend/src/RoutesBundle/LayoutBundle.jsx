@@ -11,7 +11,7 @@ import Notification from "../Components/Notification"
 import Sidebar from '../Components/Sidebar';
 const Clients= lazy(()=> import('./../Pages/Clients'));
 const ViewIndividualOrder= lazy(()=>import( '../Pages/ViewIndividualOrder'))
-
+import AdminMobileSidebar from "../Components/AdminMobileSidebar"
 
 const Settings= lazy(()=>import('../Pages/Settings'));
 const Dashboard= lazy(()=> import('./../Pages/Dashboard'));
@@ -27,11 +27,15 @@ const Notify = lazy(()=> import("../Routes/Notification"))
 const LayoutBundle = () => {
   const location= useLocation()
   const [open, setOpen] = useState(false);
+
+    const [openMobileSidebar, setOpenMobileSidebar] = useState(false);
+    const toggleDrawer = () => setOpenMobileSidebar(!open);
   
   return (
-    <div style={{backgroundColor: "#f5f5f4"}}>
-      <Header open={open} setOpen={setOpen}/>
+    <div style={{backgroundColor: "#f5f5f4"}} >
+      <Header open={open} setOpen={setOpen} toggleDrawer={toggleDrawer}/>
       <Sidebar />
+      <AdminMobileSidebar toggle={[openMobileSidebar, setOpenMobileSidebar]}/>
       <Notification open={open} setOpen={setOpen}/>
       <AnimatePresence>
       <Routes location={location} key={location.pathname}>

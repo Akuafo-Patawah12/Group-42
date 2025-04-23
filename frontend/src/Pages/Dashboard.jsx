@@ -4,18 +4,21 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recha
 import { MessageOutlined, DeleteOutlined, SyncOutlined } from '@ant-design/icons';
 import io from "socket.io-client";
 import moment from "moment";
+import SessionExpiredModal from "../Components/SessionExpiredModal";
 
 const { Content } = Layout;
 
 const Dashboard = () => {
   const [shipments, setShipments] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(moment());
+  const [visible,setVisible] = useState(false)
 
   // Socket connection
   const socket = useMemo(() => io("http://localhost:4000/Shipping", { transports: ["websocket"] }), []);
 
   // Emit fetch on mount
   useEffect(() => {
+    socket.connect()
     socket.emit("get_Shipment");
   }, [socket]);
 
@@ -25,6 +28,30 @@ const Dashboard = () => {
       console.log("Fetched shipment data:", data);
       setShipments(data);
     });
+    socket.on("connect_error", (err)=>{
+              console.log(err)
+               if (err.message.includes("Refresh token expired")) {
+                              
+                                setVisible(true)
+                            
+                          
+                           }else if(err.message.includes("403: Unauthorized")) {
+                setTimeout(()=>{
+                
+              },1000)
+                
+             } else if (err.message.includes("401: Invalid refresh token")) {
+                setTimeout(()=>{
+                  setVisible(true)
+                },1000)
+              }
+            else if(err.message.includes("No cookies found")){
+              setTimeout(()=>{
+              setVisible(true)
+            },1000)
+              
+           }
+            });
 
     return () => socket.off("fetched_Shipments");
   }, [socket]);
@@ -138,6 +165,7 @@ const Dashboard = () => {
           </Col>
         </Row>
       </Content>
+      <SessionExpiredModal visible={visible} />
     </Layout>
   );
 };
