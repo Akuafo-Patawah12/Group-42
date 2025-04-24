@@ -544,7 +544,7 @@ const LandingPage = () => {
 
         
 
-        <div className="flex gap-5 flex-col p-7 lg:flex-row">
+        <div className="flex gap-5 flex-col p-7 md:flex-row">
           <section className="w-full md:w-1/2 p-8 bg-white rounded-lg shadow-md">
   <h1 className="text-4xl font-bold text-gray-900 mb-4">
     34k+ <br /> Satisfied Customers
@@ -603,7 +603,7 @@ const LandingPage = () => {
     </div>
 </section>
 
-          <section className=" lg:w-1/2">
+          <section className=" md:w-1/2">
          
           
           <div className="flex flex-col gap-4 ">

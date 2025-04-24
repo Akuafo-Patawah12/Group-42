@@ -32,6 +32,7 @@ const orderSchema= new Schema({
     })
 
 const shipmentSchema= new Schema({
+  userId:{ type: mongoose.Types.ObjectId, ref: "User" },
   containerNumber: { type: Number, required: true, unique: true },
   loadingDate: { type: Date },  // Date when the shipment is loaded
   eta: { type: Date, required: true },

@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons'
-import React from 'react'
+import React,{useState} from 'react'
 
 import { Button,  Table, Tag } from "antd";
 
@@ -84,44 +84,45 @@ const TrackingSub = (props) => {
       ),
     },
   ];
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (selectedKeys) => {
+      setSelectedRowKeys(selectedKeys);
+    },
+  };
   
   return (
     <>
       
-      <section style={{scrollbarWidth:"none",marginInline:"auto",marginTop:"16px"}} className='flex gap-4 w-[95%]  items-center overflow-x-auto'>
-  <p className="text-sm font-medium">Filter activities</p>
+      <section
+  style={{ scrollbarWidth: "none", marginInline: "auto", marginTop: "16px" }}
+  className="flex gap-3 w-[95%] items-center overflow-x-auto py-2 px-1 backdrop-blur-sm rounded-xl bg-white/80 shadow-sm"
+>
+  <p className="text-sm font-semibold text-gray-700 whitespace-nowrap">Filter activities</p>
 
-  <button 
-    className={`bg-stone-300 border-2 border-stone-400 rounded-2xl py-1 text-sm px-2 ${props.selectedFilter === "All" ? "bg-stone-500 text-white" : ""}`}  
-    onClick={() => props.filterOrders("All")}
-  >All</button>
-
-  <button 
-    className={`bg-stone-300 border-2 border-stone-400 rounded-2xl py-1 text-sm px-2 ${props.selectedFilter === "Delivered" ? "bg-stone-500 text-white" : ""}`}  
-    onClick={() => props.filterOrders("Delivered")}
-  >Delivered</button>
-
-  <button 
-    className={`bg-stone-300 border-2 border-stone-400 rounded-2xl py-1 text-sm px-2 ${props.selectedFilter === "in-Transit" ? "bg-stone-500 text-white" : ""}`}  
-    onClick={() => props.filterOrders("in-Transit")}
-  >In Transit</button>
-
-  <button 
-    className={`bg-stone-300 border-2 border-stone-400 rounded-2xl py-1 text-sm px-2 ${props.selectedFilter === "Pending" ? "bg-stone-500 text-white" : ""}`}  
-    onClick={() => props.filterOrders("Pending")}
-  >Pending</button>
-
-  <button 
-    className={`bg-stone-300 border-2 border-stone-400 rounded-2xl py-1 text-sm px-2 ${props.selectedFilter === "Cancelled" ? "bg-stone-500 text-white" : ""}`}  
-    onClick={() => props.filterOrders("Cancelled")}
-  >Cancelled</button>
-
+  {["All", "Delivered", "in-Transit", "Pending", "Cancelled"].map((status) => (
+    <button
+      key={status}
+      onClick={() => props.filterOrders(status)}
+      className={`transition-all duration-200 border rounded-full px-4 py-1 text-sm font-medium whitespace-nowrap 
+        ${
+          props.selectedFilter === status
+            ? "bg-purple-600 text-white border-purple-700 shadow-md"
+            : "bg-white text-gray-700 border-gray-300 hover:bg-purple-100"
+        }`}
+    >
+      {status === "in-Transit" ? "In Transit" : status}
+    </button>
+  ))}
 </section>
+
 
         <div style={{marginInline:"auto",marginTop:"12px"}} className="bg-white w-[95%]  shadow-md rounded-lg p-6 ">
           <h3 className="text-lg font-bold text-gray-800 mb-4">Your Recent Orders</h3>
         
-      <Table dataSource={props.orders} columns={columns} pagination={{ pageSize: 5 }} rowKey={(record, index) => index}  scroll={{ x: 'max-content' }}/>
+      <Table dataSource={props.orders} rowSelection={rowSelection} columns={columns} pagination={{ pageSize: 5 }} rowKey={(record, index) => index}  scroll={{ x: 1200 }}/>
         </div>
 
       </>

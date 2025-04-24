@@ -7,49 +7,98 @@ const LogisticsReport = ({ order, onClose,visible,loading3 }) => {
 
   return (
     
-      <Modal 
-      open={visible} 
-      onCancel={onClose} 
-      footer={null} 
-      width={500} 
-      centered
+    <Modal
+    open={visible}
+    onCancel={onClose}
+    footer={null}
+    width={520}
+    centered
+    bodyStyle={{
+      borderRadius: "12px",
+      padding: "24px",
+      background: "#f9f5ff",
+      boxShadow: "0 8px 24px rgba(159, 122, 234, 0.1)",
+    }}
+  >
+    <Title
+      level={3}
+      style={{
+        textAlign: "center",
+        color: "#6b46c1",
+        fontWeight: 700,
+        marginBottom: "24px",
+      }}
     >
-      <Title level={3} style={{ textAlign: "center", marginBottom: "20px" }}>
-        Shipment Details
-      </Title>
+      Shipment Details
+    </Title>
 
-      {loading3 ? (
-        <div style={{ textAlign: "center" }}>
-          <Spin size="large" />
-          <p>Loading shipment details...</p>
-        </div>
-      ) : (
-        <>
-          <Descriptions bordered column={1} size="small">
-            <Descriptions.Item label="Tracking No:"> {order.tracking_no || "N/A"}</Descriptions.Item>
-            <Descriptions.Item label="Status:">{order.Status || "Pending"}</Descriptions.Item>
-            <Descriptions.Item label="CBM">{order.cbm || "N/A"}</Descriptions.Item>
-            <Descriptions.Item label="Port">{order?.shipmentId?.port === undefined ? 'N/A' : order.shipmentId.port}</Descriptions.Item>
-            <Descriptions.Item label="Route:">{order?.shipmentId?.route === undefined ? 'N/A' : order.shipmentId.route }</Descriptions.Item>
-            <Descriptions.Item label="Quantity:">{order.qty || "Unknown"}</Descriptions.Item>
-            
-            
-            <Descriptions.Item label="Total Amount:">
+    {loading3 ? (
+      <div style={{ textAlign: "center", padding: "20px 0" }}>
+        <Spin size="large" />
+        <p style={{ marginTop: "10px", color: "#6b46c1" }}>
+          Loading shipment details...
+        </p>
+      </div>
+    ) : (
+      <>
+        <Descriptions
+          bordered
+          column={1}
+          size="small"
+          contentStyle={{
+            backgroundColor: "#f3e8ff", // light purple cell
+          }}
+          labelStyle={{
+            fontWeight: 600,
+            backgroundColor: "#ede9fe", // even lighter purple
+            color: "#6b46c1",
+          }}
+        >
+          <Descriptions.Item label="Tracking No:">
+            {order.tracking_no || "N/A"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Status:">
+            {order.Status || "Pending"}
+          </Descriptions.Item>
+          <Descriptions.Item label="CBM">
+            {order.cbm || "N/A"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Port">
+            {order?.shipmentId?.port || "N/A"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Route:">
+            {order?.shipmentId?.route || "N/A"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Quantity:">
+            {order.qty || "Unknown"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Total Amount:">
             {order.totalAmount ? `$${order.totalAmount}` : "N/A"}
-            </Descriptions.Item>
+          </Descriptions.Item>
+          <Descriptions.Item label="Updated At:">
+            {new Date(order.updatedAt).toLocaleString()}
+          </Descriptions.Item>
+        </Descriptions>
 
-            <Descriptions.Item label="Updated At:">
-              {new Date(order.updatedAt).toLocaleString()}
-            </Descriptions.Item>
-          </Descriptions>
-
-          
-          <div style={{ textAlign: "right", marginTop: "20px" }}>
-            <Button type="primary" onClick={onClose}>Close</Button>
-          </div>
-        </>
-      )}
-    </Modal>
+        <div style={{ textAlign: "right", marginTop: "24px" }}>
+          <Button
+            onClick={onClose}
+            size="large"
+            style={{
+              borderRadius: "8px",
+              background: "linear-gradient(to right, #9f7aea, #d6bcfa)",
+              border: "none",
+              color: "white",
+              fontWeight: 600,
+              boxShadow: "0 4px 14px rgba(159, 122, 234, 0.4)",
+            }}
+          >
+            Close
+          </Button>
+        </div>
+      </>
+    )}
+  </Modal>
     
   );
 };

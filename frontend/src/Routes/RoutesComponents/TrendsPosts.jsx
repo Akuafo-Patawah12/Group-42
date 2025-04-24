@@ -77,7 +77,7 @@ const TrendsPosts = ({loading,loadedImages,viewProduct,loaders,posts}) => {
         className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm px-3 py-1.5 rounded-lg flex items-center gap-2"
       >
         <ShoppingCartOutlined />
-        <span>Add to cart</span>
+        <span>View Product</span>
       </button>
 
       {/* Rating & Price */}

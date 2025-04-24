@@ -2,6 +2,7 @@ import React,{useEffect,useState,useMemo} from "react"
 import {useSearchParams,useNavigate} from "react-router-dom"
 import { Modal, Input, Button } from "antd";
 import io from "socket.io-client"
+import { Link } from "lucide-react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { EyeFilled, FacebookOutlined, LeftOutlined, WechatOutlined, WhatsAppOutlined } from "@ant-design/icons";
@@ -141,9 +142,7 @@ console.log(category)
               <h3 className="text-sm font-medium mb-2">Social Media Handles</h3>
               <div className="flex items-center justify-between">
                 <div className="flex gap-3 text-2xl text-purple-600">
-                  <FacebookOutlined />
-                  <WhatsAppOutlined />
-                  <WechatOutlined />
+                <a href={post?.website_url}  target="_blank" rel="noopener noreferrer"><Link className="w-5 h-5 text-purple-600" /></a>
                 </div>
                 <button onClick={showEmailSender} className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm">
                   Send Mail
@@ -190,9 +189,16 @@ console.log(category)
                   />
                 </div>
                 <div className="mt-3 space-y-2">
-                  <span className="text-xs font-medium bg-stone-200 px-2 py-1 inline-block rounded">#{product.category}</span>
+                <div className="flex gap-2 flex-wrap">
+                  <span className="text-xs font-medium bg-stone-200 px-2 py-1 inline-block rounded">
+                    #{product.category}
+                  </span>
+                  <span className="text-xs font-medium bg-purple-100 text-purple-700 px-2 py-1 inline-block rounded">
+                    {product?.product_condition || "Condition Unknown"}
+                  </span>
+                </div>
                   <p className="text-sm text-stone-600">{product.caption}</p>
-                  <div className="text-right font-bold text-purple-700">${product.price}</div>
+                  <div className="text-right font-bold text-purple-700">₵{product.price}</div>
                 </div>
               </div>
             ))}

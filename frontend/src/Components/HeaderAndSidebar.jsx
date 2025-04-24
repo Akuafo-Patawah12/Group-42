@@ -68,7 +68,10 @@ export default function Header({open,setOpen,toggleDrawer}) {
         <div to={"/Notification"} className={"relative"}>
           <Button
             icon={<BellOutlined />}
-            onClick={()=>setOpen(!open)}
+            onClick={()=>{
+              setOpen(!open)
+              setUnreadCount([])
+              }}
             title="Notification"
             className="rounded-full  size-8 flex justify-center items-center  bg-gray-200 font-medium"
           />

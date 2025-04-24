@@ -46,7 +46,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
   async function middleware(socket, next) {
     try {
       const cookieHeader = socket.request.headers.cookie;
-      console.log("Cookie Header:", cookieHeader);
+  
   
       if (!cookieHeader) {
         return next(new Error("Refresh token expired"));
@@ -64,7 +64,7 @@ const io = socketIo(server, {   //Creating connect between server and User Inter
         throw new Error("Refresh token expired");
       });
   
-      console.log("Verified User:", user);
+      
       socket.user = user;
       next();
     } catch (err) {
@@ -177,9 +177,10 @@ orderListNamespace.on("connection",(socket)=>{
 })
 
 shippingNameSpace.on("connection",(socket)=>{
-    shipping(socket,trackingNamespace,orderListNamespace,Users)
-    console.log(users)
-    
+    const userId=socket.user.id  // Extracting users id from socket
+    Users[userId]=socket.id 
+    shipping(socket,notificationsNamespace,trackingNamespace,orderListNamespace,Users)
+      
 })
 
 

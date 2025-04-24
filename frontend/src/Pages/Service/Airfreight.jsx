@@ -93,23 +93,23 @@ const AirFreight = () => {
        
       {/* Hero Section */}
       <section className="hero relative  text-white ">
-      <div className="bg-purple-500 shadow-lg w-[80%] absolute z-50 text-gray-800 bottom-[-50px] left-1/2 -translate-x-1/2 rounded-xl gap-[3px] flex justify-between items-center ">
+      <div className="bg-purple-500 shadow-lg w-[90%] absolute z-50 text-gray-800 bottom-[-50px] left-1/2 -translate-x-1/2 rounded-xl gap-[3px] flex justify-between items-center md:w-[80%] ">
   <div className="w-full p-6 border-t-3 border-purple-500 bg-white flex flex-col items-center rounded-l-xl">
     <MapPin/>
     <span className="text-sm font-medium text-yellow-400">Origin</span>
-    <span className="text-lg text-center font-semibold">Guangzhou,<br/>China</span>
+    <span className="text-sm text-center font-medium  lg:text-lg font-semibold">Guangzhou,<br/>China</span>
   </div>
   
   <div className="w-full p-6 border-b-3  border-purple-500 bg-white flex flex-col items-center">
     <CircleDot/>
     <span className="text-sm font-medium text-yellow-400">Destination</span>
-    <span className="text-lg text-center font-semibold">Kotoka Port,<br/>Ghana</span>
+    <span className="text-sm text-center font-medium  lg:text-lg font-semibold">Kotoka Port,<br/>Ghana</span>
   </div>
   
   <div className="w-full p-6 border-t-3 border-purple-500 bg-white flex flex-col items-center rounded-r-xl">
     <MapPin/>
     <span className="text-sm font-medium text-yellow-400">Alternative</span>
-    <span className="text-lg text-center font-semibold">Yiwu,<br/>China</span>
+    <span className="text-sm text-center font-medium  lg:text-lg font-semibold">Yiwu,<br/>China</span>
   </div>
 </div>
 

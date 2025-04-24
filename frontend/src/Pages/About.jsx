@@ -83,27 +83,27 @@ const About = () => {
 <div style={{backgroundColor:"var(--purple)"}} className="reviews flex flex-col mb-6 py-[100px] bg-purple-300 md:flex-row justify-between items-start gap-10 bg-white shadow-lg rounded-2xl p-8 mt-10">
   {/* Why Choose Us */}
   <div className="flex-1 text-center md:text-left">
-    <CheckCircle className="mx-auto md:mx-0 text-purple-600 mb-4" size={36} />
-    <h3 className="text-2xl font-semibold mb-2">Why Choose Us</h3>
-    <p className="text-gray-100">
+    <CheckCircle style={{marginInline:"auto"}} className="mx-auto md:mx-0 text-purple-300 mb-4" size={36} />
+    <h3 className="text-2xl font-semibold mb-2 text-center">Why Choose Us</h3>
+    <p className="text-gray-200">
       We combine cutting-edge logistics with integrated marketing solutions to help businesses move fast and grow faster.
     </p>
   </div>
 
   {/* Mission */}
   <div className="flex-1 text-center md:text-left">
-    <Target className="mx-auto md:mx-0 text-purple-600 mb-4" size={36} />
-    <h3 className="text-2xl font-semibold mb-2">Our Mission</h3>
-    <p className="text-gray-100">
+    <Target style={{marginInline:"auto"}} className="mx-auto md:mx-0 text-purple-300 mb-4" size={36} />
+    <h3 className="text-2xl font-semibold mb-2 text-center">Our Mission</h3>
+    <p className="text-gray-200">
       To empower global trade through seamless delivery systems and smart branding tools, all in one unified platform.
     </p>
   </div>
 
   {/* Vision */}
   <div className="flex-1 text-center md:text-left">
-    <Eye className="mx-auto md:mx-0 text-purple-600 mb-4" size={36} />
-    <h3 className="text-2xl font-semibold mb-2">Our Vision</h3>
-    <p className="text-gray-100">
+    <Eye style={{marginInline:"auto"}} className="mx-auto md:mx-0 text-purple-300 mb-4" size={36} />
+    <h3 className="text-2xl font-semibold mb-2 text-center">Our Vision</h3>
+    <p className="text-gray-200">
       To become the leading digital logistics and marketing hub, accelerating the growth of businesses across borders.
     </p>
   </div>

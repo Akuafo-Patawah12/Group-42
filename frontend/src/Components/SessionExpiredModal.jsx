@@ -30,6 +30,13 @@ const SessionExpiredModal = ({ visible }) => {
             backgroundColor: "var(--purple)", // or any color you want
             color: "#fff",
             border: "none",
+            width:"100%",
+            paddingBlock:"5px",
+            fontWeight:"bold",
+            marginInline:"auto",
+            marginTop:"20px",
+            outlineOffset:"3px",
+            outline:"2px solid var(--purple)"
             }
         }}
       title={

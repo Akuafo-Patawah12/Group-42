@@ -67,6 +67,25 @@ const Overview = () => {
       setOrders(data)
       console.log("order data",data)
    })
+   
+   socket.on("update_shipment",(data)=>{
+    console.log(data)
+      setOrders(prev=>
+         prev.map((order)=> 
+           order._id===data._id ? 
+              {
+                ...order,
+                port:data.shipmentId.port,
+                route:data.shipmentId.route,
+                status:data.shipmentId.status}
+                 :
+                order
+              )
+      )
+   })
+
+  
+
    socket.on("Deleted",(data)=>{
         console.log(data)
         const rowElement = document.getElementById(`row-${data}`);
@@ -358,50 +377,39 @@ const CloseReport = () => {
   </div>
 )}
 
-      <div
-  style={{
-    width: '95%',
-    margin: '70px auto 0',
-    padding: '0.8rem',
-    display: 'grid',
-    background:"white",
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '1rem',
-    alignItems: 'center',
-    borderRadius: '1rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  }}
->
-  {/* Title */}
-  <div>
-    <span className="font-bold text-md sm:text-xl">Shipments Overview</span>
-  </div>
+<div  style={{margin: '70px auto 0'}} className="w-[95%] mt-[70px] p-4 grid  grid-cols-3 md:grid-cols-4 gap-4 items-center bg-white rounded-xl shadow-md mx-auto">
 
-  {/* Active Orders */}
-  <div>
-    <Badge count={active} size="small" offset={[5, -5]}>
-      <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
-        <CarOutlined style={style} /> Active Orders
-      </span>
-    </Badge>
-  </div>
-
-  {/* Total Shipments */}
-  <div>
-    <Badge count={orders.length} size="small" offset={[5, -5]}>
-      <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
-        <ShoppingCartOutlined style={style} /> Total Shipments
-      </span>
-    </Badge>
-  </div>
-
-  {/* Delivered Items */}
-  <div>
-    <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
-      <ProductOutlined style={style} /> Delivered Items
-    </span>
-  </div>
+{/* Title spans full width on md, 2 cols on sm */}
+<div className="col-span-3 md:col-span-1">
+  <span className="font-bold text-md text-center sm:text-xl">Shipments Overview</span>
 </div>
+
+{/* Active Orders */}
+<div>
+  <Badge count={active} size="small" offset={[5, -5]}>
+    <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+      <CarOutlined style={style} /> Active Orders
+    </span>
+  </Badge>
+</div>
+
+{/* Total Shipments */}
+<div>
+  <Badge count={orders.length} size="small" offset={[5, -5]}>
+    <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+      <ShoppingCartOutlined style={style} /> Total Shipments
+    </span>
+  </Badge>
+</div>
+
+{/* Delivered Items */}
+<div>
+  <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+    <ProductOutlined style={style} /> Delivered Items
+  </span>
+</div>
+</div>
+
 
       <div style={{marginInline:"auto",marginTop:"8px"}} className='flex  justify-between mt-2 bg-slate-200 w-[95%] mx-auto items-center py-4 rounded-2xl gap-2 '>
         <div className="flex flex-col px-[2%] w-full gap-3 md:flex-row">

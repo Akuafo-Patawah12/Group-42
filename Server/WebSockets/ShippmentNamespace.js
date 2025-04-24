@@ -1,6 +1,7 @@
+const notificationModel = require("../DatabaseSchemas/SupplyChain_Model/Notification")
 const {Shipment,Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
 
-const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
+const shipping= async(Socket,notificationsNamespace,trackingNamespace,orderListNamespace,Users)=>{
    
       Socket.on("StartShippment",async(data)=>{
         try{
@@ -161,8 +162,56 @@ const shipping= async(Socket,trackingNamespace,orderListNamespace,Users)=>{
       });
       
 
-      Socket.on("editOrderStatus",async(data)=>{
+      Socket.on("editOrderStatus",async(data,callback)=>{
         console.log(data)
+        try{
+           const updated_shipment = await Shipment.findByIdAndUpdate(
+            data.containerId,
+            {
+              route: data.selectedRoute,
+              port: data.selectedCountry,
+              status: data.shipmentStatus
+            },
+            { new: true }
+          );  
+          
+          console.log(updated_shipment)
+          callback({status:"ok",data:updated_shipment})
+          console.log("this",Users[Socket.user.id])
+          notificationsNamespace.to(Users[Socket.user.id]).emit("notify", {
+            id: updated_shipment._id,
+            message: "Your shipment has started",
+            read: false,
+          });
+
+          const orders= await Order.find({shipmentId:data.containerId})
+          .populate('customer_id','username')         // Replace with actual field name referencing User
+          .populate('shipmentId','eta loadingDate route port cbmRate ');
+          
+          console.log("this orders",orders)
+          orders.forEach( async(order)=>{
+            const recipientSocketId = Users[order.customer_id._id.toString()];
+            try{
+              const notification = new notificationModel({
+                userId:order.customer_id,
+                message:`Shipment with tracking no. ${order.tracking_no} has been updated`,
+                read: false
+              })
+             await notification.save()
+              if (recipientSocketId) {
+                console.log("user",Users[recipientSocketId],Users)
+                console.log(order.customer_id._id.toString())
+                
+                notificationsNamespace.to(recipientSocketId).emit("notify", notification);
+                trackingNamespace.to(recipientSocketId).emit("update_shipment", order);
+            }
+            }catch(error){
+              console.log(err)
+            }
+            })
+        }catch(err){
+          console.log(err)
+        }
       })
 
       Socket.on("disconnect",()=>{

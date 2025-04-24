@@ -22,7 +22,7 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
 
   return (
     <header className='w-full bg-white sticky top-0 z-60 h-[80px]  items-center flex justify-between' >
-            <div className='flex items-center font-bold text-xl'><img src="/images/sfgl_logo.jpg" alt='logo' className='w-14 '/><div className='content'><p>SFGL</p><p>SFGL</p></div></div>
+            <Link to="/" className='flex items-center font-bold text-xl'><img src="/images/sfgl_logo.jpg" alt='logo' className='w-14 '/><div className='content'><p>SFGL</p><p>SFGL</p></div></Link>
              
     
     
@@ -31,13 +31,10 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
     Home
   </NavLink>
 
-  <div className="tab-link">
-  <NavLink to="/About_us" className={({ isActive }) => isActive ? "tab-link active" : "tab-link"}>About ▾</NavLink>
-    <div className="dropdown">
-      <Link to="/" style={{ fontSize: "14px" }}>Why choose us</Link>
-      <Link to="/About" style={{ fontSize: "14px" }}>About us</Link>
-    </div>
-  </div>
+  
+  <NavLink to="/About_us" className={({ isActive }) => isActive ? "tab-link active" : "tab-link"}>About</NavLink>
+    
+  
 
   <div className="tab-link">
     <NavLink to="/Services" className={({ isActive }) => isActive ? "tab-link active" : "tab-link"}>Services ▾</NavLink>

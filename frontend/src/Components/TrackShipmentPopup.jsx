@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { Modal, Input, Button, Typography, Alert, Space } from "antd";
-
+import {Package} from "lucide-react"
 const { Title, Text } = Typography;
 
 const TrackShipmentPopup = ({open,trackRef}) => {
@@ -21,55 +21,64 @@ const TrackShipmentPopup = ({open,trackRef}) => {
       
 
       <Modal
-      open={isOpen}
-      onCancel={() => {
+  open={isOpen}
+  onCancel={() => {
+    setIsOpen(false);
+    setTrackingId("");
+  }}
+  footer={null}
+  centered
+  title={
+    <div className="text-center text-xl flex gap-3 justify-center font-semibold text-gray-800">
+      <Package/> Track Your Shipment
+    </div>
+  }
+>
+  <div className="flex flex-col gap-4 mt-4">
+    <Input
+      placeholder="Enter your Tracking Number (e.g., ILL123456789-SHP)"
+      value={trackingId}
+      className="h-[42px] border-gray-300 rounded-md shadow-sm"
+      onChange={(e) => setTrackingId(e.target.value)}
+    />
+
+    <div className="bg-purple-50 border border-purple-300 rounded-md p-4 shadow-sm flex items-start gap-3">
+      <span className="text-purple-600 text-xl">
+        <i className="ri-check-double-line" />
+      </span>
+      <div className="text-sm text-gray-700">
+        You received your Tracking Number right after requesting a quote.
+        <div className="mt-1 text-xs text-gray-500">
+          Forgot it? Check your <strong>Quote Confirmation</strong> screen or the <strong>Recent Quotes</strong> tab in your dashboard.
+        </div>
+      </div>
+    </div>
+
+    <Button
+      type="primary"
+      block
+      style={{height:"40px",background:"var(--purple)"}}
+      className="bg-purple-600 hover:bg-purple-700 h-[42px] text-white font-semibold"
+      onClick={handleTrackShipment}
+    >
+      Track Now
+    </Button>
+
+    <Button
+      danger
+      block
+      
+      style={{height:"40px"}}
+      onClick={() => {
         setIsOpen(false);
         setTrackingId("");
-        
       }}
-      footer={null}
-      title="Track Your Shipment"
     >
-      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-        <Input
-          placeholder="Enter Tracking ID"
-          value={trackingId}
-          className="h-[40px]"
-          onChange={(e) => setTrackingId(e.target.value)}
-        />
+      Cancel
+    </Button>
+  </div>
+</Modal>
 
-        <Alert
-          type="info"
-          showIcon
-          style={{background:"#f5f3ff",border:"2px solid #d8b4fe"}}
-          className="border-2 border-purple-300 bg-purple-50"
-          message={
-            <div>
-              <Text strong>NB:</Text> Your Consignment No. is the same as the Tracking number, which is sent to the email address you submitted for registration. <br />
-              <br />
-              The tracking number is a 13-digit code which starts with the prefix <Text code>“ILL”</Text> and ends with <Text code>“-SHP”</Text>.
-              <br />
-              <br />
-              If you cannot find the email in your inbox, please check your Spam. Kindly get in touch with us if you still have not received your tracking number.
-            </div>
-          }
-        />
-
-        <Button type="primary" style={{background:"var(--purple)",height:"40px"}} className="bg-purple-500" block onClick={handleTrackShipment}>
-          Track
-        </Button>
-
-        
-
-        <Button danger block onClick={() => {
-          setIsOpen(false);
-          setTrackingId("");
-          
-        }}>
-          Close
-        </Button>
-      </Space>
-    </Modal>
     </div>
   );
 };

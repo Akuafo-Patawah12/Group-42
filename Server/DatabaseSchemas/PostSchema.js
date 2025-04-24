@@ -12,6 +12,8 @@ const postSchema = new Schema({
     
   },
   category:String,
+  product_codition:String,
+  website_url:String,
   price: Number,
   premium: String,
   createdAt: {

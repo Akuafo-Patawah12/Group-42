@@ -337,17 +337,17 @@ const [visible,setVisible] = useState(false)
         shipmentStatus,
       });
         socket.emit("editOrderStatus",{containerId,selectedRoute,selectedCountry,shipmentStatus},(response)=>{
+          console.log("updated",response)
           if (response.status === "ok") {
-            toast.success(response.message);
+            toast.success("Updated successfull");
             setIsEditContainer(false)
-            const data= response.data;
-            setContainers(prev =>
-              prev.map(item =>{
-                  const updated = data.find(list =>  list._id === item._id)
+            const updated = response.data;
 
-                   return updated ? {...item,...updated} : item;
-              })
-            )
+            setContainers(prev =>
+              prev.map(item =>
+                item._id === updated._id ? { ...item, ...updated } : item
+              )
+            );
           } else {
             toast.error(response.message);
           }})
