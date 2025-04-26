@@ -4,7 +4,7 @@ import "./Tracking.css"
 import io from "socket.io-client"
 import { message,Empty,Modal,Spin } from "antd"
 import {toast} from "react-toastify"
-import { Package } from 'lucide-react';
+import { Package,MapPin, Clock,Hourglass,Timer } from 'lucide-react';
 import {route1,route2,route3,route4,route5} from "../Data/RouteData"
 import  ShipIcon  from "../icons/Truck.svg"
 import  MapShipIcon  from "../icons/CargoShip.svg"
@@ -30,6 +30,8 @@ const Mapbox = () => {
   const [isModalOpen,setIsModalOpen]= useState(false)
   const [isMoreInfo, setIsMoreInfo] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [activePortIndex, setActivePortIndex] = useState(null);
+
 
   const handleOpen = () => {
 
@@ -155,6 +157,7 @@ const trackingId = searchParams.get("tracking_id");
         pRefs.current.forEach((p) => {
           const foundIndex = pRefs.current.findIndex(p => p && p.innerHTML.trim() === country);
           setIndex(foundIndex);
+          setActivePortIndex(foundIndex);
       
           if (p && p.innerHTML.trim() === country) {
             const rect = p.getBoundingClientRect();
@@ -235,7 +238,28 @@ const trackingId = searchParams.get("tracking_id");
   
  const [form] = Form.useForm();
 
- 
+ const [width, setWidth] = useState(window.innerWidth);
+ const [containerOffset,setContainerOffset] = useState(0)
+ const adjustedLeft = width > 1000 ? `${xPosition - containerOffset}px` : `${xPosition}px`;
+
+ useEffect(() => {
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+
+    const container = document.querySelector(".layout-shift"); // Replace with your actual class
+    if (container) {
+      const rect = container.getBoundingClientRect();
+      setContainerOffset(rect.left); // distance from left edge of screen
+    }
+  };
+
+  handleResize(); // call it once on mount
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
+
+
 
  
 
@@ -266,7 +290,7 @@ useEffect(() => {
   })
     console.log(`Sent track_id to backend: ${track_id}`);
   }
-}, [track_id]);
+}, [socket,track_id]);
 
 function handTrack(){
   if (track_id) {
@@ -326,7 +350,7 @@ function handTrack(){
         <div className="line_map" ref={parent}>
         <div className="line_inner" >
           
-        <div  className="ship" style={{position:"relative"}}><div  style={{ position: "absolute",top:"-40px", left: `${xPosition-3}px` ,width:"fit-content"}}><Ship/></div>  
+        <div  className="ship" style={{position:"relative"}}><div  style={{ position: "absolute",top:"-40px", left: adjustedLeft ,width:"fit-content"}}><Ship/></div>  
          </div>
         <section className="line" style={{position:"relative"}} >
           
@@ -393,7 +417,13 @@ function handTrack(){
 
         
 <Modal
-  title="⛴ Port Stay Durations"
+  title={
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+  <MapPin size={18} />
+  <Timer size={18} />
+  <span>Port Stay Duration</span>
+</div>
+  }
   open={isMoreInfo}
   onCancel={() => setIsMoreInfo(false)}
   footer={null}
@@ -414,16 +444,22 @@ function handTrack(){
   ) : (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {routesMap[route].map((port, index) => (
+        {routesMap[route].map((port, index) => {
+          const isActive = activePortIndex;
+          return (
           <div
             key={index}
-            className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition duration-200 ease-in-out"
+            
+            className={`border  rounded-2xl p-5 shadow-sm hover:shadow-md transition duration-200 ease-in-out ${
+              index ===isActive ? 'bg-purple-100 border-purple-400' : 'bg-white border-gray-200'
+            }`}
           >
             <h3 className="text-lg font-semibold text-gray-800">{port.countryPort}</h3>
             <p className="text-gray-500">{port.country}</p>
             <span className="text-sm text-purple-600 mt-2">🕒 {port.duration}</span>
           </div>
-        ))}
+          )
+        })}
       </div>
 
       <div className="text-sm text-gray-500 mt-6 border-t pt-4">
@@ -515,7 +551,7 @@ function handTrack(){
 
     {showButton && (
         <button
-          className="back-to-top"
+          className="back-to-top fixed bg-purple-300 bottom-[50px] right-5 z-2 size-7 rounded-full shadow-xl "
           style={{
             borderWidth: `${Math.min(scrollPosition / 10, 100)}%`, // Border grows as you scroll
           }}

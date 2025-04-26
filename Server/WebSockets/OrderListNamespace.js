@@ -1,7 +1,7 @@
 
-const notification = require("../DatabaseSchemas/SupplyChain_Model/Notification")
-const { Order,Shipment } = require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
-const data= require("../DatabaseSchemas/userSchema")
+const notification = require("../Models/Notification")
+const { Order,Shipment } = require("../Models/OrderAndShipment")
+const data= require("../Models/userSchema")
 const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNamespace,Users)=>{
      
     console.log("connected to orderList")
@@ -73,11 +73,17 @@ const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNames
       }
     });
     
-    Socket.on("deleteOrder",async(data)=>{
+    Socket.on("deleteOrder",async(data,callback)=>{
         try{
             console.log(data)
-           await Order.findByIdAndDelete(data.order_id)  // find the order by the id and delele it
-           orderListNamespace.emit("orderDeleted",data.order_id)
+           const deleted = await Order.findByIdAndDelete(data.orderId)  // find the order by the id and delele it
+           console.log(deleted)
+           if (!deleted){
+            callback({status:"error", error:"Failed to delete shipment"})
+            return
+           }
+           orderListNamespace.in("adminRoom").emit("orderDeleted",data.orderId)
+           Socket.emit("orderDeleted",data.orderId)
            // Check if the users object and the specific customer_id exist
         if (Users ) {
             console.log("Customer's socket ID: ", Users[data.customer_id]);
@@ -89,6 +95,7 @@ const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNames
         }
         }catch(error){
             console.log(error)
+            callback({status:"error", error:"Failed to delete shipment"})
         }
     })
 
@@ -187,6 +194,18 @@ Socket.on("addCBM/CTN",async(data,callback)=>{
     callback({status:"ok",data: order})
   }catch(err){
     console.log(err)
+  }
+})
+
+
+Socket.on("disconnect", () => {
+  console.log("User disconnected from the orderList namespace");
+  // Remove the user from the Users object
+  for (const [userId, socketId] of Object.entries(Users)) {
+    if (socketId === Socket.id) {
+      delete Users[userId];
+      break;
+    }
   }
 })
 

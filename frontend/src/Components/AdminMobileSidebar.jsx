@@ -13,8 +13,8 @@ import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={24} />, path: "/L/Dashboard" },
-  { key: "user", label: "Users", icon: <User size={24} />, path: "/L/Clients" },
-  { key: "shipments", label: "Shipments", icon: <Truck size={24} />, path: "/L/Orders" },
+  { key: "user", label: "Users", icon: <User size={24} />, path: "/L/Users" },
+  { key: "shipments", label: "Shipments", icon: <Truck size={24} />, path: "/L/Shipments" },
   { key: "containers", label: "Containers", icon: <Package size={24} />, path: "/L/containers" },
   { key: "settings", label: "Settings", icon: <Settings size={24} />, path: "/L/Settings" },
 ];

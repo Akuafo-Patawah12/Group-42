@@ -10,7 +10,7 @@ import "./Invoice.css"
 import {v4} from "uuid"
 
 import io from "socket.io-client"
-
+import {toast} from "react-toastify"
 import {BarChartOutlined , CarOutlined, DatabaseOutlined,  ProductOutlined, ShoppingCartOutlined, WarningOutlined } from '@ant-design/icons'
 import TrackingSub from './TrackingSub'
 import LogisticsReport from './LogisticsReport'
@@ -106,6 +106,7 @@ const Overview = () => {
    })
    socket.on("orderDeleted",(data)=>{
     console.log(data)
+    toast.success("Shipment deleted")
     setOrders(prevOrders=>{
 
       // remove the deleted order from the orders array
@@ -219,10 +220,14 @@ function transit(){
 
 function deleteOrder(order_id,customer_id){  //function to delete an order
  
-  setTimeout(()=>{
-    socket.emit("deleteOrder",{order_id,customer_id})
+ 
+    socket.emit("deleteOrder",{order_id,customer_id},(response)=>{
+       if(response.status==="error"){
+         toast.error(response.message)
+       }
+    })
 
-  },5000)
+
     
 }
 
@@ -352,9 +357,9 @@ const CloseReport = () => {
     className=' layout-shift w-full bg-stone-100 pt-5 lg:w-[80%] '
     >
       {creatingOrder && (
-  <div className="fixed top-[70px] left-1/2 transform -translate-x-1/2 z-50 bg-orange-100 text-orange-800 px-4 py-2 rounded-lg shadow-md flex items-center space-x-3">
+  <div className="fixed top-[70px] left-1/2 transform -translate-x-1/2 z-50 bg-purple-100 text-orange-800 px-4 py-2 rounded-lg shadow-md flex items-center space-x-3">
     <svg
-      className="animate-spin h-5 w-5 text-orange-800"
+      className="animate-spin h-5 w-5 text-purple-800"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -373,7 +378,7 @@ const CloseReport = () => {
         d="M4 12a8 8 0 018-8v8z"
       />
     </svg>
-    <span>Creating Order...</span>
+    <span style={{marginLeft:"4px"}}>Creating Order.</span>
   </div>
 )}
 
@@ -481,7 +486,14 @@ const CloseReport = () => {
 
       {/* Request a quote modal */}
       <Modal
-        title="Request a Quote"
+        title={
+          <>
+          <div className=" pb-3">
+            Request a Quote
+          </div>
+          <div className="w-full h-[2px] bg-gradient-to-r from-white via-stone-300 to-white"></div>
+          </>
+        }
         open={isOpen}
         onCancel={()=>setIsOpen(false)}
         footer={null}
@@ -494,11 +506,11 @@ const CloseReport = () => {
             name="location"
             rules={[{ required: true, message: "Please enter the product location" }]}
           >
-            <Input placeholder="Enter the product location" value={location} onChange={(e)=> setLocation(e.target.value)}/>
+            <Input placeholder="Enter the product location" style={{paddingBlock:"7px"}} value={location} onChange={(e)=> setLocation(e.target.value)}/>
           </Form.Item>
           
           <Form.Item label="Supplier Number" name="suppliersNumber">
-            <Input placeholder="Enter supplier number (Optional)" value={suppliersNumber} onChange={(e)=> setSupplierNumber(e.target.value)}/>
+            <Input placeholder="Enter supplier number (Optional)" style={{paddingBlock:"7px"}} value={suppliersNumber} onChange={(e)=> setSupplierNumber(e.target.value)}/>
           </Form.Item>
 
           <Form.Item
@@ -510,7 +522,7 @@ const CloseReport = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit" block style={{paddingBlock:"7px",background:"var(--purple)"}}>
               Submit Request
             </Button>
           </Form.Item>

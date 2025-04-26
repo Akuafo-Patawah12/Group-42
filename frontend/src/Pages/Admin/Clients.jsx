@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import { AlertTriangle }  from 'lucide-react';
-import ButtonLoader from '../icons/ButtonLoader';
+import ButtonLoader from '../../icons/ButtonLoader';
 import { Button, Table, Input, Checkbox } from 'antd';
 import {message} from "antd"
 

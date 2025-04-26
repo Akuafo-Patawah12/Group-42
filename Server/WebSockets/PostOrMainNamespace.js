@@ -1,5 +1,5 @@
 
-const Post=require("../DatabaseSchemas/PostSchema")
+const Post=require("../Models/PostSchema")
 
 
 const PostFunction=(Socket,users,io,notificationsNamespace)=>{
@@ -34,7 +34,8 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
           price:1,
           category:1,
           createdAt: 1, //Include the createdAt
-          username: '$userDetails.username' // Include the username from userDetails
+          username: '$userDetails.username', // Include the username from userDetails
+          email:  '$userDetails.email'
         }
       }
     ]).sort({createdAt:-1});
@@ -48,7 +49,7 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
  Socket.on("getPost", async (postId) => {
   console.log(postId)
   try {
-    const post = await Post.findById(postId); // Fetch post by ID
+    const post = await Post.findById(postId).populate("user_id","email"); // Fetch post by ID
     if (post) {
       Socket.emit("postData", post); // Emit the post data back to the client
     } else {
@@ -76,14 +77,14 @@ Socket.on("getProductsByCategory", async (category) => {
 });
  
  Socket.on('sendPost', async (data) => { //socket.on means receiving data or information from client side
-   const { id,caption,img_vid,selectedCategory,isPremium,price } = data; //get post from client side
+   const { id,caption,img_vid,category,isPremium,price } = data; //get post from client side
    try {
      // Create a new post and save it to the database
      const input = new Post({
        caption,
        img_vid,
        user_id:id,
-       category: selectedCategory,
+       category,
        premium: isPremium,
        price
      });
@@ -112,6 +113,19 @@ Socket.on("getProductsByCategory", async (category) => {
      console.log(err, "sock error");
    }
  });
+
+ Socket.on("disconnect", () => {
+  console.log("Disconnected from the post namespace");
+  // Optionally, you can remove the user from the users object if needed
+  // delete users[Socket.id];
+  for (const [userId, socketId] of Object.entries(users)) {
+    if (socketId === Socket.id) {
+        delete users[userId];
+        break;
+    }
+  }
+})
+
  return Socket
 }
 

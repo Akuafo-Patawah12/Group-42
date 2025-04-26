@@ -1,6 +1,6 @@
-# 🚚 Turbo Logistics & Marketing Web App
+# 🚚 SF Ghana Logistics & Marketing Web App
 
-Welcome to **Turbo's Logistics & Marketing Website** — a modern web platform built with **React** to showcase and manage logistics operations and marketing solutions.
+Welcome to SF Ghana Logistics & Marketing Website — a modern web platform built with *React* and *Nodejs* to showcase and manage logistics operations and marketing solutions.
 
 ## ✨ Features
 
@@ -8,14 +8,13 @@ Welcome to **Turbo's Logistics & Marketing Website** — a modern web platform b
 - 📊 Marketing platform
 - 🔐 User authentication
 - 📱 Fully responsive design
-- ⚡ Real-time updates (if using WebSocket features)
+- ⚡ Real-time updates 
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React.js, Axios, React Router
-- **Styling**: Tailwind CSS / Ant Design (based on your setup)
-- **State Management**: React Hooks
-- **API**: Fetch or Axios (for REST API integration)
+- *Frontend*: React.js, Axios, React Router
+- *Backend*: Nodejs
+- *API*: Fetch or Axios (for REST API integration)
 
 ## 🚀 Getting Started
 
@@ -24,6 +23,6 @@ Welcome to **Turbo's Logistics & Marketing Website** — a modern web platform b
 ```bash
 git clone https://github.com/Akuafo-Patawah/Group-42.git
 cd Group-42
-cd Client -> for frontend or cd Server -> for backend
-cd my-app                     npm start   
-npm start                                 
+cd frontend -> for frontend or cd Server -> for backend
+npm run dev                    npm start   
+                                

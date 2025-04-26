@@ -1,11 +1,11 @@
 import React, { useState, useEffect,useMemo,useRef } from "react";
-import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col,Empty, Tag, Space,message, Button,Select ,Typography,Spin} from "antd";
+import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col,Empty, Tag, Space, Button,Select ,Typography,Spin} from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import { Edit, Trash2,Copy } from "lucide-react";
 import {toast} from "react-toastify"
-import SessionExpiredModal from "../Components/SessionExpiredModal";
+import SessionExpiredModal from "../../Components/SessionExpiredModal";
 import io from "socket.io-client"
-
+import { jwtDecode } from "jwt-decode";
 const { Search } = Input;
 const { Content } = Layout;
    const { Option } = Select;
@@ -13,7 +13,8 @@ const { Text } = Typography;
 
 const ContainerPage = () => {
   // Sample data for containers (can be fetched from an API or database)
-
+   const accesstoken = localStorage.getItem('accesstoken');
+   const decode = jwtDecode(accesstoken);
   const socket = useMemo(() =>io("http://localhost:4000/Shipping",{
     transports: ["websocket","polling"],
     withCredentials: true,
@@ -25,6 +26,18 @@ const ContainerPage = () => {
     withCredentials: true,
     secure: true
   }),[])
+
+  const socket2 = useMemo(() =>io("http://localhost:4000/notify",{
+         transports: ['websocket'],credentials: true
+       }),[]) 
+  
+    React.useEffect(()=>{
+       socket2.on("connect",()=>{
+          console.log("web socket is active")
+          
+          socket2.emit('getUnreadNotifications', decode?.id);
+       })
+      },[socket2])
 
   const [containers, setContainers] = useState([]);
   const [filteredContainers, setFilteredContainers] = useState(containers);
@@ -136,7 +149,7 @@ const [visible,setVisible] = useState(false)
     })
 
     socket.on("newContainerAdded",(data)=>{
-      message.success("new container added")
+      
       setContainers(prev => [data,...prev])
     })
 
@@ -160,7 +173,12 @@ const [visible,setVisible] = useState(false)
       message.success("New order")
       console.log("order data",data)
     })
-
+  
+    socket.on("container_deleted",(data)=>{
+        setContainers(prev =>
+           prev.filter(container => container._id !== data)
+        )
+    })
     socket.on("connect_error", (err)=>{
           console.log(err)
            if (err.message.includes("Refresh token expired")) {
@@ -180,7 +198,7 @@ const [visible,setVisible] = useState(false)
           
        }
         });
-
+  
     socket.on("disconnect", (reason) => {
         console.log(reason);
       });
@@ -290,7 +308,7 @@ const [visible,setVisible] = useState(false)
 
   const handleSave = () => {
     if ( !selectedCountry || !shipmentStatus || !containerNumber || !cbmRate || !eta || !loadingDate) {
-      message("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
@@ -307,9 +325,9 @@ const [visible,setVisible] = useState(false)
       status: shipmentStatus,
     },(response)=>{
       if (response.status === "error") {
-        message.error(response.message);
+        toast.error(response.message);
       } else{
-        message.success(response.message)
+        toast.success(response.message)
       }
          
       })
@@ -361,11 +379,11 @@ const [visible,setVisible] = useState(false)
      }
 
      function deleteContainer(containerId){
-        socket1.emit("deleteContainer",containerId,(response)=>{
+        socket.emit("deleteContainer",containerId,(response)=>{
             if(response.status==="ok"){
-              message.success("Container deleted")
+              toast.success(`Container ${response.data} deleted`)
             }else{
-               message.error(response.message)
+               toast.error(response.message)
             }
         })
      }

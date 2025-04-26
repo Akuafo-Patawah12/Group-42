@@ -1,5 +1,6 @@
-const notificationModel = require("../DatabaseSchemas/SupplyChain_Model/Notification")
-const {Shipment,Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
+const notification = require("../Models/Notification")
+const {Shipment,Order}= require("../Models/OrderAndShipment")
+const User = require("../Models/userSchema")
 
 const shipping= async(Socket,notificationsNamespace,trackingNamespace,orderListNamespace,Users)=>{
    
@@ -192,17 +193,17 @@ const shipping= async(Socket,notificationsNamespace,trackingNamespace,orderListN
           orders.forEach( async(order)=>{
             const recipientSocketId = Users[order.customer_id._id.toString()];
             try{
-              const notification = new notificationModel({
+              const notifications = new notification({
                 userId:order.customer_id,
                 message:`Shipment with tracking no. ${order.tracking_no} has been updated`,
                 read: false
               })
-             await notification.save()
+             await notifications.save()
               if (recipientSocketId) {
                 console.log("user",Users[recipientSocketId],Users)
                 console.log(order.customer_id._id.toString())
                 
-                notificationsNamespace.to(recipientSocketId).emit("notify", notification);
+                notificationsNamespace.to(recipientSocketId).emit("notify", notifications);
                 trackingNamespace.to(recipientSocketId).emit("update_shipment", order);
             }
             }catch(error){
@@ -214,7 +215,48 @@ const shipping= async(Socket,notificationsNamespace,trackingNamespace,orderListN
         }
       })
 
+
+      Socket.on("deleteContainer",async(containerId,callback)=>{
+        console.log(containerId)
+        try{
+           const delete_container = await Shipment.findOneAndDelete({_id:containerId})
+           const admins = await User.find({account_type:"Business"})
+           Socket.emit("container_deleted",containerId)
+           callback({status:"ok",data:delete_container.containerNumber})
+           const notify = {
+            userId: Socket.user.id,
+            message: `Container with number ${delete_container.containerNumber} deleted `,
+          };
+          console.log("socket",Users[Socket.user.id])
+           notificationsNamespace.to(Users[Socket.user.id]).emit("notify",notify)
+           orderListNamespace.in("adminRoom").emit("container_deleted",containerId)
+           admins.forEach(async(admin)=>{
+             const socket_id = Users[admin._id]
+            try{
+              const notifications = new notification({
+                userId: admin._id,
+                message: `Container with number ${delete_container.containerNumber} deleted `,
+              });
+              await notifications.save()
+                notificationsNamespace.to(socket_id).emit("notify",notifications)
+            }catch(error){
+              console.log(error)
+              callback({status:"error",message:"failed to delete container"})
+            }
+           })
+        }catch(err){
+          console.log(err)
+        }
+      })
+
       Socket.on("disconnect",()=>{
+        for (const [userId, socketId] of Object.entries(Users)) {
+          if (socketId === Socket.id) {
+              delete Users[userId];
+              break;
+          }
+      }
+        
         console.log("disconnect from shipment Namespace")
       })
       

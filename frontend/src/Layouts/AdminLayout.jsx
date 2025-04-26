@@ -9,18 +9,18 @@ import {AnimatePresence} from "framer-motion"
 import Header from '../Components/HeaderAndSidebar';
 import Notification from "../Components/Notification"
 import Sidebar from '../Components/Sidebar';
-const Clients= lazy(()=> import('./../Pages/Clients'));
+const Clients= lazy(()=> import('../Pages/Admin/Clients'));
 const ViewIndividualOrder= lazy(()=>import( '../Pages/ViewIndividualOrder'))
 import AdminMobileSidebar from "../Components/AdminMobileSidebar"
 
 const Settings= lazy(()=>import('../Pages/Settings'));
-const Dashboard= lazy(()=> import('./../Pages/Dashboard'));
-const Orders= lazy(()=> import('../Pages/Orders')) 
+const Dashboard= lazy(()=> import('../Pages/Dashboard'));
+const Shipments= lazy(()=> import('../Pages/Admin/Shipments')) 
  
-const ContainerPage= lazy(()=> import('../Pages/ContainerPage')) 
+const ContainerPage= lazy(()=> import('../Pages/Admin/ContainerPage')) 
 const Shipment= lazy(()=>import('../Pages/Shipment'))  
 
-const Notify = lazy(()=> import("../Routes/Notification"))
+const Notify = lazy(()=> import("../Pages/Notification"))
 
 
 
@@ -47,21 +47,21 @@ const LayoutBundle = () => {
                   <ContainerPage /> 
              </Suspense>} />
              
-             <Route path='/Shipments' element={<Suspense fallback={<Loading />}>
+             <Route path='/Shipment' element={<Suspense fallback={<Loading />}>
                   <Shipment />
              </Suspense>} />
-             <Route path='/Orders/View_Order/:id' element={<Suspense fallback={<Loading />}>
+             <Route path='/Shipments/View_Shipments/:id' element={<Suspense fallback={<Loading />}>
                   <ViewIndividualOrder />
              </Suspense>} />
-             <Route path='/Orders' element={<Suspense fallback={<Loading />}>
-                  <Orders />
+             <Route path='/Shipments' element={<Suspense fallback={<Loading />}>
+                  <Shipments/>
              </Suspense>} />
              
              <Route path='/Dashboard' element={<Suspense fallback={<Loading />}>
                   <Dashboard />
              </Suspense>} />
 
-             <Route path='/Clients' element={<Suspense fallback={<Loading />}>
+             <Route path='/Users' element={<Suspense fallback={<Loading />}>
                   <Clients />
              </Suspense>} />
              <Route path='/Settings' element={<Suspense fallback={<Loading />}>

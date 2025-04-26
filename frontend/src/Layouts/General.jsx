@@ -2,8 +2,8 @@ import React,{lazy,useState,useRef,useEffect} from 'react'
 import {Routes,Route} from 'react-router-dom'
 import '../App.css';
 
-import ForgetPassword from '../Auth_Routes/ForgetPassword'
-import UpdatePassword from '../Auth_Routes/UpdatePassword'
+import ForgetPassword from '../Auth/ForgetPassword'
+import UpdatePassword from '../Auth/UpdatePassword'
 
 import AuthLoader from '../icons/AuthLoader';
 import PageNotFound from '../Routes/PageNotFound';
@@ -24,9 +24,9 @@ const FAQPage = lazy(()=> import("../Pages/FAQs"));
 const About= lazy(()=> import( '../Pages/About'));
 const Contact= lazy(()=> import('../Pages/Contact'));
 const Services= lazy(()=> import('../Pages/Services'));
-const LandingPage= lazy(()=> import("../Auth_Routes/LandingPage"))
-const Login= lazy(()=> import('../Auth_Routes/Login'))
-const SignUp= lazy(()=> import('../Auth_Routes/SignUp'))
+const LandingPage= lazy(()=> import("../Auth/LandingPage"))
+const Login= lazy(()=> import('../Auth/Login'))
+const SignUp= lazy(()=> import('../Auth/SignUp'))
 const General = () => {
     
       

@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
-const connection = require('./DB_connection');
-const router = require('./Router_connector');
+const connection = require('./Config/DB_connection');
+const router = require('./Router/Router');
 require('dotenv').config();
 const cookies= require("cookie-parser")
 const cors=require('cors')
@@ -9,8 +9,6 @@ const app = express();
 app.use(express.urlencoded({extended:true}))
 app.use(cookies())
 app.use(express.json());
-const cluster = require('cluster');
-const numCPUs = require('os').cpus().length;
 const initializeSocket = require('./WebSockets/Socket');
 app.use(cors({
   origin:["http://localhost:5173","http://localhost:5174"],
@@ -19,7 +17,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type']
 }))
 app.use("/",router)  //A middleware that returns all API for authentication
-let server //creating a server instance
+let server; //creating a server instance
 
 
 

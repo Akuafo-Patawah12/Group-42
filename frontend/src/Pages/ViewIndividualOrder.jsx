@@ -11,7 +11,7 @@ const ViewIndividualOrder = () => {
     const[orders,setOrders] = useState([])
     const accesstoken=localStorage.getItem("accesstoken")
     const decode=jwtDecode(accesstoken)
-    const socket = useMemo(() =>io("http://localhost:5000/orderList",{
+    const socket = useMemo(() =>io("http://localhost:4000/orderList",{
         transports: ['websocket'],
       }),[])
    
@@ -53,7 +53,8 @@ const ViewIndividualOrder = () => {
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
-       className=' w-full bg-stone-100 pt-24 lg:w-[80%] ml-auto '>
+    style={{paddingTop:"100px"}}
+    className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
         <div className='flex ml-[5%] max-w-[250px]'>
         <Link to={"/Orders"} className='breadcrumb1'>Orders</Link>
         <Link className='breadcrumb'>View Order</Link>

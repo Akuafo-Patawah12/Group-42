@@ -11,9 +11,9 @@ import moment from "moment";
 
 import io from 'socket.io-client';
 import { jwtDecode } from 'jwt-decode';
-import OrderMessagePopup from './OrderMessagePopup';
+import OrderMessagePopup from '../OrderMessagePopup';
 import { toast } from 'react-toastify';
-import SessionExpiredModal from '../Components/SessionExpiredModal';
+import SessionExpiredModal from '../../Components/SessionExpiredModal';
 
 
 const { Content } = Layout;
@@ -31,7 +31,16 @@ const Orders = () => {
     
     }), []);
   const messageSocket = useMemo(() => io('http://localhost:4000/message', { transports: ['websocket'],withCredentials:true }), []);
-  
+  const socket2 = useMemo(() =>io("http://localhost:4000/notify",{
+           transports: ['websocket'],credentials: true
+         }),[]) 
+    
+      React.useEffect(()=>{
+         socket2.on("connect",()=>{
+            console.log("web socket is active")
+            socket2.emit('getUnreadNotifications', decode?.id);
+         })
+        },[socket2,decode?.id])
   const [orders, setOrders] = useState([]);
 
   const [openCBM, setOpenCBM] = useState(false);
@@ -76,10 +85,17 @@ const Orders = () => {
     });
 
     socket.on('receivedOrder', (data) => {
+      toast.success("New quote received")
       setOrders((prev) => [data, ...prev]);
     });
 
     socket.on('orderDeleted', (data) => {
+      toast.success("Shipment deleted")
+      setOrders((prev) => prev.filter((order) => order._id !== data));
+    });
+
+    socket.on("Deleted", (data) => {
+      toast.success("Shipment deleted")
       setOrders((prev) => prev.filter((order) => order._id !== data));
     });
 
@@ -147,7 +163,11 @@ const Orders = () => {
   
 
   const handleDelete = (orderId, customerId) => {
-    socket.emit('deleteOrder', { orderId, customerId });
+    socket.emit('deleteOrder', { orderId, customerId },(response)=>{
+       if (response.status==="error"){
+          toast.error(response.error)
+       }
+    });
   };
 
   
@@ -175,7 +195,7 @@ const Orders = () => {
       key: 'order_id',
       render: (text, record) => (
         <Space>
-          <Link to={`/Orders/View_Order/${record.customer_id}`}>{text}</Link>
+          <Link to={`/L/Shipments/View_Shipments/${record.customer_id}`}>{text}</Link>
           <Copy size={15} onClick={() => navigator.clipboard.writeText(record._id)} />
         </Space>
       ),

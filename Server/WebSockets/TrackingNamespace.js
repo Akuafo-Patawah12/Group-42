@@ -1,7 +1,7 @@
 
-const notificationModel = require("../DatabaseSchemas/SupplyChain_Model/Notification");
-const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment");
-const User= require("../DatabaseSchemas/userSchema")
+const notificationModel = require("../Models/Notification");
+const {Order, Shipment}= require("../Models/OrderAndShipment");
+const User= require("../Models/userSchema")
 
 
 
@@ -14,28 +14,39 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
         try {
             //Inserting new data received from clientside in to orders table
 
-            const order = new Order({customer_id:data.Id, description:data.items,location:data.location, tracking_no:data.tracking_id ,suppliersNumber });// creating new order
+            const order = new Order({customer_id:data.Id, description:data.items,location:data.location, tracking_no:data.tracking_id ,suppliersNumber:parseInt(data.suppliersNumber) });// creating new order
 
             await order.save();  // saving new order the database
-            const user= await User.findById(data.Id) //select _id from the Users table where _id=data.id
+            const customer= await User.findById(order.customer_id) //select _id from the Users table where _id=data.id
 
              const sendOrder = {
                 _id: order._id,
                 customer_id: order.customer_id,
-                customerName:user.username,
+                customerName:customer.username,
                 Status: order.Status, 
             };
             
             const admin = await User.find({account_type:"Business"})
-            admin.forEach((user)=>{
-                const socket_id= users[user._id]
-                const notify = new notificationModel({
+            admin.forEach(async(user)=>{
+                
+                try{
+                    
+                const notification = new notificationModel({
                     userId: user._id,
-                    message: `${user.username} requested a quote`
+                    message: `${customer.username} requested a quote`,
+                    read: false
                 })
-                notify.save()
-                .then(()=>console.log("Admin notified"))
-                notificationsNamespace.to(socket_id).emit("notify",notify)
+                await notification.save()
+                const socket_id= users[user._id]
+                    console.log("socket",socket_id)
+                if(socket_id){
+                    notificationsNamespace.to(socket_id).emit("notify",notification)
+                    console.log(users)
+                }
+            }catch(err){
+                console.log(err)
+            }
+                
             })
 
             Socket.emit("receive",sendOrder) //send this data the user connected to this namespace
@@ -60,18 +71,31 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
         }
   })
 
-  Socket.on("deleteOrder",async(data)=>{ // deleting order
+  Socket.on("deleteOrder",async(data,callback)=>{ // deleting order
     try{
         console.log(data)
-       await Order.findByIdAndDelete(data.order_id)  // find the order by the id and delele it
+       const order = await Order.findById(data.order_id)  // find the order by the id and delele it
+       console.log(order)
+       if(!order){
+        callback({status:"error",message:"failed to delete"})
+        return
+       }
+       if(order.Status==="in-Transit"){
+        callback({status:"error",message:"Shipments in transit cannot be deleted"})
+        return
+       }
+       
+       await Order.findByIdAndDelete(data.order_id) 
+       
        Socket.emit("orderDeleted",data.order_id)
        // Check if the users object and the specific customer_id exist
     
         // Emit the event to the specific user
-        orderListNamespace.to("orderRoom").emit("Deleted", data.order_id);
+        orderListNamespace.in("orderRoom").emit("Deleted", data.order_id);
     
     }catch(error){
         console.log(error)
+        callback({status:"error",message:"Oops, something when wrong, try again later"})
     }
 })
 
@@ -96,6 +120,12 @@ Socket.on("track",async(data,callback)=>{
     // Log the users currently in the /order room for debugging
     
     Socket.on('disconnect', () => {
+        for (const [userId, socketId] of Object.entries(users)) {
+            if (socketId === Socket.id) {
+                delete users[userId];
+                break;
+            }
+        }
         console.log('User disconnected from the tracking namespace');
     });
 

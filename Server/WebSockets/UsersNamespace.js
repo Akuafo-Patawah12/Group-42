@@ -1,4 +1,4 @@
-const user= require("../DatabaseSchemas/userSchema")
+const user= require("../Models/userSchema")
 
 
 const userFunc= (socket)=>{

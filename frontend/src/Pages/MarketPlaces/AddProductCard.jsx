@@ -6,7 +6,7 @@ import {Upload,Image as ImageIcon} from "lucide-react"
 const { TextArea } = Input;
 const { Option } = Select;
 
-const TrendPostPopup = (props) => {
+const AddProductCard = (props) => {
   const categories = [
     "Electronics", "Fashion", "Home & Living", "Beauty & Personal Care",
     "Health & Wellness", "Groceries", "Sports & Outdoor", "Books & Stationery",
@@ -19,8 +19,8 @@ const TrendPostPopup = (props) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [productCondition, setProductCondition] = useState("");
 
-  const handleCategoryChange = (value) => {
-    props.selectCat[1](value);
+  const handleCategory = (value) => {
+    props.setCategory[1](value);
   };
 
   const handleConditionChange = (e) => {
@@ -41,9 +41,8 @@ const TrendPostPopup = (props) => {
     >
       {currentSlide === 0 ? (
         <div>
-        <div onDrag={props.handleDragOver} onDrop={props.handleDrop} onClick={() => document.getElementById("fileInput").click()} className="w-full h-48 border-2 border-dashed border-purple-500 flex justify-center items-center rounded-lg mb-4 overflow-hidden">
+        <div  onClick={() => document.getElementById("fileInput").click()} className="w-full h-48 border-2 border-dashed border-purple-500 flex justify-center items-center rounded-lg mb-4 overflow-hidden">
         <img
-          ref={props.picRef}
           src={props.imagePreview}
           alt="Preview"
           className={`max-w-full ${props.image ?"block":"hidden"} max-h-full object-contain`}
@@ -79,8 +78,8 @@ const TrendPostPopup = (props) => {
     <Select
       style={{ width: '100%' }}
       placeholder="Choose a category"
-      value={props.selectCat[0]}
-      onChange={handleCategoryChange}
+      value={props.setCategory[0]}
+      onChange={handleCategory}
       size="large"
       className="rounded-lg"
     >
@@ -158,6 +157,8 @@ const TrendPostPopup = (props) => {
       <Input 
         placeholder="Add your website URL (Optional)" 
         size="large" 
+        value={props.website_url}
+        onChange={}
         className="rounded-lg transition-all duration-300 ease-in-out"
       />
     )}
@@ -188,4 +189,4 @@ const TrendPostPopup = (props) => {
   );
 };
 
-export default TrendPostPopup;
+export default AddProductCard;

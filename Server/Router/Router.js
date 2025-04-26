@@ -1,11 +1,12 @@
 const router= require("express").Router()
-const {SignUp,login, updatePassword,logout}= require("./Routes/Authentication")
-const forgetPassword = require("./Routes/Nodemailer")
+const {SignUp,login, updatePassword,logout}= require("../Controllers/Authentication")
+const forgetPassword = require("../Utils/Nodemailer")
 const {rateLimit}= require("express-rate-limit")
-const { getUserProfile, deletePost } = require('./Controllers/Profile');
-const contact = require("./Controllers/Contact")
-const { updateEmail,settings_updatePassword,logoutAllSessions, deleteAccount } = require("./Routes/Settings")
-const Authenticate = require("./Middlewares/Authenticate")
+const { getUserProfile, deletePost } = require('../Controllers/Profile');
+const contact = require("../Controllers/Contact")
+const { updateEmail,settings_updatePassword,logoutAllSessions, deleteAccount } = require("../Controllers/Settings")
+const Authenticate = require("../Middlewares/Authenticate")
+const marketingMailSender = require("../Controllers/MarketingMailSender")
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -31,6 +32,7 @@ router.post("/logout-all", logoutAllSessions);
 router.post("/contact",limiter, contact)
 router.delete("/delete-account", deleteAccount);
 router.get('/profile/:id', Authenticate, getUserProfile);
+router.post("marketing-mail",limiter, marketingMailSender)
 
 // Route to delete a post (requires authentication)
 router.delete('/post/:postId', Authenticate, deletePost);

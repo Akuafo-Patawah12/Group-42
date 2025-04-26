@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Divider, Spin, message } from "antd";
+import { Avatar, Button, Divider, Spin, message ,Modal} from "antd";
 import { Link } from "lucide-react";
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
@@ -11,6 +11,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const accesstoken = localStorage.getItem("accesstoken");
   const decode = jwtDecode(accesstoken);
+  
 
   axios.defaults.withCredentials=true
   useEffect(() => {
@@ -58,8 +59,8 @@ const UserProfile = () => {
 
   return (
     <div style={{ paddingTop: "100px" }}
-  className="layout-shift w-full min-h-screen bg-gradient-to-br from-stone-100 to-stone-200 lg:w-[80%] px-6 py-10 mx-auto">
-      <div className="flex items-center p-3 rounded-2xl bg-white gap-4 mb-6">
+   className="layout-shift w-full min-h-screen bg-gradient-to-br from-stone-100 to-stone-200 lg:w-[80%] px-6 py-10 mx-auto">
+      <div className="flex items-center p-3 rounded-xl shadow-2xl bg-white gap-4 mb-6">
         <Avatar size={64} className="bg-purple-600 text-white">
           {user?.username?.slice(0, 2).toUpperCase()}
         </Avatar>
@@ -71,19 +72,23 @@ const UserProfile = () => {
       </div>
 
       <Divider orientation="left">User Posts</Divider>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className=" w-full shadow-md py-5  rounded-lg bg-white columns-1 grid-gap-2 md:columns-2 lg:columns-3 space-y-4">
         {posts.map((post) => (
           <div
             key={post._id}
-            className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition duration-200"
+            style={{marginBottom:"10px"}}
+            className="relative w-full  border-2 border-purple-500 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden break-inside-avoid md:w-[270px]"
           >
+          <div className="min-h-[200px]">
           {post.img_vid && (
               <img
                 src={post.img_vid}
                 alt="Post"
-                className="w-full h-48 object-cover rounded mt-2"
+                className="w-full h-auto  rounded mt-2"
               />
             )}
+            </div>
+            <div className="p-2">
             <span className="bg-purple-100 text-purple-700 px-2 py-1 text-xs rounded-full">#{post.category}</span>
             <h4 className="mt-2 text-sm font-medium text-gray-800">{post.caption}</h4>
             <p className="text-xs text-gray-500">Condition: {post.product_condition}</p>
@@ -93,9 +98,25 @@ const UserProfile = () => {
               </a>
             )}
             <p className="mt-2 font-bold text-purple-700">₵{post.price}</p>
-            <Button danger size="small" onClick={() => handleDeletePost(post._id)} className="mt-2">
+            <Button 
+              danger
+              size="small"
+              onClick={() => {
+                Modal.confirm({
+                  title: 'Are you sure you want to delete this post?',
+                  content: 'This action cannot be undone.',
+                  okText: 'Yes, Delete',
+                  okType: 'danger',
+                  cancelText: 'Cancel',
+                  onOk() {
+                    handleDeletePost(post._id);
+                  },
+                });
+              }}
+              className="mt-2">
               Delete Post
             </Button>
+          </div>
           </div>
         ))}
       </div>

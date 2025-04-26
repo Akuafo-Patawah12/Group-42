@@ -13,7 +13,7 @@ const Invoice= lazy(()=> import("../Pages/Invoice"))
 const Settings= lazy(()=>import('../Pages/Settings'))
 const Tracking= lazy(()=>import('../Pages/Tracking'))
 const ItemList = lazy(()=>import("../Pages/ItemList"))
-const LazyTrends= lazy(()=> import ("../Routes/Trends"))
+const ProductList= lazy(()=> import ("../Pages/MarketPlaces/PoductList"))
  
  
 
@@ -34,11 +34,11 @@ const CustomersLayout=()=>{
                   <Tracking />
              </Suspense>} />
 
-             <Route path='/Trends' element={<Suspense fallback={<Loading />}>
-             <LazyTrends />
+             <Route path='/MarketPlace' element={<Suspense fallback={<Loading />}>
+             <ProductList />
              </Suspense>} />
 
-             <Route path='/Trends/Items' element={<Suspense fallback={<Loading />}>
+             <Route path='/MarketPlace/product_list' element={<Suspense fallback={<Loading />}>
              <ItemList/>
              </Suspense>} />
 

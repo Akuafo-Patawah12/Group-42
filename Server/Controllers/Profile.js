@@ -1,6 +1,6 @@
-const User = require('../DatabaseSchemas/userSchema');
-const Post = require('../DatabaseSchemas/PostSchema');
-const {Order} = require('../DatabaseSchemas/SupplyChain_Model/OrderAndShipment');
+const User = require('../Models/userSchema');
+const Post = require('../Models/PostSchema');
+const {Order} = require('../Models/OrderAndShipment');
 
 // Controller to get user profile details
 exports.getUserProfile = async (req, res) => {

@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const tls = require('tls');
 const jwt= require('jsonwebtoken');
-const data=require('../DatabaseSchemas/userSchema');
+const data=require('../Models/userSchema');
 
 const forgetPassword = async(req,res)=>{
     const {email} =req.body  // get user email from client side

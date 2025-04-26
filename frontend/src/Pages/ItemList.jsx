@@ -3,9 +3,10 @@ import {useSearchParams,useNavigate} from "react-router-dom"
 import { Modal, Input, Button } from "antd";
 import io from "socket.io-client"
 import { Link } from "lucide-react";
+import {toast} from "react-toastify"
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import { EyeFilled, FacebookOutlined, LeftOutlined, WechatOutlined, WhatsAppOutlined } from "@ant-design/icons";
+import { EyeFilled, ShoppingCartOutlined, LeftOutlined, WechatOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import RefIcon from "@ant-design/icons/lib/icons/ArrowRightOutlined";
 
 const ItemList=()=>{
@@ -20,6 +21,13 @@ const ItemList=()=>{
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
   const [Error, setIsError] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    message: "",
+    marketer_email: post?.user_id.email || ""
+  });
+
+  const [loading, setLoading] = useState(false);
 
   const socket = useMemo(() =>io("http://localhost:4000",{
     transports: ['websocket'],
@@ -33,6 +41,7 @@ const ItemList=()=>{
 
       // Listen for the response
       socket.on("postData",(data) => {
+        console.log(data)
         if (data.error) {
           setError(data.error); // Handle error from server
         } else {
@@ -88,6 +97,40 @@ console.log(category)
   const handleGoBack = () => {
     navigate(-1); // Navigates to the previous page
   } 
+
+
+  
+
+  const handleChange = (e) => {
+    const { value, name } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSend = async () => {
+    if (!formData.email || !formData.message) {
+      return toast.warning("Please fill out both fields.");
+    }
+
+    setLoading(true);
+
+    try {
+      const response= await axios.post("http://localhost:4000/Marketing_email",{formData})
+      await new Promise((res) => setTimeout(res, 1000)); // Simulated request
+      toast.success("Message sent successfully!");
+      setFormData({ email: "", message: "" });
+      handleOk(); // Close modal
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send message.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const item={rating: 4}
     return(
       <div style={{paddingTop:"100px"}}
           className='layout-shift  w-full bg-stone-100 px-3 lg:w-[80%] px-0 '>
@@ -157,29 +200,52 @@ console.log(category)
     
       {/* Email Modal */}
       <Modal
-        title="Contact Us"
-        open={sender}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        <form className="flex flex-col gap-3">
-          <Input type="email" placeholder="Enter your email" className="py-2 px-3" />
-          <Input.TextArea rows={5} placeholder="Enter your message here" className="py-2 px-3" />
-          <Button type="primary" className="bg-purple-500 text-white" block>
-            Send
-          </Button>
-        </form>
-      </Modal>
+      title="Contact Us"
+      open={sender}
+      onOk={handleSend}
+      onCancel={handleCancel}
+      footer={null}
+    >
+      <form className="flex flex-col gap-3">
+        <Input
+          name="email"
+          type="email"
+          placeholder="Enter your email"
+          value={formData.email}
+          onChange={handleChange}
+          style={{paddingBlock:"5px"}}
+          className="py-4 px-3"
+        />
+        <Input.TextArea
+          name="message"
+          rows={5}
+          placeholder="Enter your message here"
+          value={formData.message}
+          onChange={handleChange}
+          className="py-2 px-3"
+        />
+        <Button
+          type="primary"
+          style={{background:" var(--purple)",paddingBlock:"4px"}}
+          className=" py-3 text-white"
+          block
+          disabled={formData.message==="" || formData.email===""}
+          onClick={handleSend}
+          loading={loading}
+        >
+          Send
+        </Button>
+      </form>
+    </Modal>
     
       {/* Related Products Section */}
       <div style={{marginBlock:"30px"}} className="mt-10 bg-white p-6 rounded-xl shadow-md">
         <h1 style={{marginBlock:"16px"}} className="text-lg font-semibold mb-4">Products in "Books & Stationery"</h1>
         {products.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className=" w-full shadow-md py-5  rounded-lg bg-white columns-1 grid-gap-2 md:columns-2 lg:columns-3 space-y-4">
             {products.map((product, index) => (
-              <div key={index} className="border-2 border-purple-400 bg-white rounded-2xl p-4 hover:shadow-xl transition-all">
-                <div className="bg-stone-100 h-[200px] rounded-lg overflow-hidden flex justify-center items-center">
+              <div key={index} className="relative w-full  border-2 border-purple-500 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden break-inside-avoid md:w-[270px]">
+                <div className="bg-stone-100 h-auto rounded-lg overflow-hidden flex justify-center items-center">
                   <LazyLoadImage
                     src={product.img_vid}
                     alt={product.caption}
@@ -187,20 +253,61 @@ console.log(category)
                     className="object-contain h-full"
                     onError={() => console.log("failed to upload image")}
                   />
+                  
                 </div>
-                <div className="mt-3 space-y-2">
-                <div className="flex gap-2 flex-wrap">
-                  <span className="text-xs font-medium bg-stone-200 px-2 py-1 inline-block rounded">
-                    #{product.category}
-                  </span>
-                  <span className="text-xs font-medium bg-purple-100 text-purple-700 px-2 py-1 inline-block rounded">
-                    {product?.product_condition || "Condition Unknown"}
-                  </span>
+                <div className="w-full px-4 py-3 bg-gradient-to-r from-white via-gray-100 to-white">
+                    {/* Category */}
+                    <div className="mb-2">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-wide">Category</span>
+                      <div style={{marginTop:"4px"}} className="inline-block mt-1 bg-purple-100 text-purple-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm">
+                        #{product.category}
+                      </div>
+                    </div>
+                
+                    {/* Description */}
+                    <div className="mb-2">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-wide">Description</span>
+                      <p className="text-xs font-medium text-gray-700 mt-1">{product.caption}</p>
+                    </div>
+                
+                    {/* Actions */}
+                    <div style={{marginTop:"16px"}} className="flex items-center justify-between ">
+                      {/* Add to Cart */}
+                      <button
+                        
+                        className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm px-3 py-1.5 rounded-lg flex items-center gap-2"
+                      >
+                        <ShoppingCartOutlined />
+                        <span>View Product</span>
+                      </button>
+                
+                      {/* Rating & Price */}
+                      <div className="flex flex-col items-end">
+                        <div className="flex space-x-1">
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <svg
+                              key={i}
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill={i < item.rating ? "gold" : "none"}
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4 text-yellow-500"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.905c.969 0 1.371 1.24.588 1.81l-3.97 2.888a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.54 1.118l-3.97-2.888a1 1 0 00-1.176 0l-3.97 2.888c-.784.57-1.838-.197-1.54-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.783-.57-.38-1.81.588-1.81h4.905a1 1 0 00.95-.69l1.518-4.674z"
+                              />
+                            </svg>
+                          ))}
+                        </div>
+                        <span className="text-sm font-semibold text-gray-800 mt-1">₵{product.price}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                  <p className="text-sm text-stone-600">{product.caption}</p>
-                  <div className="text-right font-bold text-purple-700">₵{product.price}</div>
-                </div>
-              </div>
+              
             ))}
           </div>
         ) : (

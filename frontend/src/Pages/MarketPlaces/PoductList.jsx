@@ -8,9 +8,9 @@ import { storage } from "../../firebase"
 import { v4 } from "uuid"
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import io from "socket.io-client"
-import TrendPostPopup from './TrendPostPopup';
-import TrendsPosts from './TrendsPosts';
-
+import AddProductCard from './AddProductCard';
+import TrendsPosts from './Products';
+import {motion} from "framer-motion"
 
 const TrendsCompo = () => {
 
@@ -40,6 +40,7 @@ const TrendsCompo = () => {
   const initialSearch = searchParams.get("search") || "";
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [productsCategory, setProductsCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [filteredPosts,setFilteredPosts] = useState([])
 
@@ -54,9 +55,8 @@ const TrendsCompo = () => {
     const filtered = posts.filter((post) => {
       const matchesCategory =
         selectedCategory === "All" || post.category === selectedCategory;
-      const matchesSearch = post.category
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+        const matchesSearch = post.category?.toLowerCase().includes(searchTerm.toLowerCase());
+
       return matchesCategory && matchesSearch;
     });
 
@@ -153,7 +153,7 @@ const TrendsCompo = () => {
     if(!image) return;  /*if there's no image selected don't process with the rest of the functionalities */
     setSendAlert(true)
     setCaption("") //empty caption input field after making a post
-    pic.current.src=""
+    setImage(null) //empty image input field after making a post
     try{
   const storageRef = ref(storage, `images/${image.name + v4()}`); //setting the path for the chosen image
  
@@ -163,7 +163,7 @@ const TrendsCompo = () => {
   const url=await  getDownloadURL(snapshot.ref) //get image reference and download the url from file server(firebase)
       console.log('File available at', url);
     
-      socket.emit('sendPost',{id:userId,caption,category,img_vid:url,selectedCategory,price,isPremium}); //emit post including image url to the web server
+      socket.emit('sendPost',{id:userId,caption,category,img_vid:url,price,isPremium}); //emit post including image url to the web server
       setSendAlert(false)
     
  
@@ -274,7 +274,7 @@ const TrendsCompo = () => {
         
       const viewProduct= (id,category) =>{
         const encodedCategory = encodeURIComponent(category);
-        navigate(`/Customer/Trends/Items?similar_for=${id}&category=${encodedCategory}`);
+        navigate(`/Customer/Marketplace/product_list?similar_for=${id}&category=${encodedCategory}`);
       }
        
 
@@ -283,79 +283,27 @@ const TrendsCompo = () => {
       //Select image from file explorer
         const [imagePreview,setImagePreview] = useState(null)
         const [image, setImage] = useState(null);
-      let pic=useRef()
+      
       const handleFile = (file) => {
         if (file && file.type.startsWith('image/')) {
           setImage(file);
           const objectUrl = URL.createObjectURL(file);
           
           setImagePreview(objectUrl)
-          pic.current.src = imagePreview;
+          
         }
       };
     
-      const handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const file = e.dataTransfer.files[0];
-        handleFile(file);
-      };
-    
-      const handleDragOver = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      };
+      
     
       const handleChange = (e) => {
         const file = e.target.files[0];
         handleFile(file);
       };
 
-        useEffect(() => {
-          
-
-          
-          const handleDrop = (event) => {
-              event.preventDefault();
-              event.stopPropagation();
+        
   
-              const files = event.dataTransfer.files;
-              if (files.length > 0) {
-                  const file = files[0];
-                  setImage(file);
-                  pic.current.src = URL.createObjectURL(file);
-              }
-          };
-  
-          const currentPic = pic.current;
-          if (currentPic) {
               
-              currentPic.addEventListener('drop', handleDrop);
-          }
-  
-          // Clean up event listener on component unmount
-          return () => {
-              if (currentPic) {
-                  currentPic.removeEventListener('drop', handleDrop);
-                  
-              }
-          };
-      }, []);
-
-                const popRef= useRef(null)
-                useEffect(()=>{   //this function allows u to close the popup menu by clicking outside of it.
-                  let closePop =(event)=>{
-                    if(popRef.current && !popRef.current.contains(event.target)){
-                      setOpenDialog(false);
-                    }
-                       /**This function is executed when you click outside the pop up menu in event.js to close it */
-                  }
-                  document.addEventListener("mousedown",closePop);
-                  return()=>{
-                    document.removeEventListener("mousedown",closePop)
-                    /**This function is executed when you click outside the sidebar to close it in ToggleSideBar.jsx */
-                  }
-                },[]);     
     const [openDialog,setOpenDialog]= useState(false)
 
    
@@ -446,6 +394,11 @@ const TrendsCompo = () => {
   
               
   return (
+    <motion.div 
+             initial={{ opacity: 0, perspective: 1000, rotateY: -90,y:100 }}
+             animate={{ opacity: 1, perspective: 1000, rotateY: 0 ,y:0}}
+             exit={{ opacity: 0,y:100}}
+                className='layout-shift w-full bg-stone-100  lg:w-[80%] '>
     <main className='pt-[20px]  '>
       {sendAlert ?<div className='absolute top-20 z-99 left-[50%] font-medium bg-stone-300 rounded-lg px-[40px] py-2 translate-x-[-50%] translate-y-[-50%]'>Creating post...</div>:null}
       <div style={{marginInline:"auto",marginTop:"70px"}} className="bg-white rounded-lg  w-[95%] shadow-md p-4 flex  sm:flex-row items-center justify-between gap-4">
@@ -558,14 +511,13 @@ const TrendsCompo = () => {
 
       {/* create a post popup menu*/}
       
-     {openDialog &&<TrendPostPopup
-         reference={popRef}
+     {openDialog &&<AddProductCard
+         
          send={sendPost}
-         picRef={pic}
+         
          cap={caption}
          image={image}
-         handleDragOver={handleDragOver}
-         handleDrop={handleDrop}
+         
         handleChange={handleChange}
         popUp={openDialog}
         setOpenDialog={setOpenDialog}
@@ -574,11 +526,12 @@ const TrendsCompo = () => {
          premium={[isPremium, setIsPremium]}
         selectCat={[selectedCategory,setSelectedCategory]}
         setCaption={setCaption}
-        setCategory={setCategory}
+        setCategory={[category,setCategory]}
          
    />} 
   
     </main>
+    </motion.div>
   )
 }
 

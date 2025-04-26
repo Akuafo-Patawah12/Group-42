@@ -1,14 +1,7 @@
-const Notification = require("../DatabaseSchemas/SupplyChain_Model/Notification")
+const Notification = require("../Models/Notification")
 const Notify=(socket)=>{
 
-socket.on("sendMessage",async(data)=>{
-    try{
-       console.log(data)
-       socket.to().emit("receivedMessage",data)
-    }catch(error){
-        console.log(error)
-    }
-})
+
 
 socket.on('getUnreadNotifications', async (userId) => {
     try {

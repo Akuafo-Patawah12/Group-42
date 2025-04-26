@@ -1,4 +1,4 @@
-const User = require("../DatabaseSchemas/userSchema")
+const User = require("../Models/userSchema")
 const bcrypt = require("bcrypt");
 
 exports.updateEmail = async (req, res) => {

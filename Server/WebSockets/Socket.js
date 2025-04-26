@@ -1,7 +1,5 @@
 const socketIo = require('socket.io');
-const Post= require('../DatabaseSchemas/PostSchema')
-const {Order}= require("../DatabaseSchemas/SupplyChain_Model/OrderAndShipment")
- const data= require("../DatabaseSchemas/userSchema")
+
  const Message=  require("./NotificationsNamespace")
 const jwt= require('jsonwebtoken')
 const cookie= require('cookie');
@@ -156,8 +154,14 @@ notificationsNamespace.on('connection', (socket) => {
   notify(socket)
  
   socket.on('disconnect', () => {
-    
-      console.log('User disconnected from the notifications namespace');
+    console.log('User disconnected from the notifications namespace');
+    for (const [userId, socketId] of Object.entries(users)) {
+      if (socketId === socket.id) {
+          delete users[userId];
+          break;
+      }
+  }
+      
   });
 });
    

@@ -1,6 +1,6 @@
 const bcrypt= require('bcrypt')
 const jwt=require ('jsonwebtoken')
-const data= require('../DatabaseSchemas/userSchema')
+const data= require('../Models/userSchema')
 
 
 

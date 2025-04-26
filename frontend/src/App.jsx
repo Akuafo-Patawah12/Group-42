@@ -4,15 +4,15 @@ import {Routes,Route} from 'react-router-dom'
 import './App.css';
 
 
-import LayoutBundle from './RoutesBundle/LayoutBundle';
-import CustomersLayout from './RoutesBundle/CustomersLayout';
+import AdminLayout from './Layouts/AdminLayout';
+import CustomersLayout from './Layouts/CustomersLayout';
 
 import PageNotFound from './Routes/PageNotFound';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import General from './RoutesBundle/General';
+import General from './Layouts/General';
 
 
 
@@ -37,7 +37,7 @@ function App() {
 
             
           <Route path="/*" element={<General/>} /> 
-          <Route path="/L/*" element={<LayoutBundle/>} />
+          <Route path="/L/*" element={<AdminLayout/>} />
           <Route path="/Customer/*" element={<CustomersLayout/>} />
           <Route path='*' element={<PageNotFound/>} />
          </Routes>
