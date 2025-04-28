@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import { Link,useNavigate } from 'react-router-dom'
+import { Link,useNavigate,useLocation } from 'react-router-dom'
 import { Form, Input, Button, Checkbox, Typography, message } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
@@ -11,6 +11,12 @@ import WarningIcon from '../icons/Warning_icon'
 
 
 const Login = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get('id'); // Will be "true" or null
+  const getQuote = searchParams.get('get_quote'); // Will be "true" or null
+  const getQuoteValue = getQuote === 'true' ? true : false; // Convert to boolean
+
     axios.defaults.withCredentials = true;   //this allow us to send token safely to the browser's cookies
     const [formData,setFormData]= useState({
         email:"",
@@ -59,7 +65,14 @@ const Login = () => {
                     seValidation(""); 
                     setLoader(false)  //hidden button loader
                     // Navigate to the Trends page
-                    navigate('/Customer/Overview');
+                    if(getQuoteValue){
+                    navigate('/Customer/Overview?showModal=true'); // Navigate to this /Trends path after login succeeds
+                    }else if(id){
+
+                    navigate(`/Customer/Tracking?track_id=${id}`); // Navigate to this /Trends path after login succeeds 
+                  }else{
+                    navigate('/Customer/Overview'); // Navigate to this /Trends path after login succeeds
+                    }
                     break;
             
                 default:

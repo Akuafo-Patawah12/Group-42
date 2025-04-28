@@ -108,6 +108,10 @@ Socket.on("track",async(data,callback)=>{
       if(!order){
          callback({status: "error", message:"Your tracking id is not associated with any order"})
       }
+      if (!order.shipmentId) {
+        callback({status: "error", message:"Shipment is still pending"})
+      }
+      
       console.log(order)
       callback({status:"ok",message:"Tracking"})
       Socket.emit("get_item_location",order)

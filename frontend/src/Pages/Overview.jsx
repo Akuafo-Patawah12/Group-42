@@ -8,7 +8,7 @@ import {jwtDecode} from "jwt-decode"
 import "./Pages.css"
 import "./Invoice.css"
 import {v4} from "uuid"
-
+import { useLocation,useNavigate } from "react-router-dom"
 import io from "socket.io-client"
 import {toast} from "react-toastify"
 import {BarChartOutlined , CarOutlined, DatabaseOutlined,  ProductOutlined, ShoppingCartOutlined, WarningOutlined } from '@ant-design/icons'
@@ -23,7 +23,8 @@ const Overview = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const [visible,setVisible] = useState(false)
-
+  const locationPath = useLocation();
+  const navigate = useNavigate()
   const[orders,setOrders]=useState([]) //the array that stores alll the specific clients orders
   const socket = useMemo(() =>io("http://localhost:4000/Tracking",{
     transports: ['websocket'],
@@ -245,7 +246,20 @@ const togglePopup = () => {
 
 
 
+  useEffect(() => {
+    // Check if the 'showModal' query parameter exists in the URL
+    const params = new URLSearchParams(locationPath.search);
+    if (params.get('showModal') === 'true') {
+      setIsOpen(true);  // Open the modal if 'showModal=true' is present in the URL
+    }
+  }, [locationPath.search]);
 
+  const handleCloseModal = () => {
+    setIsOpen(false);
+
+    // Remove the 'showModal' query parameter from the URL
+    navigate('/customer/overview', { replace: true });
+  };
 
 
 
@@ -495,7 +509,7 @@ const CloseReport = () => {
           </>
         }
         open={isOpen}
-        onCancel={()=>setIsOpen(false)}
+        onCancel={()=>handleCloseModal()}
         footer={null}
       >
         <Form layout="vertical" onFinish={handleSubmit}>

@@ -7,6 +7,7 @@ const contact = require("../Controllers/Contact")
 const { updateEmail,settings_updatePassword,logoutAllSessions, deleteAccount } = require("../Controllers/Settings")
 const Authenticate = require("../Middlewares/Authenticate")
 const marketingMailSender = require("../Controllers/MarketingMailSender")
+const confirmToken = require("../Controllers/ConfirmToken")
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -32,8 +33,8 @@ router.post("/logout-all", logoutAllSessions);
 router.post("/contact",limiter, contact)
 router.delete("/delete-account", deleteAccount);
 router.get('/profile/:id', Authenticate, getUserProfile);
-router.post("marketing-mail",limiter, marketingMailSender)
-
+router.post("/marketing-mail",limiter, marketingMailSender)
+router.get("/confirm_token", confirmToken)
 // Route to delete a post (requires authentication)
 router.delete('/post/:postId', Authenticate, deletePost);
 

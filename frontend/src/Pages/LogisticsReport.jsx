@@ -103,7 +103,7 @@ const LogisticsReport = ({ order, onClose, visible, loading3 }) => {
               {order.qty || "Unknown"}
             </Descriptions.Item>
             <Descriptions.Item label="Total Amount:">
-              {order.totalAmount ? `$${order.totalAmount}` : "N/A"}
+              {order.cbm ? `$${order.cbm * order.shipmentId?.cbmRate}` : "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Updated At:">
               {new Date(order.updatedAt).toLocaleString()}

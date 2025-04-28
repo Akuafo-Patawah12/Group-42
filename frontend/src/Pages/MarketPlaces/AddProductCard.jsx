@@ -158,7 +158,7 @@ const AddProductCard = (props) => {
         placeholder="Add your website URL (Optional)" 
         size="large" 
         value={props.website_url}
-        onChange={}
+        onChange={(e)=> props.setWebsite_url(e.target.value)}
         className="rounded-lg transition-all duration-300 ease-in-out"
       />
     )}
@@ -181,7 +181,7 @@ const AddProductCard = (props) => {
             {currentSlide === 0 ? 'Next' : 'Previous'}
           </Button>
           <Button type="primary" disabled={props.cap==="" || props.imagePreview===null  || props.price[0]===""} style={{background:"var(--purple)"}} onClick={props.send} className="bg-purple-500 hover:bg-purple-600">
-            Post
+            {props.postLoader ? <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin"></div> : "Post"}
           </Button>
         </div>
       </div>

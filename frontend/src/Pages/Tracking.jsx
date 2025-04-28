@@ -10,6 +10,7 @@ import  ShipIcon  from "../icons/Truck.svg"
 import  MapShipIcon  from "../icons/CargoShip.svg"
 import  Ship2Icon  from "../icons/image.svg"
 import Ship from "../icons/Ship"
+import MapShip from '../icons/MapShip'
 import { RightCircleFilled,ArrowRightOutlined, UpOutlined ,CheckOutlined  } from '@ant-design/icons'
 import Map, { Marker,  NavigationControl,Source,Layer } from "react-map-gl/maplibre";
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -284,8 +285,10 @@ useEffect(() => {
    socket.emit("track",track_id,(response)=>{
     if(response.status==="ok"){
        toast.success("Tracking...")
+      }else if(response.message==="Shipment is still pending"){
+       toast.warning(response.message)
       }else{
-       toast.error(response.message)
+        toast.error(response.message)
       }
   })
     console.log(`Sent track_id to backend: ${track_id}`);
@@ -485,7 +488,7 @@ function handTrack(){
       id="Map"
     >
       <Marker latitude={routesMap[route][Index].Latitude} longitude={routesMap[route][Index].Longitude}>
-        <div><Package/></div>
+        <div><MapShip/></div>
       </Marker>
 
       <Marker longitude={routesMap[route][0].Longitude} latitude={routesMap[route][0].Latitude} color="blue">
@@ -536,7 +539,8 @@ function handTrack(){
           type="line"
           paint={{
             "line-color": "#8A2BE2", // BlueViolet line color
-            "line-width": 3, // Line thickness
+            "line-width": 2, // Line thickness,
+            "line-dasharray": [3, 2], // Dash pattern: [dash length, gap length]
           }}
         />
       </Source>

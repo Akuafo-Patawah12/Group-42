@@ -147,6 +147,7 @@ const Orders = () => {
     (response) => {
       if (response.status === "ok") {
         toast.success("CBM & CTN updated")
+        setOpenCBM(false)
         setOrders(prev =>
           prev.map(order =>
             order._id === response.data._id ? response.data : order
@@ -326,9 +327,9 @@ const Orders = () => {
     console.log("Start shipment for:", containerNumber);
     socket.emit("start-shipment",{containerNumber,selectedRowKeys},(response)=>{
       if (response.status==="ok"){
-        message.success("shipment started")
+        toast.success("shipment started")
       }else{
-        message.error("error starting shipments")
+        toast.error("error starting shipments")
       }
     })
     // Send this to your backend or Socket.IO here
@@ -343,6 +344,7 @@ const Orders = () => {
       message.success("Shipment started!");
     } catch (error) {
       // Validation error
+      console.log(error)
     }
   };
   

@@ -2,7 +2,8 @@ import React,{useEffect,useState,useMemo} from "react"
 import {useSearchParams,useNavigate} from "react-router-dom"
 import { Modal, Input, Button } from "antd";
 import io from "socket.io-client"
-import { Link } from "lucide-react";
+import axios from "axios"
+import { Link, BadgeCheck } from "lucide-react";
 import {toast} from "react-toastify"
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -24,8 +25,19 @@ const ItemList=()=>{
   const [formData, setFormData] = useState({
     email: "",
     message: "",
-    marketer_email: post?.user_id.email || ""
+    marketer_email: ""
   });
+
+
+  console.log("this email",post?.user_id?.email)
+  useEffect(() => {
+    if (post?.user_id?.email) {
+      setFormData(prev => ({
+        ...prev,
+        marketer_email: post.user_id.email
+      }));
+    }
+  }, [post]);
 
   const [loading, setLoading] = useState(false);
 
@@ -110,25 +122,33 @@ console.log(category)
   };
 
   const handleSend = async () => {
-    if (!formData.email || !formData.message) {
-      return toast.warning("Please fill out both fields.");
+    if (!formData.email.trim() || !formData.message.trim()) {
+      toast.warning("Please fill out both fields.");
+      return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      const response= await axios.post("http://localhost:4000/Marketing_email",{formData})
-      await new Promise((res) => setTimeout(res, 1000)); // Simulated request
-      toast.success("Message sent successfully!");
-      setFormData({ email: "", message: "" });
-      handleOk(); // Close modal
+      const response = await axios.post("http://localhost:4000/marketing-mail", formData);
+  
+      // Optional: You can check response status if needed
+      if (response.status === 200) {
+        await new Promise((res) => setTimeout(res, 1000)); // Simulate slight delay
+        toast.success("Message sent successfully!");
+        setFormData({ email: "", message: "" });
+        handleOk(); // Close modal
+      } else {
+        toast.error("Unexpected response from server.");
+      }
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to send message.");
+      console.error("Send message error:", error);
+      toast.error(error.response?.data?.message || "Failed to send message.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   const item={rating: 4}
     return(
@@ -159,11 +179,11 @@ console.log(category)
             {/* Owner Info */}
             <div className="flex items-center justify-between bg-white border-2 border-purple-400 rounded-xl px-4 py-3">
               <div className="flex items-center gap-3">
-                <div className="rounded-full bg-purple-500 text-white flex items-center justify-center w-8 h-8">A</div>
-                <span className="font-medium text-sm">Andrew Patawah</span>
+                <div className="rounded-full bg-purple-500 text-white flex items-center justify-center w-8 h-8">{post.user_id.username[0]}</div>
+                <span className="font-medium text-sm">{post.user_id.username} <br/> <span className="text-xs">Joined since {new Date(post.user_id?.createdAt).toLocaleString()}</span></span>
               </div>
               <button title="View profile">
-                <EyeFilled className="text-lg text-purple-500 hover:text-purple-700" />
+                < BadgeCheck className="text-lg text-purple-500 hover:text-purple-700" />
               </button>
             </div>
     
@@ -184,9 +204,16 @@ console.log(category)
             <div className="bg-white border-2 border-purple-400 rounded-xl px-4 py-3">
               <h3 className="text-sm font-medium mb-2">Social Media Handles</h3>
               <div className="flex items-center justify-between">
-                <div className="flex gap-3 text-2xl text-purple-600">
-                <a href={post?.website_url}  target="_blank" rel="noopener noreferrer"><Link className="w-5 h-5 text-purple-600" /></a>
-                </div>
+                {post.website_url && (
+                         <a
+                           href={post.website_url}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           className="inline-flex items-center text-xs text-purple-600 hover:underline gap-1"
+                         >
+                           <Link size={14} /> Visit Website
+                         </a>
+                       )}
                 <button onClick={showEmailSender} className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm">
                   Send Mail
                 </button>
@@ -244,8 +271,8 @@ console.log(category)
         {products.length > 0 ? (
           <div className=" w-full shadow-md py-5  rounded-lg bg-white columns-1 grid-gap-2 md:columns-2 lg:columns-3 space-y-4">
             {products.map((product, index) => (
-              <div key={index} className="relative w-full  border-2 border-purple-500 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden break-inside-avoid md:w-[270px]">
-                <div className="bg-stone-100 h-auto rounded-lg overflow-hidden flex justify-center items-center">
+              <div key={index} style={{marginBottom:"16px"}} className="relative w-full  border-2 border-purple-500 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden break-inside-avoid md:w-[270px]">
+                <div className="bg-stone-100 min-h-[200px] rounded-lg overflow-hidden flex justify-center items-center">
                   <LazyLoadImage
                     src={product.img_vid}
                     alt={product.caption}

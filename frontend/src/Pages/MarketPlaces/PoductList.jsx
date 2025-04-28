@@ -2,10 +2,11 @@ import {  LeftOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons'
 import React,{useState,useEffect,useRef,useMemo} from 'react'
 import {jwtDecode} from "jwt-decode"
 import {useNavigate,useSearchParams} from 'react-router-dom';
-import {Input,AutoComplete,Empty,Button } from 'antd'
+import {Input,AutoComplete,Empty,Button,Modal } from 'antd'
 import axios from 'axios'
 import { storage } from "../../firebase"
 import { v4 } from "uuid"
+import { toast } from 'react-toastify';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import io from "socket.io-client"
 import AddProductCard from './AddProductCard';
@@ -31,7 +32,7 @@ const TrendsCompo = () => {
  
   
   const [filteredOptions, setFilteredOptions] = useState(posts);
-
+ const [website_url,setWebsite_url] = useState("")
 
   const [searchParams, setSearchParams] = useSearchParams();
   
@@ -143,6 +144,21 @@ const TrendsCompo = () => {
     }
   }, []);
   
+  useEffect(() => {
+    const handleOffline = () => {
+      toast.warning(
+      
+         'You are currently offline. Please check your internet connection.'
+        
+      );
+    };
+  
+    window.addEventListener('offline', handleOffline);
+  
+    return () => {
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   
 
 
@@ -152,6 +168,7 @@ const TrendsCompo = () => {
     e.preventDefault()
     if(!image) return;  /*if there's no image selected don't process with the rest of the functionalities */
     setSendAlert(true)
+    setPostLoader(true)
     setCaption("") //empty caption input field after making a post
     setImage(null) //empty image input field after making a post
     try{
@@ -163,8 +180,9 @@ const TrendsCompo = () => {
   const url=await  getDownloadURL(snapshot.ref) //get image reference and download the url from file server(firebase)
       console.log('File available at', url);
     
-      socket.emit('sendPost',{id:userId,caption,category,img_vid:url,price,isPremium}); //emit post including image url to the web server
+      socket.emit('sendPost',{id:userId,caption,website_url,category,img_vid:url,price,isPremium}); //emit post including image url to the web server
       setSendAlert(false)
+      
     
  
 }catch(e){
@@ -173,7 +191,7 @@ const TrendsCompo = () => {
     } 
     
 
-    
+    const [postLoader,setPostLoader] = useState(false)
     useEffect(()=>{
       socket.emit("refreshPost","call refresh")
     },[])
@@ -188,7 +206,15 @@ const TrendsCompo = () => {
 
         socket.on('receivePost',(data)=>{
           // Update the state by adding the new post to the existing posts
+          console.log('Received Post:', data); 
+          setPostLoader(false)
+          setOpenDialog(false)
+          toast.success("You added a product")
           setPosts(prevPosts => [data,...prevPosts,]);
+          setLoadedImages(prev => ({
+            ...prev,
+            [data._id]: true  //  initialize the new post's image as loaded
+          }));
         })
         
         
@@ -523,9 +549,12 @@ const TrendsCompo = () => {
         setOpenDialog={setOpenDialog}
         price={[price, setPrice]}
         imagePreview={imagePreview}
+         postLoader={postLoader}
          premium={[isPremium, setIsPremium]}
         selectCat={[selectedCategory,setSelectedCategory]}
         setCaption={setCaption}
+        setWebsite_url={setWebsite_url}
+        website_url={website_url}
         setCategory={[category,setCategory]}
          
    />} 

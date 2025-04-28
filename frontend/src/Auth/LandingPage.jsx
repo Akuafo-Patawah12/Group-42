@@ -1,10 +1,11 @@
 import {useRef, useState, useEffect} from "react"
 import { Card,Table, Col, Row,Button, Typography, Space, Avatar,  Rate  } from 'antd';
-import { Link } from "react-router-dom"
+import { Link,useNavigate } from "react-router-dom"
 import { SafetyOutlined, TeamOutlined, CheckCircleOutlined,LeftOutlined, RightOutlined, GlobalOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { Plane, Ship, Store,TrendingUp,PackagePlus,Megaphone,Package, ShoppingCart, UserPlus, Home, PackageCheck,Truck, HomeIcon, StarIcon, ChevronLeft, ChevronRight  } from "lucide-react";
-
+import axios from "axios"
+import { toast } from "react-toastify"
 import "./LandingPage.css"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 const { Title, Paragraph } = Typography
@@ -12,7 +13,7 @@ const { Title, Paragraph } = Typography
 
 
 const LandingPage = () => {
-
+ const navigate = useNavigate()
   const reviews = [
     {
       name: 'Akuafo Patawah',
@@ -247,6 +248,46 @@ const LandingPage = () => {
       return () => container.removeEventListener("scroll", checkScroll);
     }
   }, []);
+
+ const [loading,setLoading] = useState(false)
+  const handleGetQuoteClick = async () => {
+    setLoading(true);
+    
+
+    try {
+      // Make an API call to check if the refresh token exists in cookies
+      const response = await axios.get('http://localhost:4000/confirm_token', {
+        withCredentials: true,  // Ensures cookies are sent with the request
+      });
+
+      if (response.status === 200) {
+        // Handle success if refresh token exists
+        console.log('Refresh token exists and is valid');
+        setLoading(false);
+        navigate('/customer/overview?showModal=true');
+        // You can proceed with further actions, such as displaying a quote
+      }else{
+        // Handle case where refresh token does not exist or is invalid
+        console.log("You're not logged in");
+        setLoading(false);
+        toast.warning("Please login to get a quote")
+        navigate("/login?get_quote=true")
+      }
+    } catch (err) {
+      setLoading(false);
+      if (err.response) {
+        // Handle response error from the API (e.g., invalid or missing token)
+        
+        console.log("You're not logged in");
+        setLoading(false);
+        toast.warning("Please login to get a quote")
+        navigate("/login?get_quote=true")
+        console.log(`Error: ${err.response.data.message}`);
+      } else {
+        console.log('Error checking refresh token');
+      }
+    }
+  };
  
   return(
     <div className="pb-12  px-2  ">
@@ -262,7 +303,7 @@ const LandingPage = () => {
     <p style={{margin:"0 auto",textAlign:"center"}} className=" font-bold text-stone-700 text-sm w-4/5 ">
     Seamlessly connect products with people. We simplify global logistics while elevating your brand through strategic marketing—helping you move smarter and grow faster.
     </p>
-    <button style={{margin:"20px auto"}}  className="bg-purple-500 text-purple-200 text-sm font-medium p-3 rounded-3xl ">Get a Quote</button>
+    <button style={{margin:"20px auto"}} onClick={handleGetQuoteClick}  className="bg-purple-500 text-purple-200 text-sm font-medium p-3 rounded-3xl ">{loading ? "loading..." : "Get a Quote"}</button>
     <div style={{margin:"20px auto"}} className="bg-[url('/images/ad.svg')] bg-contain bg-no-repeat w-[80%] h-[300px]"></div>
   </div>
 

@@ -1,6 +1,7 @@
 
 const Post=require("../Models/PostSchema")
-
+const User=require("../Models/userSchema")
+const notification=require("../Models/Notification")
 
 const PostFunction=(Socket,users,io,notificationsNamespace)=>{
      //asigning the users id to the socket id and inserting into the users object
@@ -32,6 +33,7 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
           caption: 1, // Include the caption
           img_vid: 1, // Include the img_vid,
           price:1,
+          website_url: 1, // Include the website_url
           category:1,
           createdAt: 1, //Include the createdAt
           username: '$userDetails.username', // Include the username from userDetails
@@ -49,7 +51,7 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
  Socket.on("getPost", async (postId) => {
   console.log(postId)
   try {
-    const post = await Post.findById(postId).populate("user_id","email"); // Fetch post by ID
+    const post = await Post.findById(postId).populate("user_id","email username createdAt"); // Fetch post by ID
     if (post) {
       Socket.emit("postData", post); // Emit the post data back to the client
     } else {
@@ -77,7 +79,7 @@ Socket.on("getProductsByCategory", async (category) => {
 });
  
  Socket.on('sendPost', async (data) => { //socket.on means receiving data or information from client side
-   const { id,caption,img_vid,category,isPremium,price } = data; //get post from client side
+   const { id,caption,img_vid,website_url,category,isPremium,price } = data; //get post from client side
    try {
      // Create a new post and save it to the database
      const input = new Post({
@@ -85,6 +87,7 @@ Socket.on("getProductsByCategory", async (category) => {
        img_vid,
        user_id:id,
        category,
+       website_url,
        premium: isPremium,
        price
      });
@@ -96,7 +99,7 @@ Socket.on("getProductsByCategory", async (category) => {
          user_id: post.user_id._id,
          caption,
          img_vid,
-         category:selectedCategory,
+         category,
          price,
          createdAt: post.createdAt,
          username: post.user_id.username
@@ -107,8 +110,32 @@ Socket.on("getProductsByCategory", async (category) => {
         message: `${post.user_id.username} created a post.`
     };
     notificationsNamespace.emit('notify', notificationData);
-
-
+    const customers = await User.find({account_type:"Personal"}); // Fetch user by ID
+    customers.forEach(async(customer) => {
+      try{
+      const socketId = users[customer._id]; // Fetch user’s socket ID
+      if (socketId) {
+        if(customer._id.toString() === post.user_id._id.toString()){
+          // Emit the notification to the specific user
+          const notification1 = new notification({
+            userId: customer._id,
+            message: `You uploaded a product.`,
+          });
+          await notification1.save();
+          notificationsNamespace.to(socketId).emit("notify", notification1);
+        }else{
+        const notification2 = new notification({
+          userId: customer._id,
+          message: `${post.user_id.username} added a product.`,
+        });
+        await notification2.save();
+        notificationsNamespace.to(socketId).emit("notify", notification2);
+      }
+    }
+  }catch(err){
+      console.log(err)
+    }
+    })
    } catch (err) {
      console.log(err, "sock error");
    }

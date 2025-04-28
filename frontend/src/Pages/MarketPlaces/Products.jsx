@@ -5,6 +5,7 @@ import { Empty } from "antd";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PostLoader from '../../icons/PostLoader';
 import { ImageLoader } from '../../icons/ButtonLoader';
+import { Link } from 'lucide-react';
 const TrendsPosts = ({loading,loadedImages,viewProduct,loaders,posts}) => {
         
      const[handleImageLoad]=loaders 
@@ -28,30 +29,23 @@ const TrendsPosts = ({loading,loadedImages,viewProduct,loaders,posts}) => {
   </section>
 
   {/* Image Section */}
-  <section className="flex justify-center min-h-[150px] items-center bg-stone-100 w-full ">
-  
-  {loadedImages[post._id] ? (
-            <LazyLoadImage
-              src={post.img_vid}
-              alt={post.caption}
-              effect="blur"
-              onLoad={() => handleImageLoad(post._id)}
-              className="w-full h-full object-cover"
-              onError={() => console.log(`Failed to load image for post ${post._id}`)}
-            />
-          ) : (
-            <LazyLoadImage
-              src={post.img_vid}
-              alt={post.caption}
-              effect="blur"
-              onLoad={() => handleImageLoad(post._id)}
-              className="hidden"
-              onError={() => console.log(`Failed to load image for post ${post._id}`)}
-            />
-          )}
-          {!loadedImages[post._id] && <ImageLoader />}
-        
-  </section>
+  <section className="flex justify-center min-h-[150px] items-center bg-stone-100 w-full relative overflow-hidden">
+  <LazyLoadImage
+    src={post.img_vid}
+    alt={post.caption}
+    effect="blur"
+    onLoad={() => handleImageLoad(post._id)}
+    className={`w-full h-full object-cover ${!loadedImages[post._id] ? 'opacity-0' : 'opacity-100'} transition-opacity duration-500`}
+    onError={() => console.log(`Failed to load image for post ${post._id}`)}
+  />
+
+  {!loadedImages[post._id] && (
+    <div className="absolute inset-0 flex justify-center items-center bg-stone-100">
+      <ImageLoader />
+    </div>
+  )}
+</section>
+
 
   {/* Info Section */}
   <div className="w-full px-4 py-3 bg-gradient-to-r from-white via-gray-100 to-white">
@@ -69,6 +63,17 @@ const TrendsPosts = ({loading,loadedImages,viewProduct,loaders,posts}) => {
       <p className="text-xs font-medium text-gray-700 mt-1">{post.caption}</p>
     </div>
 
+
+     {post.website_url && (
+         <a
+           href={post.website_url}
+           target="_blank"
+           rel="noopener noreferrer"
+           className="inline-flex items-center text-xs text-purple-600 hover:underline gap-1"
+         >
+           <Link size={14} /> Visit Website
+         </a>
+       )}
     {/* Actions */}
     <div style={{marginTop:"16px"}} className="flex items-center justify-between ">
       {/* Add to Cart */}

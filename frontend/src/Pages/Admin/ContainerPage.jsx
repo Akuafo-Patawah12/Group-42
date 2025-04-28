@@ -607,7 +607,7 @@ const [visible,setVisible] = useState(false)
   open={isEdit}
   onCancel={() => setIsEdit(false)}
   footer={null}
-  styles={{ maxHeight: "60vh", overflowY: "auto" }} // 🔥 Scrollable body
+  style={{ maxHeight: "60vh", overflowY: "auto",background:"white",borderRadius:"20px" }} // 🔥 Scrollable body
 >
   <Form layout="vertical">
     {/* All form content wrapped in one scrollable area */}

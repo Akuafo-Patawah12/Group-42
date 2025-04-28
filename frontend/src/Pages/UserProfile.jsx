@@ -88,36 +88,53 @@ const UserProfile = () => {
               />
             )}
             </div>
-            <div className="p-2">
-            <span className="bg-purple-100 text-purple-700 px-2 py-1 text-xs rounded-full">#{post.category}</span>
-            <h4 className="mt-2 text-sm font-medium text-gray-800">{post.caption}</h4>
-            <p className="text-xs text-gray-500">Condition: {post.product_condition}</p>
-            {post.website_url && (
-              <a href={post.website_url} target="_blank" rel="noopener noreferrer" className="text-xs text-purple-600 flex items-center gap-1 mt-1">
-                <Link size={14} /> Link
-              </a>
-            )}
-            <p className="mt-2 font-bold text-purple-700">₵{post.price}</p>
-            <Button 
-              danger
-              size="small"
-              onClick={() => {
-                Modal.confirm({
-                  title: 'Are you sure you want to delete this post?',
-                  content: 'This action cannot be undone.',
-                  okText: 'Yes, Delete',
-                  okType: 'danger',
-                  cancelText: 'Cancel',
-                  onOk() {
-                    handleDeletePost(post._id);
-                  },
-                });
-              }}
-              className="mt-2">
-              Delete Post
-            </Button>
-          </div>
-          </div>
+            <div className="p-4 rounded-lg shadow-sm bg-white space-y-2">
+  <div className="flex items-center gap-2">
+    <span className="bg-purple-100 text-purple-700 px-2 py-0.5 text-xs font-semibold rounded-full">
+      #{post.category}
+    </span>
+  </div>
+
+  <h4 className="text-base font-semibold text-gray-800">{post.caption}</h4>
+
+  <p className="text-sm text-gray-500">
+    Condition: <span className="font-medium text-gray-700">{post.product_condition}</span>
+  </p>
+
+  {post.website_url && (
+    <a
+      href={post.website_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center text-xs text-purple-600 hover:underline gap-1"
+    >
+      <Link size={14} /> Visit Link
+    </a>
+  )}
+
+  <p className="text-lg font-bold text-purple-700">₵{post.price}</p>
+
+  <Button
+    danger
+    size="small"
+    onClick={() => {
+      Modal.confirm({
+        title: 'Are you sure you want to delete this post?',
+        content: 'This action cannot be undone.',
+        okText: 'Yes, Delete',
+        okType: 'danger',
+        cancelText: 'Cancel',
+        onOk() {
+          handleDeletePost(post._id);
+        },
+      });
+    }}
+    className="w-full"
+  >
+    Delete Post
+  </Button>
+</div>
+</div>
         ))}
       </div>
     </div>

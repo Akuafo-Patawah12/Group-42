@@ -1,7 +1,8 @@
 
 const nodemailer = require("nodemailer");
 const marketingMailSender = async (req, res) => {
-    const { email, message } = req.body;
+    const { email, message ,marketer_email } = req.body;
+    console.log(email, message ,marketer_email)
   
     if (!email || !message) {
       return res.status(400).json({ error: "Email and message are required." });
@@ -20,8 +21,8 @@ const marketingMailSender = async (req, res) => {
       // Email options
       const mailOptions = {
         from: email,
-        to: process.env.EMAIL_USER, // receiving email (usually same as your email)
-        subject: "New Contact Form Message",
+        to: marketer_email, // receiving email (usually same as your email)
+        subject: "New Message from SFGL website",
         html: `
           <h3>Contact Form Submission</h3>
           <p><strong>From:</strong> ${email}</p>
