@@ -42,7 +42,7 @@ exports.getUserProfile = async (req, res) => {
 exports.deletePost = async (req, res) => {
   try {
     const { postId } = req.params;
-
+   console.log(postId,req.user.id)
     // Find and delete the post
     const post = await Post.findById(postId);
     
@@ -56,7 +56,7 @@ exports.deletePost = async (req, res) => {
     }
 
     // Delete the post
-    await post.remove();
+     await Post.findByIdAndDelete(postId);
 
     return res.status(200).json({ message: 'Post deleted successfully' });
   } catch (error) {

@@ -36,6 +36,6 @@ router.get('/profile/:id', Authenticate, getUserProfile);
 router.post("/marketing-mail",limiter, marketingMailSender)
 router.get("/confirm_token", confirmToken)
 // Route to delete a post (requires authentication)
-router.delete('/post/:postId', Authenticate, deletePost);
+router.delete('/posts/:postId', Authenticate, deletePost);
 
 module.exports= router
