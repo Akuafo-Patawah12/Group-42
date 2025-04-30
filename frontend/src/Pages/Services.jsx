@@ -74,10 +74,10 @@ const Services = () => {
 </h2>
 <p style={{margin:"20px auto"}} className="font-bold text-center max-w-[350px]">Quick, reliable, and affordable logistics solutions tailored for your business.</p>
 
-<section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-10 max-w-7xl mx-auto">
+<section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 md:px-10 max-w-7xl mx-auto">
 
   <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
-    <SeaFreight className="w-16 h-16 mb-4 text-purple-600" />
+    <SeaFreight className="w-10 h-10 mb-4 text-purple-600" />
     <h3 className="text-lg font-semibold text-gray-800 mb-2">Sea Freight</h3>
     <p className="text-sm text-gray-600">
       SF Ghana Logistics provides reliable and cost-effective Sea Freight Services for bulk shipments over long distances. 
@@ -86,7 +86,7 @@ const Services = () => {
   </div>
 
   <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
-    <AirFreightIcon className="w-16 h-16 mb-4 text-purple-600" />
+    <AirFreightIcon className="w-10 h-10 mb-4 text-purple-600" />
     <h3 className="text-lg font-semibold text-gray-800 mb-2">Air Freight</h3>
     <p className="text-sm text-gray-600">
       Fast, secure, and efficient transport for high-priority or time-sensitive shipments. 
@@ -94,17 +94,10 @@ const Services = () => {
     </p>
   </div>
 
-  <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
-    <Door2door className="w-16 h-16 mb-4 text-purple-600" />
-    <h3 className="text-lg font-semibold text-gray-800 mb-2">Door-to-Door Delivery</h3>
-    <p className="text-sm text-gray-600">
-      We manage the full logistics process from pickup to final delivery. 
-      <Link to="/Services/Door2door" className="text-purple-600 font-medium ml-1">See more...</Link>
-    </p>
-  </div>
+  
 
   <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
-    <ProcurementIcon className="w-16 h-16 mb-4 text-purple-600" />
+    <ProcurementIcon className="w-10 h-10 mb-4 text-purple-600" />
     <h3 className="text-lg font-semibold text-gray-800 mb-2">Procurement Training</h3>
     <p className="text-sm text-gray-600">
       Free training to enhance procurement and sourcing skills for businesses. 
@@ -113,20 +106,15 @@ const Services = () => {
   </div>
 
   <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
-    <Clearance className="w-16 h-16 mb-4 text-purple-600" />
-    <h3 className="text-lg font-semibold text-gray-800 mb-2">Container Clearance</h3>
-    <p className="text-sm text-gray-600">
+    <Clearance className="w-5 h-5 mb-4 text-purple-600" />
+    <h3  className="text-lg font-semibold text-gray-800 ">Container Clearance</h3>
+    <p  className="text-sm text-gray-600">
       Hassle-free customs clearance and flexible credit options for efficient logistics.
       <Link to="/Services/Clearance" className="text-purple-600 font-medium ml-1">See more...</Link>
     </p>
   </div>
 
-  <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
-    <h3 className="text-lg font-semibold text-gray-800 mb-2">Groupage Services</h3>
-    <p className="text-sm text-gray-600">
-      Share container space and save costs with timely, reliable delivery for small-to-medium shipments.
-    </p>
-  </div>
+  
 </section>
 
 {/* Image & Marketplace section */}
@@ -136,8 +124,8 @@ const Services = () => {
   </div>
   <div className="w-full lg:w-1/2">
     <img src="../images/online-purchase-payment-commerce-concept-transformed.jpeg" alt="e-commerce" className="w-full rounded-xl shadow-md mb-4" />
-    <h3 style={{marginBottom:"8px"}} className="text-lg font-semibold text-gray-800 mb-2">Third Party Marketplace</h3>
-    <p className="text-sm text-gray-600">
+    <h3 style={{marginBlock:"8px"}} className="text-lg font-semibold text-gray-800 mb-2">Third Party Marketplace</h3>
+    <p style={{marginBottom:"8px"}} className="text-sm text-gray-600">
       Connect buyers and sellers with secure transactions, powerful tools, and easy navigation to empower small businesses with a seamless e-commerce experience.
     </p>
   </div>

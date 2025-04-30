@@ -1,5 +1,5 @@
 const User = require('../Models/userSchema');
-const Post = require('../Models/PostSchema');
+const Post = require('../Models/ProductsSchema');
 const {Order} = require('../Models/OrderAndShipment');
 
 // Controller to get user profile details

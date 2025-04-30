@@ -25,6 +25,7 @@ const userSchema = new Schema({
     default: "Personal",
     required: true
   },
+  lastUsernameChange: Date,
   device_info: {
       type: [String] // To specify that it's an array of strings
     },

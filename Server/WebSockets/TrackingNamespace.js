@@ -23,7 +23,10 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
                 _id: order._id,
                 customer_id: order.customer_id,
                 customerName:customer.username,
-                Status: order.Status, 
+                Status: order.Status,
+                createdAt: order.createdAt,
+                tracking_no: order.tracking_no, 
+                description: order.description,
             };
             
             const admin = await User.find({account_type:"Business"})

@@ -4,7 +4,16 @@ const forgetPassword = require("../Utils/Nodemailer")
 const {rateLimit}= require("express-rate-limit")
 const { getUserProfile, deletePost } = require('../Controllers/Profile');
 const contact = require("../Controllers/Contact")
-const { updateEmail,settings_updatePassword,logoutAllSessions, deleteAccount } = require("../Controllers/Settings")
+const { 
+	updateEmail,
+	deleteAccount,
+	getUser,
+	requestChangeEmail,
+	verifyEmailChange,
+	updateUsername,
+	settings_updatePassword,
+	logoutAllSessions
+} = require("../Controllers/Settings")
 const Authenticate = require("../Middlewares/Authenticate")
 const marketingMailSender = require("../Controllers/MarketingMailSender")
 const confirmToken = require("../Controllers/ConfirmToken")
@@ -22,20 +31,27 @@ const limiter = rateLimit({
 
 
 
+
+
 router.post("/SignUp",limiter, SignUp )
 router.post("/Login",limiter, login)
 router.put("/updatePassword/:id",updatePassword)
 router.post("/forgetPassword",forgetPassword)
 router.post("/logout", logout)
 router.put("/update_email", updateEmail)
-router.put("/password", settings_updatePassword);
-router.post("/logout-all", logoutAllSessions);
 router.post("/contact",limiter, contact)
 router.delete("/delete-account", deleteAccount);
 router.get('/profile/:id', Authenticate, getUserProfile);
 router.post("/marketing-mail",limiter, marketingMailSender)
 router.get("/confirm_token", confirmToken)
+router.get("/getUser", Authenticate, getUser); 
+router.post("/verify-email-change",Authenticate,verifyEmailChange)
+router.post("/request-email-change",Authenticate, requestChangeEmail)
+router.post("/change-username",Authenticate, updateUsername)
+router.post("/update-password",Authenticate, settings_updatePassword)
 // Route to delete a post (requires authentication)
 router.delete('/posts/:postId', Authenticate, deletePost);
+router.delete("/delete-account",Authenticate, deleteAccount);
+router.post("/delete-all-devices",Authenticate, logoutAllSessions)
 
 module.exports= router

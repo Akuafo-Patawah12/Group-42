@@ -13,9 +13,9 @@ import Footer from '../Components/Footer';
 import TrackShipmentPopup from '../Components/TrackShipmentPopup';
 import More from '../Pages/More';
 import AirFreight from '../Pages/Service/Airfreight';
-import Groupage from '../Pages/Service/Groupage';
+
 import SeaFreight from '../Pages/Service/Seafreight';
-import Door2door from '../Pages/Service/Door2door';
+
 import ThirdPartyMarketing from '../Pages/Service/ThirdPartyMarketing';
 import Procurement from '../Pages/Service/Procurement';
 const GalleryPage= lazy(()=> import('../Pages/Gallery'));
@@ -89,9 +89,7 @@ const General = () => {
                <AirFreight />
             </React.Suspense>} />
 
-            <Route path='/Services/Groupage' element={<React.Suspense fallback={<AuthLoader/>}>
-               <Groupage />
-            </React.Suspense>} />
+            
 
             <Route path='/Services/Procurement' element={<React.Suspense fallback={<AuthLoader/>}>
                <Procurement />
@@ -101,10 +99,7 @@ const General = () => {
                <ThirdPartyMarketing />
             </React.Suspense>} />
 
-            <Route path='/Services/Door2door' element={<React.Suspense fallback={<AuthLoader/>}>
-               <Door2door />
-            </React.Suspense>} />
-
+            
             <Route path='/Services/SeaFreight' element={<React.Suspense fallback={<AuthLoader/>}>
                <SeaFreight />
             </React.Suspense>} />

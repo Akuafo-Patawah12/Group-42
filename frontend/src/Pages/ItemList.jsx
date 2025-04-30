@@ -2,7 +2,7 @@ import React,{useEffect,useState,useMemo} from "react"
 import {useSearchParams,useNavigate} from "react-router-dom"
 import { Modal, Input, Button } from "antd";
 import io from "socket.io-client"
-import axios from "axios"
+import axios from "../api/api"
 import { Link, BadgeCheck } from "lucide-react";
 import {toast} from "react-toastify"
 import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -13,15 +13,15 @@ import RefIcon from "@ant-design/icons/lib/icons/ArrowRightOutlined";
 const ItemList=()=>{
 
   const [searchParams] = useSearchParams();
-  const[isQuery,setQuery] = useState()
-  const[isCategory,setCategory] = useState("")
+
+ 
   const [sender,setSender] = useState(false)
   const navigate = useNavigate();
   
   const [post, setPost] = useState(null);
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
-  const [Error, setIsError] = useState("");
+  const [Error] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     message: "",
@@ -66,7 +66,7 @@ const ItemList=()=>{
     return () => {
       socket.off("postData");
     };
-  }, [searchParams]);
+  }, [socket, searchParams]); // Added socket to dependencies
 
   useEffect(() => {
     const category = searchParams.get("category"); // Category to filter by
@@ -130,7 +130,7 @@ console.log(category)
     setLoading(true);
   
     try {
-      const response = await axios.post("http://localhost:4000/marketing-mail", formData);
+      const response = await axios.post("/marketing-mail", formData);
   
       // Optional: You can check response status if needed
       if (response.status === 200) {

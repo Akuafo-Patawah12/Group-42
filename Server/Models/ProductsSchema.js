@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 // Define the user schema
-const postSchema = new Schema({
+const productsSchema = new Schema({
   user_id: {type:Schema.Types.ObjectId,ref:"User"},
   caption: {
     type: String 
@@ -23,6 +23,6 @@ const postSchema = new Schema({
 });
 
 // Create the user model
-const Post = mongoose.model('Post', postSchema);
+const Product = mongoose.model('Product', productsSchema);
 
-module.exports = Post;
+module.exports = Product;

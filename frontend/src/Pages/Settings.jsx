@@ -2,6 +2,8 @@ import React,{useState,useMemo,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import {motion } from "framer-motion"
 import { jwtDecode } from 'jwt-decode'
+import axios from "../api/api";
+import {toast} from "react-toastify" 
 import io from "socket.io-client"
 const Settings = () => {
   const socket = useMemo(() =>io("http://localhost:4000",{
@@ -35,80 +37,115 @@ const Settings = () => {
 
 
 const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [username, setUsername] = useState("JohnDoe");
+  const [username, setUsername] = useState("");
   const [newUsername, setNewUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  const [email, setEmail] = useState("john@example.com");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [newEmail, setNewEmail] = useState("");
+ 
+  const [sessions, setSessions] = useState([]);
 
-  const [sessions, setSessions] = useState([
-    { id: 1, device: "Chrome on Windows", location: "Accra, Ghana", active: true },
-    { id: 2, device: "Safari on iPhone", location: "Kumasi, Ghana", active: true },
-  ]);
+  
+ 
+  
 
-  const handleUsernameUpdate = (e) => {
+  const handleSubmitUsername = async (e) => {
     e.preventDefault();
-    if (newUsername.trim()) {
-      setUsername(newUsername);
-      setNewUsername("");
-      alert("Username updated successfully!");
+   
+    setError('');
+
+    try {
+      const res = await axios.post('/change-username', { newUsername }, { withCredentials: true });
+      toast.message("Username updated successfully");
+      setNewUsername('');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Something went wrong');
     }
   };
 
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
-  
-    if (password && newPassword) {
-      try {
-        await fetch("/api/user/password", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: decode.id, // Adjust based on auth
-            password,
-            newPassword,
-          }),
-        });
-  
-        setPassword("");
-        setNewPassword("");
-        alert("Password updated successfully!");
-      } catch (error) {
-        console.error("Password update error:", error);
-        alert("Failed to update password.");
-      }
+    toast.success(newPassword)
+    if (password==="" || newPassword==="") {
+      toast.warning('All fields are required');
+      return;
     }
-  };
-  
+    setError('');
 
-  const handleEmailUpdate = async (e) => {
-    e.preventDefault();
-    if (newEmail.trim()) {
-      try {
-        await fetch("/api/user/update_email", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: decode.id, // Adjust based on your auth logic
-            newEmail,
-          }),
-        });
-  
-        setEmail(newEmail);
-        setNewEmail("");
-        alert("Email updated. A confirmation has been sent.");
-      } catch (err) {
-        console.error(err);
-        alert("Failed to update email.");
-      }
+    try {
+      const res = await axios.post(
+        '/update-password',
+        { password, newPassword },
+        { withCredentials: true }
+      );
+      toast.success(res.data.message);
+      
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Something went wrong');
     }
   };
+
+  
+  const getUser = async () => {
+     try {
+      const response = await axios.get("/getUser");
+      const user = response.data;
+      setUsername(user.username);
+      setEmail(user.email);
+      setSessions(user.device_info)
+     }catch (error) {
+      console.error("Error fetching user data:", error);
+      alert("Failed to fetch user data.");
+     }
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+
+  const requestEmailChange = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await axios.post(
+        '/request-email-change',
+        { newEmail },
+        
+      );
+      if(response.status===200){
+      toast.success("Verification link sent to your new email");
+      }
+    } catch (error) {
+      throw error.response?.data || { message: 'Something went wrong' };
+    }
+  };
+
+
+
+  const [error, setError] = useState('');
+
+  // Extract token outside useEffect
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+
+  useEffect(() => {
+    if (!token) return; // Don't run if there's no token
+
+    const verifyEmailChange = async () => {
+      try {
+        const res = await axios.post('/verify-email-change', { token });
+        if (res.status===200){
+        toast.success("Verified");
+        }
+      } catch (err) {
+        setError(err.response?.data?.message || 'Verification failed');
+      }
+    };
+
+    verifyEmailChange();
+  }, [token]); // Only run if token exists
   
 
   const handleLogoutAllSessions = () => {
@@ -117,13 +154,20 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     setSessions([]);
   };
 
-  const handleRemoveAccount = () => {
-  if (confirm("Are you sure you want to delete your account? This action is irreversible.")) {
-    // Make API call or socket emit here
-    // Example: socket.emit("deleteAccount", { userId: decodedToken.id });
-    console.log("Account deletion triggered");
-  }
-};
+  
+  
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) return;
+    try {
+      const res = await axios.post('/delete-all-devices', {}, { withCredentials: true });
+      toast.success(res.data.message);
+      window.location.href = '/login';
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Error removing devices');
+    }
+  };
+  
 
   return (
     <motion.div
@@ -152,7 +196,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
 <div className="flex gap-5 justify-between py-5">
   {/* Update Username */}
-  <form onSubmit={handleUsernameUpdate} className="mb-10 bg-white p-6 rounded-xl shadow">
+  <form onSubmit={handleSubmitUsername} className="mb-10 bg-white p-6 rounded-xl shadow">
     <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 mb-4">Update Username</h3>
     <label style={{marginBlock:"8px"}} className="block text-sm  mb-2 font-medium text-gray-700">Current Username: {username}</label>
     <input
@@ -172,7 +216,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   </form>
 
   {/* Update Email */}
-  <form onSubmit={handleEmailUpdate} className="mb-10 bg-white p-6 rounded-xl shadow">
+  <form onSubmit={requestEmailChange} className="mb-10 bg-white p-6 rounded-xl shadow">
     <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Update Email</h3>
     <label style={{marginBlock:"8px"}} className="block text-sm  font-medium text-gray-700">Current Email: {email}</label>
     <input
@@ -210,7 +254,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
       type="password"
       value={newPassword}
       onChange={(e) => setNewPassword(e.target.value)}
-      placeholder="New Password"
+      placeholder="Current Password"
       style={{marginBlock:"16px"}}
       className="w-full text-sm px-4 py-2 border border-gray-300 rounded  focus:outline-none focus:ring-2 focus:ring-purple-400"
     />
@@ -232,9 +276,9 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
       <p className="text-gray-500 text-sm">No active sessions.</p>
     ) : (
       <ul style={{marginBlock:"16px"}} className="flex flex-col gap-3 ">
-        {sessions.map((session) => (
-          <li key={session.id} className="bg-purple-50 p-3 text-sm rounded border border-purple-100">
-            <strong className="text-purple-700">{session.device}</strong> — {session.location}
+        {sessions.map((session,index) => (
+          <li key={index} className="bg-purple-50 p-3 text-xs font-semibold rounded border border-purple-100">
+            <p className="text-purple-700">{session}</p> 
           </li>
         ))}
       </ul>
@@ -253,7 +297,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     Once you delete your account, there is no going back. Please be certain.
   </p>
   <button
-    onClick={handleRemoveAccount}
+    onClick={handleDeleteAccount}
     
     className="w-full text-sm py-2 text-red-500 bg-red-200 border-2 border-red-300 rounded hover:bg-red-700 transition"
   >

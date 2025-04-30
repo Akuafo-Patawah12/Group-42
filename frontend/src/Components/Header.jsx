@@ -42,7 +42,6 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
       <Link to="/Services/AirFreight">Air Freight</Link>
       <Link to="/Services/SeaFreight">Sea Freight</Link>
       <Link to="/Services/Procurement">Procurement</Link>
-      <Link to="/Services/Groupage">Groupage</Link>
       <Link to="/Services/Marketing">Shop with Us</Link>
     </div>
   </div>
@@ -55,7 +54,6 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
     <NavLink to="/More" className={({ isActive }) => isActive ? "tab-link active" : "tab-link"}>More ▾</NavLink>
     <div className="dropdown">
       <Link to="/More/FAQs">FAQs</Link>
-      <Link to="/Orders">Get a Quote</Link>
       <Link to="/More/Gallery">Gallery</Link>
       <Link to="/More/Privacy_&_Policy">Privacy & Policy</Link>
     </div>

@@ -1,5 +1,5 @@
 
-const Post=require("../Models/PostSchema")
+const Product=require("../Models/ProductsSchema")
 const User=require("../Models/userSchema")
 const notification=require("../Models/Notification")
 
@@ -12,7 +12,7 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
  Socket.on("refreshPost",async(data)=>{
   console.log(data)
   try {
-    const result = await Post.aggregate([  //joining an querying different tables
+    const result = await Product.aggregate([  //joining an querying different tables
       { 
         $lookup: {
           from: 'users', // Name of the user collection
@@ -51,9 +51,9 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
  Socket.on("getPost", async (postId) => {
   console.log(postId)
   try {
-    const post = await Post.findById(postId).populate("user_id","email username createdAt"); // Fetch post by ID
-    if (post) {
-      Socket.emit("postData", post); // Emit the post data back to the client
+    const product = await Product.findById(postId).populate("user_id","email username createdAt"); // Fetch post by ID
+    if (product) {
+      Socket.emit("postData", product); // Emit the post data back to the client
     } else {
       Socket.emit("postData", { error: "Post not found" });
     }
@@ -66,7 +66,7 @@ const PostFunction=(Socket,users,io,notificationsNamespace)=>{
 
 Socket.on("getProductsByCategory", async (category) => {
   try {
-    const products = await Post.find({ category: category }); // Query products by category
+    const products = await Product.find({ category: category }); // Query products by category
     if (products.length > 0) {
       Socket.emit("categoryProducts", products); // Emit the products to the client
     } else {
@@ -82,7 +82,7 @@ Socket.on("getProductsByCategory", async (category) => {
    const { id,caption,img_vid,website_url,category,isPremium,price } = data; //get post from client side
    try {
      // Create a new post and save it to the database
-     const input = new Post({
+     const input = new Product({
        caption,
        img_vid,
        user_id:id,
@@ -91,23 +91,23 @@ Socket.on("getProductsByCategory", async (category) => {
        premium: isPremium,
        price
      });
-     await input.save(); //insert post into database 
-     const post = await Post.findOne({ _id: input._id }).populate('user_id','username').lean();/* getting post from
-     post collection and using the user id in the post collection to get the username from the users collection */
+     await input.save(); //insert product into database 
+     const product = await Product.findOne({ _id: input._id }).populate('user_id','username').lean();/* getting post from
+     post collection and using the user id in the product collection to get the username from the users collection */
      const data={
-         _id: post._id,
-         user_id: post.user_id._id,
+         _id: product._id,
+         user_id: product.user_id._id,
          caption,
          img_vid,
          category,
          price,
-         createdAt: post.createdAt,
-         username: post.user_id.username
+         createdAt: product.createdAt,
+         username: product.user_id.username
      }
        io.emit('receivePost', data);
        const notificationData = {
-        _id: post._id,
-        message: `${post.user_id.username} created a post.`
+        _id: product._id,
+        message: `${product.user_id.username} created a post.`
     };
     notificationsNamespace.emit('notify', notificationData);
     const customers = await User.find({account_type:"Personal"}); // Fetch user by ID
@@ -115,7 +115,7 @@ Socket.on("getProductsByCategory", async (category) => {
       try{
       const socketId = users[customer._id]; // Fetch user’s socket ID
       if (socketId) {
-        if(customer._id.toString() === post.user_id._id.toString()){
+        if(customer._id.toString() === product.user_id._id.toString()){
           // Emit the notification to the specific user
           const notification1 = new notification({
             userId: customer._id,
@@ -126,7 +126,7 @@ Socket.on("getProductsByCategory", async (category) => {
         }else{
         const notification2 = new notification({
           userId: customer._id,
-          message: `${post.user_id.username} added a product.`,
+          message: `${product.user_id.username} added a product.`,
         });
         await notification2.save();
         notificationsNamespace.to(socketId).emit("notify", notification2);
@@ -142,7 +142,7 @@ Socket.on("getProductsByCategory", async (category) => {
  });
 
  Socket.on("disconnect", () => {
-  console.log("Disconnected from the post namespace");
+  console.log("Disconnected from the product namespace");
   // Optionally, you can remove the user from the users object if needed
   // delete users[Socket.id];
   for (const [userId, socketId] of Object.entries(users)) {
