@@ -30,6 +30,22 @@ exports.updateEmail = async (req, res) => {
   };
 
 
+  exports.notificationSettings = async (req, res) => {
+    try{
+    const { allowNotifications } = req.body;
+  
+    await User.findByIdAndUpdate(req.user.id, {
+      notificationPreference: allowNotifications
+    });
+  
+    res.json({ message: 'Notification preference updated' });
+  }catch(err){
+    console.log(err)
+  }
+  };
+  
+
+
 
   
   
@@ -202,6 +218,16 @@ exports.logoutAllSessions =  async (req, res) => {
     res.json({ message: 'All devices removed and logged out successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to remove devices' });
+  }
+};
+
+exports.getNotificationPreference = async (req, res) => {
+  try{
+  const user = await User.findById(req.user.id);
+  res.json({ allowNotifications: user.notificationPreference });
+  }catch(err){
+    console.log(err)
+    res.status(500).json({ message: 'Failed to fetch notification preference' });
   }
 };
 

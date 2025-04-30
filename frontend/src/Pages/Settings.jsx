@@ -12,7 +12,14 @@ const Settings = () => {
   const navigate= useNavigate()
 
   const accesstoken = localStorage.getItem('accesstoken');
-    const decode = jwtDecode(accesstoken);
+  let decode = null;
+
+  try {
+    if (accesstoken) decode = jwtDecode(accesstoken);
+  } catch (err) {
+    console.error("Invalid token:", err);
+    decode = null;
+  }
   useEffect(()=>{
     socket.on('connect',()=>{
         console.log("Connected to server")
@@ -36,7 +43,7 @@ const Settings = () => {
 },[socket,navigate])
 
 
-const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
   const [username, setUsername] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -48,6 +55,64 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [sessions, setSessions] = useState([]);
 
   
+  const [notifyEnabled, setNotifyEnabled] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await axios.get("/getUser");
+        const user = response.data;
+        setUsername(user.username);
+        setEmail(user.email);
+        setSessions(user.device_info);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        alert("Failed to fetch user data.");
+      } finally {
+        setLoading(false); // make sure to do this
+      }
+    };
+
+    getUser();
+  }, []);
+
+  // Fetch current preference on mount
+  useEffect(() => {
+    const fetchPreference = async () => {
+      try {
+        const res = await axios.get('/get-notification-preference', { withCredentials: true });
+        setNotifyEnabled(res.data.allowNotifications);
+      } catch (err) {
+        toast.error('Failed to load preferences');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPreference();
+  }, []);
+
+  // Handle toggle
+  const handleToggle = async () => {
+    try {
+      const newPref = !notifyEnabled;
+      setNotifyEnabled(newPref);
+
+      await axios.post(
+        '/update-notification-preference',
+        { allowNotifications: newPref },
+        { withCredentials: true }
+      );
+
+      toast.success(`Notifications ${newPref ? 'enabled' : 'disabled'}`);
+    } catch (err) {
+      console.log(err)
+      toast.error('Failed to update preference');
+    }
+  };
+
  
   
 
@@ -88,22 +153,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   };
 
   
-  const getUser = async () => {
-     try {
-      const response = await axios.get("/getUser");
-      const user = response.data;
-      setUsername(user.username);
-      setEmail(user.email);
-      setSessions(user.device_info)
-     }catch (error) {
-      console.error("Error fetching user data:", error);
-      alert("Failed to fetch user data.");
-     }
-  }
-
-  useEffect(() => {
-    getUser();
-  }, []);
+  
 
 
   const requestEmailChange = async (e) => {
@@ -180,21 +230,32 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   <h2 style={{marginBlock:"16px"}} className="text-xl font-bold text-purple-700 mb-8">Settings</h2>
 
   {/* Notifications Toggle */}
-  <div className="mb-10 flex items-center justify-between bg-white p-4 rounded-xl shadow">
+  <div className="mb-10 w-full  mx-auto flex items-center justify-between bg-white p-6 rounded-2xl shadow-md border border-gray-200">
+  <div className="flex flex-col">
     <span className="text-lg font-semibold text-gray-800">Receive Notifications</span>
+    <span className="text-sm text-gray-500">Toggle to enable or disable notifications</span>
+  </div>
+
+  <div className="flex items-center gap-4">
     <label className="relative inline-flex items-center cursor-pointer">
       <input
         type="checkbox"
         className="sr-only peer"
-        checked={notificationsEnabled}
-        onChange={() => setNotificationsEnabled(!notificationsEnabled)}
+        checked={notifyEnabled}
+        onChange={handleToggle}
       />
-      <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-purple-600 transition-all duration-300"></div>
+      <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-purple-600 transition-all duration-300"></div>
       <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-300 transform peer-checked:translate-x-full"></div>
     </label>
+    <span className={`text-sm font-medium ${notifyEnabled ? 'text-green-600' : 'text-red-500'}`}>
+      {notifyEnabled ? 'Enabled' : 'Disabled'}
+    </span>
   </div>
+</div>
 
-<div className="flex gap-5 justify-between py-5">
+
+
+<div className="flex flex-col gap-5 justify-between py-5 lg:flex-row">
   {/* Update Username */}
   <form onSubmit={handleSubmitUsername} className="mb-10 bg-white p-6 rounded-xl shadow">
     <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 mb-4">Update Username</h3>
@@ -209,7 +270,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     />
     <button
       type="submit"
-      className="w-full text-sm py-2 border-2 text-purple-500 border-purple-300 bg-purple-200 rounded hover:bg-purple-700 transition"
+      className="w-full text-sm py-2 border-2 font-semibold text-purple-800 border-purple-300 bg-purple-200 rounded hover:text-white hover:bg-purple-400  transition"
     >
       Update Username
     </button>
@@ -229,7 +290,7 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     />
     <button
       type="submit"
-      className="w-full text-sm py-2 border-2 text-purple-500 border-purple-300 bg-purple-200 rounded hover:bg-purple-700 transition"
+      className="w-full text-sm py-2 border-2 font-semibold text-purple-800 border-purple-300 bg-purple-200 rounded hover:text-white hover:bg-purple-400  transition"
     >
       Update Email
     </button>
@@ -256,22 +317,22 @@ const [notificationsEnabled, setNotificationsEnabled] = useState(true);
       onChange={(e) => setNewPassword(e.target.value)}
       placeholder="Current Password"
       style={{marginBlock:"16px"}}
-      className="w-full text-sm px-4 py-2 border border-gray-300 rounded  focus:outline-none focus:ring-2 focus:ring-purple-400"
+      className="w-full text-sm  px-4 py-2 border border-gray-300 rounded  focus:outline-none focus:ring-2 focus:ring-purple-400"
     />
 
     <button
       type="submit"
-      className="w-full py-2 text-sm border-2 text-purple-500 border-purple-300 bg-purple-200  rounded hover:bg-purple-400 text-white transition"
+      className="w-full text-sm py-2 border-2 font-semibold text-purple-800 border-purple-300 bg-purple-200 rounded hover:text-white hover:bg-purple-400  transition"
     >
       Update Password
     </button>
   </form>
 
   
-<div className='flex py-5 justify-between gap-5'>
+<div className='flex flex-col py-5 justify-between gap-5 lg:flex-row'>
   {/* Session Management */}
   <div style={{marginBlock:"16px"}} className="mb-10 bg-white p-6 rounded-xl shadow">
-    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Active Sessions</h3>
+    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Manage Sessions</h3>
     {sessions.length === 0 ? (
       <p className="text-gray-500 text-sm">No active sessions.</p>
     ) : (

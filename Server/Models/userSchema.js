@@ -44,6 +44,10 @@ const userSchema = new Schema({
     default: Date.now
   
   },
+  notificationPreference: {
+  type: Boolean,
+  default: true // allow notifications by default
+},
   createdAt: {
     type: Date,
     default: Date.now

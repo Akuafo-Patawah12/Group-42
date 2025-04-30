@@ -12,7 +12,9 @@ const {
 	verifyEmailChange,
 	updateUsername,
 	settings_updatePassword,
-	logoutAllSessions
+	logoutAllSessions,
+	notificationSettings,
+	getNotificationPreference
 } = require("../Controllers/Settings")
 const Authenticate = require("../Middlewares/Authenticate")
 const marketingMailSender = require("../Controllers/MarketingMailSender")
@@ -53,5 +55,7 @@ router.post("/update-password",Authenticate, settings_updatePassword)
 router.delete('/posts/:postId', Authenticate, deletePost);
 router.delete("/delete-account",Authenticate, deleteAccount);
 router.post("/delete-all-devices",Authenticate, logoutAllSessions)
+router.post("/update-notification-preference",Authenticate,notificationSettings)
+router.get("/get-notification-preference",Authenticate,getNotificationPreference)
 
 module.exports= router

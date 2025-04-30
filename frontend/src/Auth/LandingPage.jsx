@@ -587,7 +587,7 @@ const LandingPage = () => {
 
         <div className="flex gap-5 flex-col p-7 md:flex-row">
           <section className="w-full md:w-1/2 p-8 bg-white rounded-lg shadow-md">
-  <h1 className="text-4xl font-bold text-gray-900 mb-4">
+  <h1 className="text-4xl text-center font-bold text-gray-900 mb-4">
     34k+ <br /> Satisfied Customers
   </h1>
   <p style={{marginBlock:"20px"}} className="text-gray-700 ">
