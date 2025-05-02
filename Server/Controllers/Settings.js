@@ -199,7 +199,7 @@ exports.settings_updatePassword = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.user._id);
+    await User.findByIdAndDelete(req.user.id);
     res.clearCookie('token'); // If you're using cookies
     res.json({ message: 'Account deleted successfully' });
   } catch (err) {
