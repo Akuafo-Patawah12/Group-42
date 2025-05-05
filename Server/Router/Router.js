@@ -1,5 +1,5 @@
 const router= require("express").Router()
-const {SignUp,login, updatePassword,logout}= require("../Controllers/Authentication")
+const {SignUp,login, updatePassword,logout,verifyOTP}= require("../Controllers/Authentication")
 const forgetPassword = require("../Utils/Nodemailer")
 const {rateLimit}= require("express-rate-limit")
 const { getUserProfile, deletePost } = require('../Controllers/Profile');
@@ -51,6 +51,7 @@ router.post("/verify-email-change",Authenticate,verifyEmailChange)
 router.post("/request-email-change",Authenticate, requestChangeEmail)
 router.post("/change-username",Authenticate, updateUsername)
 router.post("/update-password",Authenticate, settings_updatePassword)
+router.post("/verify_otp", verifyOTP)
 // Route to delete a post (requires authentication)
 router.delete('/posts/:postId', Authenticate, deletePost);
 router.delete("/delete-account",Authenticate, deleteAccount);

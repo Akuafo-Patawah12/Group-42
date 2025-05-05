@@ -49,7 +49,8 @@ const Orders = () => {
   const [qty,setQty] = useState("")
   const [order_id,setOrder_id] = useState("")
   const [visible,setVisible] = useState(false)
-  
+  const [search, setSearch] = useState("");
+  const [filteredContainers, setFilteredContainers] = useState(orders);
 
   useEffect(()=>{
     socket.connect();
@@ -81,7 +82,26 @@ const Orders = () => {
     });
 
     socket.on('getAllOrders', (data) => {
+      console.log(data)
       setOrders(data);
+    });
+
+    socket.on("usersAssigned", ({ message, data }) => {
+      console.log("Shipment updated:", message, data);
+
+      setOrders((prev) => {
+        const updatedIds = data.map((o) => o._id.toString());
+
+        // Replace the updated orders in the table
+        const updated = prev.map((order) =>
+          updatedIds.includes(order._id) ? data.find((o) => o._id === order._id) : order
+        );
+
+        // Add any new ones not in the list
+        const newOnes = data.filter((o) => !prev.find((p) => p._id === o._id));
+
+        return [...updated, ...newOnes];
+      });
     });
 
     socket.on('receivedOrder', (data) => {
@@ -136,6 +156,18 @@ const Orders = () => {
             }
   }, [socket]);
 
+  useEffect(() => {
+    if (!search) {
+      setFilteredContainers(orders); // Reset if search is empty
+    } else {
+      setFilteredContainers(
+        orders.filter((order) =>
+          order.customerName.toString().toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [search, orders]); 
+
   function save(){
     socket.emit('addCBM/CTN', {
       Sender_id: decode.id,
@@ -187,11 +219,22 @@ const Orders = () => {
     },
   };
   
+  function sort(){
+
+    
+    setFilteredContainers(
+     orders.filter((order) =>
+       order.customerName.toString().toLowerCase().includes(search.toLowerCase())
+     )
+   );
+ }
+
+
   const columns = [
     
     
     {
-      title: '#Order ID',
+      title: 'Shipment ID',
       dataIndex: '_id',
       key: 'order_id',
       render: (text, record) => (
@@ -262,7 +305,9 @@ const Orders = () => {
       title: 'ETA',
       dataIndex: 'eta',
       key: 'eta',
-      render: (text) => moment(text).format('MMMM D, YYYY'),
+      render:(record)=>(
+        record === undefined ? <p>N/A</p> : <p>{moment(record).format('MMMM D, YYYY')}</p>
+      )
     }
     ,
 
@@ -287,27 +332,33 @@ const Orders = () => {
     },
   ];
 
+
+
   const handleBulkDelete = () => {
-    Modal.confirm({
-      title: "Are you sure you want to delete selected orders?",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "Cancel",
-      onOk: () => {
-        if (selectedRowKeys.length === 0) return;
+    const confirmed = window.confirm("Are you sure you want to delete selected shipments?");
+    if (!confirmed) return;
   
-        socket.emit("bulkDeleteOrders", { orderIds: selectedRowKeys }, (response) => {
-          if (response.success) {
-            message.success("Orders deleted successfully");
+    if (selectedRowKeys.length === 0) {
+      alert("No orders selected.");
+      return;
+    }
+  
+  
+        socket.emit("bulkDeleteShipments", { orderIds: selectedRowKeys }, (response) => {
+          if (response.status==="ok") {
+            toast.success("Shipments deleted successfully");
+            const deletedIds = response.data;
+            console.log("deleted shipments",deletedIds)
+            setOrders((prev) => prev.filter(order => !deletedIds.includes(order._id.toString())));
+
             setSelectedRowKeys([]);
-            // refetch or update your orders list here
+            
           } else {
-            message.error("Failed to delete orders");
+            toast.error("Failed to delete orders");
             console.error(response.error);
           }
         });
-      },
-    });
+     
   };
   
   
@@ -328,8 +379,10 @@ const Orders = () => {
     socket.emit("start-shipment",{containerNumber,selectedRowKeys},(response)=>{
       if (response.status==="ok"){
         toast.success("shipment started")
+      }else if(response.status==="warning"){
+        toast.warning(response.message)
       }else{
-        toast.error("error starting shipments")
+        toast.error(response.message)
       }
     })
     // Send this to your backend or Socket.IO here
@@ -383,7 +436,7 @@ const Orders = () => {
   <Button
     danger
     disabled={selectedRowKeys.length === 0}
-    onClick={()=>handleBulkDelete()}
+    onClick={handleBulkDelete}
   >
     Delete Selected
   </Button>}
@@ -391,8 +444,11 @@ const Orders = () => {
 
   <input
     type="text"
-    placeholder="Search by Container Number..."
-   
+    placeholder="Sort by Container No. or Shipping Mark..."
+    onChange={(e) =>{ 
+      sort()
+      setSearch(e.target.value)
+    }}
     className="w-full sm:w-72 px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
   />
 </div>
@@ -433,10 +489,13 @@ const Orders = () => {
                  <Card title="Shipments Overview" style={{border:"1px solid #ddd",width:"100%"}} className="w-full">
       <Table
         columns={columns}
-        dataSource={orders}
+        dataSource={filteredContainers}
         rowSelection={rowSelection}
         rowKey="_id"
         pagination={{ pageSize: 10 }}
+        rowClassName={(record) =>
+          selectedRowKeys.includes(record._id) ? 'custom-selected-row' : ''
+        }
         scroll={{ x: 1200 }}
         bordered
       />

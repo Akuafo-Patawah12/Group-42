@@ -1,6 +1,7 @@
 
 const notification = require("../Models/Notification")
 const { Order,Shipment } = require("../Models/OrderAndShipment")
+const mongoose = require("mongoose")
 const data= require("../Models/userSchema")
 const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNamespace,Users)=>{
      
@@ -114,69 +115,173 @@ const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNames
 
  Socket.on("start-shipment", async ({ containerNumber, selectedRowKeys }, callback) => {
   try {
-    console.log(containerNumber, selectedRowKeys)
-    const shipments = await Shipment.findOne({containerNumber});
-      if (!shipments) {
-        return callback( {status:"error", message: "Container not found" });
-      } 
-      if (!Array.isArray(selectedRowKeys)) {
-        console.log("Invalid order IDs")
-        return callback({ status: "error", message: "Invalid order IDs" });
-      }
-  
-      
-    // Update the orders in the database
-    await Order.updateMany(
+    console.log(containerNumber, selectedRowKeys);
+
+    const shipments = await Shipment.findOne({ containerNumber });
+    if (!shipments) {
+      return callback({ status: "error", message: "Container not found" });
+    }
+
+    if (!Array.isArray(selectedRowKeys)) {
+      console.log("Invalid order IDs");
+      return callback({ status: "error", message: "Invalid order IDs" });
+    }
+
+    // Update orders
+    const ordersToUpdate = await Order.find({ _id: { $in: selectedRowKeys } });
+
+// Check if any order is missing CBM
+const ordersMissingCBM = ordersToUpdate.filter(order => !order.cbm);
+
+if (ordersMissingCBM.length > 0) {
+  return callback({
+    status: "warning",
+    message: "Make sure all selected shipments have CBM/CTN values.",
+    missingOrders: ordersMissingCBM.map(o => o._id) // optional for debugging
+  });
+}
+
+// Proceed with update only if all have CBM
+await Order.updateMany(
   { _id: { $in: selectedRowKeys } },
-  { $set: { shipmentId:shipments._id, Status: "in-Transit" } }
+  { $set: { shipmentId: shipments._id, Status: "in-Transit" } }
 );
 
 
-const updatedOrders = await Order.find({ _id: { $in: selectedRowKeys } });
-if(!updatedOrders){
-  console.log("no orders found")
-}
-updatedOrders.forEach((order) => {
-  shipments.assignedOrders.push({
-    orderId: order._id,
-    userId: order.customer_id,
-  });
-});
+    const updatedOrders = await Order.find({ _id: { $in: selectedRowKeys } });
 
-await shipments.save();
-
-updatedOrders.forEach((order) => {
-    const recipientSocketId = Users[order.customer_id]; // Fetch user’s socket ID
-    const notify = new notification({
-      userId: order.customer_id,
-      message: "Your shipment has started",
+    updatedOrders.forEach((order) => {
+      shipments.assignedOrders.push({
+        orderId: order._id,
+        userId: order.customer_id,
+      });
     });
 
-    notify
-    .save()
-    .then(() => console.log("Notification saved"))
-    .catch((err) => console.log("Failed to save notification", err));
+    await shipments.save();
 
-    if (recipientSocketId) {
-      console.log("socketid",recipientSocketId)
+    // Aggregated full order data
+    const updatedOrderData = await Order.aggregate([
+      {
+        $match: {
+          _id: { $in: selectedRowKeys.map(id => new mongoose.Types.ObjectId(id)) }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'customer_id',
+          foreignField: '_id',
+          as: 'userDetails'
+        }
+      },
+      { $unwind: '$userDetails' },
+      {
+        $lookup: {
+          from: 'shipments',
+          localField: 'shipmentId',
+          foreignField: '_id',
+          as: 'shipmentDetails'
+        }
+      },
+      {
+        $unwind: {
+          path: '$shipmentDetails',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          customer_id: 1,
+          Status: 1,
+          cbm: 1,
+          qty: 1,
+          createdAt: 1,
+          customerName: '$userDetails.username',
+          containerNumber: '$shipmentDetails.containerNumber',
+          route: '$shipmentDetails.route',
+          port: '$shipmentDetails.port',
+          eta: '$shipmentDetails.eta',
+          cbmRate: '$shipmentDetails.cbmRate',
+          shipmentDate: '$shipmentDetails.createdAt'
+        }
+      }
+    ]);
 
-      notificationsNamespace.to(recipientSocketId).emit("notify", {
-        id: containerNumber,
+    // 🔔 Send notifications to users
+    updatedOrders.forEach((order) => {
+      const recipientSocketId = Users[order.customer_id];
+
+      const notify = new notification({
+        userId: order.customer_id,
         message: "Your shipment has started",
-        read: false,
       });
-      Socket.to(recipientSocketId).emit("assignedToContainer", { containerNumber, updatedOrders });
-    }
-  });
 
-    
-    // Optional: Emit to others or log something
-    console.log(`Shipment started for container: ${containerNumber}`);
-    
-    Socket.emit("usersAssigned", { message: "Users successfully assigned!", containerNumber });
+      notify.save().catch((err) => console.log("Notification error:", err));
+
+      if (recipientSocketId) {
+        notificationsNamespace.to(recipientSocketId).emit("notify", {
+          id: containerNumber,
+          message: "Your shipment has started",
+          read: false,
+        });
+
+        Socket.to(recipientSocketId).emit("assignedToContainer", {
+          containerNumber,
+          updatedOrders: updatedOrderData.filter(
+            (o) => o.customer_id.toString() === order.customer_id.toString()
+          ),
+        });
+      }
+    });
+
+    // ✅ Send updated orders ONLY to the sender
+    Socket.emit("usersAssigned", {
+      message: "Shipment assigned successfully",
+      data: updatedOrderData,
+    });
+
+    callback({ status: "ok" });
+
   } catch (error) {
     console.error("Error starting shipment:", error);
-    callback({ status: "error" });
+    callback({ status: "error", message: "Internal server error" });
+  }
+});
+
+
+Socket.on("bulkDeleteShipments", async (data , callback) => {
+  const {orderIds} = data
+  console.log(orderIds)
+  try {
+    if (!Array.isArray(orderIds) || orderIds.length === 0) {
+      return callback({ status: "error", error: "No shipment IDs provided" });
+    }
+
+    // Delete shipments
+    await Shipment.updateMany(
+      { "assignedOrders.orderId": { $in: orderIds } },
+      {
+        $pull: {
+          assignedOrders: {
+            orderId: { $in: orderIds }
+          }
+        }
+      }
+    );
+
+    // Delete orders that reference the deleted shipments
+    const deletedOrders = await Order.deleteMany({ _id: { $in: orderIds } });
+
+    
+
+    callback({
+      status: "ok",
+      data: orderIds,
+    });
+  } catch (error) {
+    console.error("Error deleting shipments and orders:", error);
+    callback({ status: "error", error: "Server error while deleting shipments/orders" });
   }
 });
 

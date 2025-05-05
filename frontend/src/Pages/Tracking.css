@@ -1,3 +1,8 @@
+.ant-input:focus, .ant-input-focused {
+    box-shadow: none !important;
+    border-color: #fff !important; /* Or your custom border color */
+  }
+
 .Track_cont3{
     background: url("../../public/images/s.jpg") no-repeat;
     background-size: cover;

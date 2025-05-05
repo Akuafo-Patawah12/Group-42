@@ -15,7 +15,7 @@ import More from '../Pages/More';
 import AirFreight from '../Pages/Service/Airfreight';
 
 import SeaFreight from '../Pages/Service/Seafreight';
-
+import VerificationPage from "../Auth/VerificationPage"
 import ThirdPartyMarketing from '../Pages/Service/ThirdPartyMarketing';
 import Procurement from '../Pages/Service/Procurement';
 const GalleryPage= lazy(()=> import('../Pages/Gallery'));
@@ -128,7 +128,7 @@ const General = () => {
           </React.Suspense>} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/UpdatePassword/:id" element={<UpdatePassword/>} />
-         
+           <Route path="/verify" element={<VerificationPage />} />
           
           <Route path='*' element={<PageNotFound/>} />
          </Routes>

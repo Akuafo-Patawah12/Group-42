@@ -406,16 +406,16 @@ const CloseReport = () => {
 {/* Active Orders */}
 <div>
   <Badge count={active} size="small" offset={[5, -5]}>
-    <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+    <span className="border border-purple-200 bg-purple-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
       <CarOutlined style={style} /> Active Orders
     </span>
   </Badge>
 </div>
 
 {/* Total Shipments */}
-<div>
+<div >
   <Badge count={orders.length} size="small" offset={[5, -5]}>
-    <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+    <span className="border border-purple-200 bg-purple-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
       <ShoppingCartOutlined style={style} /> Total Shipments
     </span>
   </Badge>
@@ -423,20 +423,20 @@ const CloseReport = () => {
 
 {/* Delivered Items */}
 <div>
-  <span className="bg-stone-100 px-3 py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+  <span className="border border-purple-200 bg-purple-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
     <ProductOutlined style={style} /> Delivered Items
   </span>
 </div>
 </div>
 
 
-      <div style={{marginInline:"auto",marginTop:"8px"}} className='flex  justify-between mt-2 bg-slate-200 w-[95%] mx-auto items-center py-4 rounded-2xl gap-2 '>
+      <div style={{marginInline:"auto",marginTop:"8px"}} className='flex  justify-between mt-2 bg-purple-100 border border-purple-200 w-[95%] mx-auto items-center py-4 rounded-2xl gap-2 '>
         <div className="flex flex-col px-[2%] w-full gap-3 md:flex-row">
         
 
         <Card className="w-full rounded-xl shadow-md md:w-1/2">
       {/* View Data Section */}
-      <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+      <div className="flex items-center justify-between bg-purple-100 border border-purple-200 p-4 rounded-lg">
         <Button shape="circle" icon={<DatabaseOutlined />} size="large" />
         <Typography.Text className="font-medium">View Data</Typography.Text>
       </div>
@@ -463,7 +463,7 @@ const CloseReport = () => {
 
     <Card  className="w-full rounded-xl shadow-md md:w-1/2">
       {/* View Analytics Section */}
-      <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+      <div className="flex items-center justify-between bg-purple-100 border border-purple-200 p-4 rounded-lg">
         <Button shape="circle" icon={<BarChartOutlined />} size="large" />
         <Typography.Text className="font-medium">Analytics overview</Typography.Text>
       </div>
@@ -471,7 +471,7 @@ const CloseReport = () => {
      
 
      
-      {orders.length===0 ?<div><Empty styles={{ image:{ height: 50 } }} description="No shipment" /> </div>:
+      {orders.length===0 ?<div style={{marginTop:"10px"}}><Empty styles={{ image:{ height: 50 } }} description="No shipment" /> </div>:
       <ResponsiveContainer width="100%" height={190}>
     <BarChart data={data}>
       <XAxis dataKey="month" />

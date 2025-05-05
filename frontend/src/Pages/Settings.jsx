@@ -4,6 +4,7 @@ import {motion } from "framer-motion"
 import { jwtDecode } from 'jwt-decode'
 import axios from "../api/api";
 import {toast} from "react-toastify" 
+import {Trash2} from "lucide-react"
 import io from "socket.io-client"
 const Settings = () => {
   const socket = useMemo(() =>io("http://localhost:4000",{
@@ -295,12 +296,11 @@ const Settings = () => {
       Update Email
     </button>
   </form>
-  </div>
 
-  {/* Update Password */}
+ {/* Update Password */}
   <form onSubmit={handlePasswordUpdate} className="mb-10 bg-white p-6 rounded-xl shadow">
-    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Change Password</h3>
-    <label style={{marginBlock:"8px"}} className="block text-sm font-medium text-gray-700">Current Password</label>
+    <h3 style={{marginBlock:"10px"}} className="text-sm font-semibold text-purple-700 ">Change Password</h3>
+
     <input
       type="password"
       value={password}
@@ -327,6 +327,10 @@ const Settings = () => {
       Update Password
     </button>
   </form>
+  </div>
+
+  
+ 
 
   
 <div className='flex flex-col py-5 justify-between gap-5 lg:flex-row'>
@@ -338,8 +342,9 @@ const Settings = () => {
     ) : (
       <ul style={{marginBlock:"16px"}} className="flex flex-col gap-3 ">
         {sessions.map((session,index) => (
-          <li key={index} className="bg-purple-50 p-3 text-xs font-semibold rounded border border-purple-100">
-            <p className="text-purple-700">{session}</p> 
+          <li key={index} className="bg-purple-50 p-3 flex text-xs font-semibold rounded border border-purple-100">
+            <p className="text-purple-700">{session}</p>
+            <Trash2 size={30} /> 
           </li>
         ))}
       </ul>

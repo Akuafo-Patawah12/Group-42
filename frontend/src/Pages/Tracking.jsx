@@ -325,8 +325,8 @@ function handTrack(){
           allowClear
           size="large"
           onChange={handleSearch}
+          style={{ boxShadow: 'none', border: '1px solid #ccc' }}
           
-          className="w-full"
         />
       </Form.Item>
       </div>

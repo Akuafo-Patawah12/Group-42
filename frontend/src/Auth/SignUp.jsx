@@ -1,6 +1,6 @@
 import React ,{useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from "axios"
+import axios from "../api/api"
 import { Form, Input, Button, Radio, Typography,message } from 'antd';
 
 
@@ -13,7 +13,7 @@ const SignUp = () => {
     const [formData,setFormData]= useState({
         username:"",
         email:"",
-        account_type:"Personal",
+        account_type:"User",
         password:"",
        });
 
@@ -24,7 +24,7 @@ const SignUp = () => {
         
         try{
             setLoader(true)
-          await axios.post("http://localhost:4000/SignUp",{formData})
+          await axios.post("/SignUp",{formData})
           .then(res=>{
             if(res.data.message==="exist") {
                 setValidation("Email already exist") 

@@ -81,7 +81,7 @@ const [visible,setVisible] = useState(false)
     const statusOptions = ["All","Pending", "In Transit", "Delivered"]; 
     
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+    const [searchTerm, setSearchTerm] = useState("");
     const [permission,setPermission] = useState(false)
      const [selectedRoute, setSelectedRoute] = useState(null);
      const [selectedCountry, setSelectedCountry] = useState(null);
@@ -387,8 +387,16 @@ const [visible,setVisible] = useState(false)
             }
         })
      }
-  
+    
+     function sort(){
 
+    
+     setFilteredContainers(
+      containers.filter((container) =>
+        container.containerNumber.toString().toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }
   // Columns for the table
   const columns = [
     
@@ -491,7 +499,7 @@ const [visible,setVisible] = useState(false)
     },
   ];
 
-  const [searchTerm, setSearchTerm] = useState("");
+  
 
   const filteredOrders = useMemo(() => {
     return shipmentOrders.filter(order =>
@@ -501,6 +509,8 @@ const [visible,setVisible] = useState(false)
         .includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, shipmentOrders]);
+
+  
 
   const AssignedShipments= [
     {
@@ -564,7 +574,10 @@ const [visible,setVisible] = useState(false)
     type="text"
     placeholder="Search by Container Number..."
     value={search}
-    onChange={(e) => setSearch(e.target.value)}
+    onChange={(e) =>{ 
+      sort()
+      setSearch(e.target.value)
+    }}
     onPaste={(e) => setSearch(e.clipboardData.getData("text"))}
     className="w-full sm:w-72 px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
   />
@@ -601,17 +614,17 @@ const [visible,setVisible] = useState(false)
           <Empty description="No orders match your search." />
         )}
       </Space>
-</Modal>
-    <Modal
-  title="Add container"
+      </Modal>
+      <Modal
+  title={<h2 style={{ textAlign: 'center', fontWeight: '600' }}>Add Container</h2>}
   open={isEdit}
   onCancel={() => setIsEdit(false)}
   footer={null}
-  style={{ maxHeight: "60vh", overflowY: "auto",background:"white",borderRadius:"20px" }} // 🔥 Scrollable body
+  centered
+  style={{ borderRadius: "16px" }}
+  bodyStyle={{ maxHeight: "60vh", overflowY: "auto", padding: "24px" }}
 >
   <Form layout="vertical">
-    {/* All form content wrapped in one scrollable area */}
-
     <Form.Item
       label="Container Number"
       name="containerNumber"
@@ -665,59 +678,67 @@ const [visible,setVisible] = useState(false)
       />
     </Form.Item>
 
-    <Form.Item label="Select Route">
+    <Form.Item label="Select Route" required>
       <Select
-        style={{ width: "100%", height: "40px" }}
+        style={{ width: "100%" }}
         placeholder="Select Route"
         value={selectedRoute}
         onChange={handleRouteChange}
       >
         {Object.keys(routes).map((route) => (
-          <Option key={route} value={route}>
+          <Select.Option key={route} value={route}>
             Route {route}
-          </Option>
+          </Select.Option>
         ))}
       </Select>
     </Form.Item>
 
     {selectedRoute && (
-      <Form.Item label={`Select Port in Route ${selectedRoute}`}>
+      <Form.Item label={`Select Port in Route ${selectedRoute}`} required>
         <Select
-          style={{ width: "100%", height: "40px" }}
-          onChange={(country) => setSelectedCountry(country)}
+          style={{ width: "100%" }}
           placeholder="Select Port"
           value={selectedCountry}
+          onChange={setSelectedCountry}
         >
           {routes[selectedRoute].map((country) => (
-            <Option key={country} value={country}>
+            <Select.Option key={country} value={country}>
               {country}
-            </Option>
+            </Select.Option>
           ))}
         </Select>
       </Form.Item>
     )}
 
-    <Form.Item label="Update Status">
+    <Form.Item label="Update Status" required>
       <Select
         style={{ width: "100%" }}
-        onChange={(status) => setShipmentStatus(status)}
         placeholder="Select Status"
         value={shipmentStatus}
+        onChange={setShipmentStatus}
       >
         {statusOptions.map((status) => (
-          <Option key={status} value={status}>
+          <Select.Option key={status} value={status}>
             {status}
-          </Option>
+          </Select.Option>
         ))}
       </Select>
     </Form.Item>
   </Form>
 
-  {/* 🔒 Fixed Footer */}
-  <div style={{ position: "sticky", bottom: 0, background: "#fff", paddingTop: "12px" }}>
+  {/* Fixed Footer Button */}
+  <div style={{
+    position: "sticky",
+    bottom: "-30px",
+    background: "#fff",
+    padding: "16px 0",
+    marginTop: "12px",
+    borderTop: "1px solid #f0f0f0"
+  }}>
     <Button
       type="primary"
-      style={{ width: "100%", height: "40px",background:"var(--purple)" }}
+      block
+      style={{ background: "var(--purple)", height: "40px", fontWeight: 500 }}
       onClick={handleSave}
       disabled={!selectedRoute || !selectedCountry || !shipmentStatus}
     >
@@ -725,6 +746,7 @@ const [visible,setVisible] = useState(false)
     </Button>
   </div>
 </Modal>
+
 
     
 
@@ -806,7 +828,7 @@ const [visible,setVisible] = useState(false)
             <Card title="Containers Overview" style={{border:"1px solid #ddd"}}>
               <Table
                 columns={columns}
-                dataSource={containers}
+                dataSource={filteredContainers}
                 pagination={{ pageSize: 5 }}
                 scroll={{ x: 1200 }} // Makes the table horizontally scrollable
                 title={() => (

@@ -97,7 +97,7 @@ const TrackingSub = (props) => {
     <>
       
       <section
-  style={{ scrollbarWidth: "none", marginInline: "auto", marginTop: "16px" }}
+  style={{ scrollbarWidth: "none", marginInline: "auto", marginTop: "16px",paddingInline:"2.5%" }}
   className="flex gap-3 w-[95%] items-center overflow-x-auto py-2 px-1 backdrop-blur-sm rounded-xl bg-white/80 shadow-sm"
 >
   <p className="text-sm font-semibold text-gray-700 whitespace-nowrap">Filter activities</p>

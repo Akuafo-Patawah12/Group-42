@@ -1,12 +1,12 @@
 import React,{useState} from 'react'
 import { Link,useNavigate,useLocation } from 'react-router-dom'
-import { Form, Input, Button, Checkbox, Typography, message } from 'antd';
+import { Form, Input, Button, Checkbox, Typography } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 
 
 
-import axios from 'axios'
+import axios from "../api/api"
 import WarningIcon from '../icons/Warning_icon'
 
 
@@ -25,18 +25,19 @@ const Login = () => {
        });
        const[loader,setLoader] =useState(false)
     const[validation,seValidation] =useState("")
+  
        const navigate= useNavigate()
        const handleSubmit = async()=>{
         
         
         try{
             setLoader(true)  //display button loader after clicking login button to submit form
-          await axios.post("http://localhost:4000/Login",{formData})   //making an API request from web server
-          .then(res=>{
+          const res = await axios.post("/Login",{formData})   //making an API request from web server
+         
 
             
             switch (res.data.message) {
-                case "Logged in as a company":
+                case "Logged in as an admin":
                     // Store the access token in local storage
                     localStorage.setItem('user', res.data.user_name);
                     localStorage.setItem('accesstoken', res.data.accessToken);  /*receiving access token from server and 
@@ -55,7 +56,7 @@ const Login = () => {
                     navigate('/L/Dashboard');//Navigate to this /Trends path after login succeeds
                     break;
             
-                case "Logged in as an individual":
+                case "Logged in as a user":
                     // Show success message with SweetAlert2
                     localStorage.setItem('user', res.data.user_name);
                     localStorage.setItem('accesstoken', res.data.accessToken);
@@ -80,46 +81,52 @@ const Login = () => {
                     break;
             }
             
-        })
-          .catch(err=>{
-            switch (err.response.status) {
-                case 429:
-                    seValidation("Too many attempts");
-                    setLoader(false);
-                    console.error('Response error:', err.response.data);
-                    break;
-                    
-                case 404:
-                    seValidation("Email does not exist");
-                    setLoader(false);
-                    console.log('Email not found:', err.response.data);
-                    break;
-            
-                case 401:
-                    seValidation("Invalid credentials");
-                    setLoader(false);
-                    console.log('Invalid credentials:', err.response.data);
-                    break;
-            
-                case 500:
-                    seValidation("Server error");
-                    setLoader(false);
-                    console.log('Server error:', err.response.data);
-                    break;
-            
-                default:
-                    break;
-            }
-            
-        })
-    }catch(e){
-        message.error(
-            "Oops,system down",
+    }catch(err){
          
-         ); 
-        console.log(e)
-       } 
+        console.log(err)
+
+        switch (err.response.status) {
+          case 429:
+              seValidation("Too many attempts");
+              setLoader(false);
+              console.error('Response error:', err.response.data);
+              break;
+              
+          case 404:
+              seValidation("Email does not exist");
+              setLoader(false);
+              console.log('Email not found:', err.response.data);
+              break;
+      
+          case 401:
+              seValidation("Invalid credentials");
+              setLoader(false);
+              console.log('Invalid credentials:', err.response.data);
+              break;
+
+              case 400:
+           
+              setLoader(false);
+              navigate(`/verify?auth_user=${err.response.data.id}`)
+              console.log('new device login:', err.response.data);
+              break;
+      
+          case 500:
+              seValidation("Server error");
+              setLoader(false);
+              console.log('Server error:', err.response.data);
+              break;
+      
+          default:
+              toast.error("invalid role")
+              break;
+      }
+
+
+    } 
     }
+
+
     const[togglePassword,setTogglePassword]= useState(false)
     function pass_to_text(){
          setTogglePassword(!togglePassword)

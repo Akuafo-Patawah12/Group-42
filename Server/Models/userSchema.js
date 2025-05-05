@@ -21,8 +21,8 @@ const userSchema = new Schema({
   },
   account_type: {
     type:String,
-    enum: ["Personal","Business"],
-    default: "Personal",
+    enum: ["Admin","User"],
+    default: "User",
     required: true
   },
   lastUsernameChange: Date,
