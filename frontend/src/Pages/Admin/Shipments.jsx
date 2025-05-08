@@ -1,9 +1,30 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Pencil } from "lucide-react";
-import { DeleteOutlined, MessageOutlined, CopyOutlined } from '@ant-design/icons';
-import { Button,Form, Input, Table,Modal,message,Layout, Space, Tag ,Row,Col,Card} from 'antd';
+
+import { Button,Form, Modal,message,Popconfirm,Layout,Card} from 'antd';
 import { motion } from 'framer-motion';
+import {
+  Box,
+  
+ 
+ 
+ 
+ 
+ 
+  
+  
+ 
+  
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+  Chip,
+  Grid,
+} from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import { Copy ,Edit,Trash2} from "lucide-react";
 import moment from "moment";
 
@@ -218,6 +239,12 @@ const Orders = () => {
       setSelectedRowKeys(selectedKeys);
     },
   };
+
+  const handleSelectionChange = (selectionModel) => {
+    const ids = Array.from(selectionModel.ids); // Convert Set to Array
+    console.log('Selected Row Keys:', ids);
+    setSelectedRowKeys(ids);
+  };
   
   function sort(){
 
@@ -230,107 +257,62 @@ const Orders = () => {
  }
 
 
-  const columns = [
-    
-    
-    {
-      title: 'Shipment ID',
-      dataIndex: '_id',
-      key: 'order_id',
-      render: (text, record) => (
-        <Space>
-          <Link to={`/L/Shipments/View_Shipments/${record.customer_id}`}>{text}</Link>
-          <Copy size={15} onClick={() => navigator.clipboard.writeText(record._id)} />
-        </Space>
-      ),
-    },
-    {
-      title: 'Shipping Mark',
-      dataIndex: 'customerName',
-      key: 'client',
-    },
-    
-    {
-      title: 'Container No.',
-      dataIndex: 'containerNumber',
-      key: 'containerNumber',
-      render:(text)=>(
-        text === undefined ? <p>N/A</p> : <p>{text}</p>
-      )
-    },
-    {
-      title: 'CBM',
-      dataIndex: 'cbm',
-      key: 'cbm',
-      render:(record)=>(
-        record === undefined ? <p>N/A</p> : <p>{record}</p>
-      )
-    },
-    {
-      title: 'Quantity',
-      dataIndex: 'qty',
-      key: 'qty',
-      render:(record)=>(
-        record === undefined ? <p>N/A</p> : <p>{record}</p>
-      )
-    },
-    {
-      title: 'Status',
-      dataIndex: 'Status',
-      key: 'status',
-      render: (status) => {
-        let color = '';
-        switch (status) {
-          case 'Delivered':
-            color = 'green';
-            break;
-          case 'In Transit':
-            color = 'orange';
-            break;
-          case 'Pending':
-            color = 'red';
-            break;
-          default:
-            color = 'gray';
-        }
-        return <Tag color={color}>{status}</Tag>;
-      },
-    },
-    {
-      title: 'Route',
-      dataIndex: 'route',
-      key: 'route',
-    },
-    {
-      title: 'ETA',
-      dataIndex: 'eta',
-      key: 'eta',
-      render:(record)=>(
-        record === undefined ? <p>N/A</p> : <p>{moment(record).format('MMMM D, YYYY')}</p>
-      )
-    }
-    ,
+ const columns = [
+  {
+    field: '_id',
+    headerName: 'Shipment ID',
+    width: 200,
+    renderCell: (params) => (
+      <Box display="flex" alignItems="center" gap={1}>
+        <Link to={`/L/Shipments/View_Shipments/${params.row.customer_id}`}>
+          {params.value}
+        </Link>
+        <Copy size={15} style={{ cursor: 'pointer' }} onClick={() => navigator.clipboard.writeText(params.value)} />
+      </Box>
+    ),
+  },
+  { field: 'customerName', headerName: 'Shipping Mark', width: 180 },
+  { field: 'containerNumber', headerName: 'Container No.', width: 160, renderCell: (params) => params.value || 'N/A' },
+  { field: 'cbm', headerName: 'CBM', width: 100, renderCell: (params) => params.value || 'N/A' },
+  { field: 'qty', headerName: 'Quantity', width: 120, renderCell: (params) => params.value || 'N/A' },
+  {
+    field: 'Status',
+    headerName: 'Status',
+    width: 140,
+    renderCell: (params) => {
+      const status = params.value;
+      const color =
+        status === 'Delivered' ? 'success' :
+        status === 'In Transit' ? 'warning' :
+        status === 'Pending' ? 'error' : 'default';
 
-    {
-      title: 'Actions',
-      key: 'actions',
-      render: (text, record) => (
-        <Space size="middle">
-          <Button
-            icon={<Edit size={18} className="text-purple-700" />}
-            onClick={() => openCBMPop(record.customer_id,record._id)}
-            type="link"
-          />
-          <Button
-            icon={<Trash2 size={18}/>}
-            onClick={() => handleDelete(record._id, record.customer_id)}
-            type="link"
-            danger
-          />
-        </Space>
-      ),
+      return <Chip label={status} color={color} size="small" />;
     },
-  ];
+  },
+  { field: 'route', headerName: 'Route', width: 140 },
+  {
+    field: 'eta',
+    headerName: 'ETA',
+    width: 160,
+    renderCell: (params) => moment(params.value).format('MMMM D, YYYY') || 'N/A',
+  },
+  {
+    field: 'actions',
+    headerName: 'Actions',
+    width: 120,
+    sortable: false,
+    renderCell: (params) => (
+      <Box display="flex" gap={1}>
+        <Button onClick={() => openCBMPop(params.row.customer_id, params.row._id)} size="small" variant="outlined" color="secondary">
+          <Edit size={16} />
+        </Button>
+        <Button onClick={() => handleDelete(params.row._id, params.row.customer_id)} size="small" variant="outlined" color="error">
+          <Trash2 size={16} />
+        </Button>
+      </Box>
+    ),
+  },
+];
 
 
 
@@ -370,7 +352,7 @@ const Orders = () => {
     });
   };
   
-
+  const [formData, setFormData] = useState({ containerNumber: '' });
   const [form] = Form.useForm();
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -390,8 +372,8 @@ const Orders = () => {
 
   const handleStart = async () => {
     try {
-      const values = await form.validateFields();
-      onStart(values.containerNumber);
+      
+      onStart(formData.containerNumber);
       form.resetFields();
       setModalOpen(false)
       message.success("Shipment started!");
@@ -433,13 +415,29 @@ const Orders = () => {
   </Button>
 
   {selectedRowKeys.length !== 0 &&
-  <Button
-    danger
-    disabled={selectedRowKeys.length === 0}
-    onClick={handleBulkDelete}
-  >
-    Delete Selected
-  </Button>}
+    <Popconfirm
+            title="Are you sure you want to delete selected record?"
+            onConfirm={handleBulkDelete}
+            okText="Yes"
+            cancelText="No"
+            okButtonProps={{
+              style: {
+                backgroundColor: '#dc2626', // Tailwind red-600
+                borderColor: '#dc2626',
+                color: 'white',
+              },
+              danger: true,
+            }}
+          >
+            <Button
+              danger
+              disabled={selectedRowKeys.length === 0}
+              
+            >
+              Delete Selected
+            </Button>
+          </Popconfirm>
+}
   </div>
 
   <input
@@ -455,52 +453,68 @@ const Orders = () => {
 
 
 
-<Modal
-      title={`Start Shipment ( ${selectedRowKeys.length > 0 && `${selectedRowKeys.length} selected )`}`}
-      open={modalOpen}
-      onCancel={() => {
-        form.resetFields();
-        setModalOpen(false)
-      }}
-      footer={null}
-    >
-      <Form form={form} layout="vertical">
-        <Form.Item
-          label="Container Number"
-          name="containerNumber"
-          rules={[{ required: true, message: 'Please enter a container number' }]}
-        >
-          <Input placeholder="e.g., CNT1234567" />
-        </Form.Item>
+<Dialog
+  open={modalOpen}
+  onClose={() => {
+    setFormData({ containerNumber: '' }); // reset manually or via Formik
+    setModalOpen(false);
+  }}
+  fullWidth
+  maxWidth="sm"
+  PaperProps={{
+    sx: { borderRadius: 3, p: 2 },
+  }}
+>
+  <DialogTitle>
+    <Typography variant="h6" fontWeight={600}>
+      Start Shipment ({selectedRowKeys.length} selected)
+    </Typography>
+  </DialogTitle>
 
-        <div className="flex justify-end gap-2">
-          <Button onClick={()=> setModalOpen(false)}>Cancel</Button>
-          <Button type="primary" onClick={handleStart}>
-            Start
-          </Button>
-        </div>
-      </Form>
-    </Modal>
+  <DialogContent dividers>
+    <TextField
+      fullWidth
+      label="Container Number"
+      value={formData.containerNumber}
+      onChange={(e) =>
+        setFormData((prev) => ({ ...prev, containerNumber: e.target.value }))
+      }
+      placeholder="e.g., CNT1234567"
+      required
+      margin="normal"
+    />
+  </DialogContent>
+
+  <DialogActions sx={{ px: 3, pb: 2 }}>
+    <Button
+      onClick={() => setModalOpen(false)}
+      variant="outlined"
+      color="inherit"
+    >
+      Cancel
+    </Button>
+    <Button onClick={handleStart} variant="contained" color="primary">
+      Start
+    </Button>
+  </DialogActions>
+</Dialog>
 
      <div style={{ padding: "10px 0",width:"90%",marginInline:"auto" }}>
              
                {/* Container Page Title */}
                
                  <Card title="Shipments Overview" style={{border:"1px solid #ddd",width:"100%"}} className="w-full">
-      <Table
-        columns={columns}
-        dataSource={filteredContainers}
-        rowSelection={rowSelection}
-        rowKey="_id"
-        pagination={{ pageSize: 10 }}
-        rowClassName={(record) =>
-          selectedRowKeys.includes(record._id) ? 'custom-selected-row' : ''
-        }
-        scroll={{ x: 1200 }}
-        bordered
-      />
+                 <DataGrid
+                    rows={filteredContainers} // Data for the rows
+                    columns={columns} // Define your columns
+                    getRowId={(row) => row._id} // Ensure to use _id as the unique identifier for each row
+                    checkboxSelection // Enable checkbox selection
+                    onRowSelectionModelChange={handleSelectionChange} // Capture the selected row IDs
+                    selectionModel={selectedRowKeys} // Bind selectedRowKeys to the DataGrid's selection
+                    autoHeight // Adjust the height to fit the content
+                  />
 
-      </Card>
+                </Card>
      
       
       </div>

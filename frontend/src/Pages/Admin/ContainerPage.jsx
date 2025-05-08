@@ -1,5 +1,9 @@
 import React, { useState, useEffect,useMemo,useRef } from "react";
 import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col,Empty, Tag, Space, Button,Select ,Typography,Spin} from "antd";
+import { Chip, IconButton, Tooltip,Box } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+
+
 import { SearchOutlined } from '@ant-design/icons';
 import { Edit, Trash2,Copy } from "lucide-react";
 import {toast} from "react-toastify"
@@ -399,106 +403,125 @@ const [visible,setVisible] = useState(false)
   }
   // Columns for the table
   const columns = [
-    
-    { 
-      title: "Container Number",
-      dataIndex: "containerNumber",
-      key: "containerNumber",
-      render:(text,record)=> (
-        <Space>
-        <p>{text}</p>
-        <Copy size={15} onClick={() => navigator.clipboard.writeText(record.containerNumber)} />
-        </Space>
-      ) },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => {
-        const color = status === "Pending..." ? "orange" : status === "In Transit" ? "blue" : status === "Delivered" ? "green" : "red";
-        return <Tag color={color}>{status}</Tag>;
-      },
-    },
-    { title: "Route", dataIndex: "route", key: "route" },
-    { title: "Port", dataIndex: "port", key: "port" },
-    {
-      title: "CBM Rate",
-      dataIndex: "cbmRate",
-      key: "cbmRate",
-      render: (cbmRate) => `$${cbmRate.toFixed(2)}`,
-    },
-    {
-      title: "Loading Date",
-      dataIndex: "loadingDate",
-      key: "loadingDate",
-      render: (loadingDate) => new Date(loadingDate).toLocaleDateString()
-      },
-    {
-      title: "ETA",
-      dataIndex: "eta",
-      key: "eta",
-      render: (eta) => new Date(eta).toLocaleDateString(),
-    },
-    {
-      title: "Assigned Shipments",
-      key: "assignedOrders",
-      render: (_, orders) => (
-        <div>
-          {orders.assignedOrders.length > 0 ? (
-            <div className="flex gap-px">
-              <Tag style={{ float: "left" }}>{orders.assignedOrders.length}</Tag>
-              <button
-  onClick={() => {
-    const shipmentId = orders._id;
-    setSelectedShipmentId(shipmentId);
-    set_modal_open(true);
-    socket.emit("getOrdersByShipment", shipmentId);
-  }}
-  className=" px-2 text-xs  bg-purple-200 border-1 border-purple-300 hover:bg-purple-700 text-stone-500 font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-200"
->
-  
-  View 
-</button>
-
-            </div>
-          ) : (
-            <Tag color="gray">No shipments</Tag>
-          )}
+      field: 'containerNumber',
+      headerName: 'Container Number',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span>{params.value}</span>
+          <Tooltip title="Copy">
+            <IconButton
+              size="small"
+              onClick={() => navigator.clipboard.writeText(params.row.containerNumber)}
+            >
+              <Copy size={16} />
+            </IconButton>
+          </Tooltip>
         </div>
-      )
-    }
-    ,
+      ),
+    },
     {
-      title: "Actions",
-      key: "actions",
-      render: (_,container) =>
-        <div style={{ display: "flex", gap: "3px" }}>
-  
-
-  <Button 
-    size="small" 
-    type="default" 
-    style={{fontSize:"12px",border:"none"}}
+      field: 'status',
+      headerName: 'Status',
+      width: 130,
+      renderCell: (params) => {
+        const color =
+          params.value === 'Pending...'
+            ? 'warning'
+            : params.value === 'In Transit'
+            ? 'info'
+            : params.value === 'Delivered'
+            ? 'success'
+            : 'error';
+        return <Chip label={params.value} color={color} size="small" />;
+      },
+    },
+    { field: 'route', headerName: 'Route', width: 130 },
+    { field: 'port', headerName: 'Port', width: 130 },
+    {
+      field: 'cbmRate',
+      headerName: 'CBM Rate',
+      width: 120,
+      renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
+    },
+    {
+      field: 'loadingDate',
+      headerName: 'Loading Date',
+      width: 130,
+      renderCell: (params) => new Date(params.value).toLocaleDateString(),
+    },
+    {
+      field: 'eta',
+      headerName: 'ETA',
+      width: 130,
+      renderCell: (params) => new Date(params.value).toLocaleDateString(),
+    },
+    {
+      field: 'assignedOrders',
+      headerName: 'Assigned Shipments',
+      width: 200,
+      renderCell: (params) => {
+        const orders = params.value;
+        return orders && orders.length > 0 ? (
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' ,height:"100%"}}>
+  <Chip label={orders.length} color="default" size="small" />
+  <button
     onClick={() => {
-      handleEditContainer();
-      setContainerIds(container._id);
+      setSelectedShipmentId(params.row._id);
+      set_modal_open(true);
+      socket.emit('getOrdersByShipment', params.row._id);
     }}
+    style={{
+      fontSize: '0.75rem',
+      backgroundColor: '#ddd6fe',
+      border: '1px solid #c4b5fd',
+      color: '#4b5563',
+      fontWeight: 600,
+      height: '24px', // Matches MUI small Chip height
+      padding: '0 10px',
+      borderRadius: '8px',
+      transition: 'all 0.3s',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      lineHeight: 1,
+    }}
+    className="hover:bg-purple-700 hover:text-white"
   >
-    <Edit size={18}/>
-  </Button>
-
-  <Button 
-    size="small" 
-    type="danger" 
-    onClick={()=> deleteContainer(container._id)}
-  >
-    <Trash2 style={{ color:"red"}} size={18}/>
-  </Button>
+    View
+  </button>
 </div>
-,
+
+        ) : (
+          <Chip label="No shipments" color="default" size="small" />
+        );
+      },
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 120,
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' ,height:"100%"}}>
+          <IconButton
+            size="small"
+            onClick={() => {
+              handleEditContainer();
+              setContainerIds(params.row._id);
+            }}
+          >
+            <Edit size={18} />
+          </IconButton>
+          <IconButton size="small" onClick={() => deleteContainer(params.row._id)}>
+            <Trash2 size={18} style={{ color: 'red' }} />
+          </IconButton>
+        </div>
+      ),
     },
   ];
-
   
 
   const filteredOrders = useMemo(() => {
@@ -826,18 +849,35 @@ const [visible,setVisible] = useState(false)
           {/* Container Page Title */}
           <Col span={24}>
             <Card title="Containers Overview" style={{border:"1px solid #ddd"}}>
-              <Table
+            <DataGrid
+                rows={filteredContainers}
                 columns={columns}
-                dataSource={filteredContainers}
-                pagination={{ pageSize: 5 }}
-                scroll={{ x: 1200 }} // Makes the table horizontally scrollable
-                title={() => (
-                  <Space>
-                    <SearchOutlined />
-                    <span>Search Containers</span>
-                  </Space>
-                )}
-                // You can add more functionality like filtering and sorting here
+                getRowId={(row) => row._id}
+                pageSizeOptions={[5]}
+                initialState={{
+                  pagination: { paginationModel: { pageSize: 5, page: 0 } }
+                }}
+                
+                density="comfortable"
+                sx={{
+                  // Horizontal scroll equivalent
+                  '& .MuiDataGrid-columnHeaders': {
+                    backgroundColor: '#f3f4f6',
+                  },
+                  '& .MuiDataGrid-row:hover': {
+                    backgroundColor: '#f9fafb',
+                  },
+                }}
+                slots={{
+                  toolbar: () => (
+                    <Box display="flex" alignItems="center" p={1} gap={1}>
+                      <SearchOutlined fontSize="small" />
+                      <Typography variant="body1" fontWeight={500}>
+                        Search Containers
+                      </Typography>
+                    </Box>
+                  ),
+                }}
               />
             </Card>
           </Col>

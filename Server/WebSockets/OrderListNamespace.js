@@ -1,6 +1,7 @@
 
 const notification = require("../Models/Notification")
 const { Order,Shipment } = require("../Models/OrderAndShipment")
+const User = require("../Models/userSchema")
 const mongoose = require("mongoose")
 const data= require("../Models/userSchema")
 const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNamespace,Users)=>{
@@ -117,7 +118,14 @@ const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNames
   try {
     console.log(containerNumber, selectedRowKeys);
 
-    const shipments = await Shipment.findOne({ containerNumber });
+    const parsedContainerNumber = parseInt(containerNumber, 10);
+
+if (isNaN(parsedContainerNumber)) {
+  return callback({ status: "error", message: "Invalid container number" });
+}
+
+const shipments = await Shipment.findOne({ containerNumber: parsedContainerNumber });
+
     if (!shipments) {
       return callback({ status: "error", message: "Container not found" });
     }
@@ -301,6 +309,22 @@ Socket.on("addCBM/CTN",async(data,callback)=>{
     console.log(err)
   }
 })
+
+
+Socket.on('getUserNameById', async ({userId}, callback) => {
+  try {
+    const user = await User.findById(userId).select('username'); // Only get 'name' field
+
+    if (!user) {
+      return callback({ status: 'error', message: 'User not found' });
+    }
+
+    callback({ status: 'success', name: user.username });
+  } catch (err) {
+    console.error(err);
+    callback({ status: 'error', message: 'Server error' });
+  }
+});
 
 
 Socket.on("disconnect", () => {

@@ -1,43 +1,64 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { motion } from "framer-motion";
-import { jwtDecode } from "jwt-decode";
-import { io } from "socket.io-client";
-import { Table, Checkbox, Tag, Space } from 'antd';  // Import Ant Design components
+import { useParams, Link as RouterLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
+import { io } from 'socket.io-client';
 
-import './Pages.css';
+import {
+  Box,
+  Chip,
+  Breadcrumbs,
+  Typography,
+  Link,
+} from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 
 const ViewIndividualOrder = () => {
   const { id } = useParams();
   const [orders, setOrders] = useState([]);
   const accesstoken = localStorage.getItem("accesstoken");
   const decode = jwtDecode(accesstoken);
+
   const socket = useMemo(() => io("http://localhost:4000/orderList", {
     transports: ['websocket'],
   }), []);
 
+  const [userName, setUserName] = useState('');
+
   useEffect(() => {
     socket.emit("getUserOrder", id);
     socket.emit("joinRoom", { id: decode.id });
+    socket.emit('getUserNameById', {userId:id}, (response) => {
+      if (response.status === 'success') {
+        setUserName(response.name);
+      } else {
+        toast.error("Failed to fetch user name");
+      }
+    });
   }, [id, decode.id, socket]);
+
+  
+ 
+
+  
 
   useEffect(() => {
     socket.on("connect", () => {
       console.log("user connected");
     });
     socket.on("sendUserOrder", (data) => {
-      console.log(data);
       setOrders(data);
     });
     socket.on('receiveOneOrder', (data) => {
       if (data.customer_id === id) {
         setOrders(prev => [data, ...prev]);
       }
-      console.log("order data", data);
     });
     socket.on("disconnect", (reason) => {
       console.log(reason);
     });
+
     return () => {
       socket.off("connect");
       socket.off("sendUserOrder");
@@ -48,49 +69,56 @@ const ViewIndividualOrder = () => {
 
   const columns = [
     {
-      title: '',
-      dataIndex: 'checkbox',
-      render: (_, record) => (
-        <Checkbox className="flex justify-center items-center" />
-      ),
-    },
-    {
-      title: '#Order ID',
-      dataIndex: '_id',
-      render: (text) => (
-        <Link to={`/orders/${text}`} style={{ fontSize: '15px', color: '#57534e' }}>
-          {text}
+      field: 'id',
+      headerName: '#Order ID',
+      flex: 1,
+      renderCell: (params) => (
+        <Link   underline="hover">
+          {params.row._id}
         </Link>
       ),
     },
     {
-      title: '#Client',
-      dataIndex: 'customerName',
-      render: (text) => <span style={{ fontSize: '15px', color: '#57534e' }}>{text}</span>,
+      field: 'customerName',
+      headerName: 'Client',
+      flex: 1,
     },
     {
-      title: 'Product',
-      dataIndex: 'product',  // Assuming product is an object or array that needs to be mapped
-      render: () => <span>-</span>,  // Placeholder for actual product data
+      field: 'product',
+      headerName: 'Product',
+      flex: 1,
+      renderCell: () => <span>-</span>, // Replace with actual data
     },
     {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      render: () => <span>-</span>,  // Placeholder for actual quantity data
+      field: 'quantity',
+      headerName: 'Quantity',
+      flex: 1,
+      renderCell: () => <span>-</span>, // Replace with actual data
     },
     {
-      title: 'Status',
-      dataIndex: 'Status',
-      render: (status) => (
-        <Tag color={status === 'Delivered' ? 'green' : 'orange'}>{status}</Tag>
+      field: 'Status',
+      headerName: 'Status',
+      flex: 1,
+      renderCell: (params) => (
+        <Chip
+          label={params.row.Status}
+          color={params.row.Status === 'Delivered' ? 'success' : 'warning'}
+          size="small"
+        />
       ),
     },
     {
-      title: 'Arrival Time',
-      dataIndex: 'arrivalTime',  // Assuming you have this field in the data
-      render: () => <span>-</span>,  // Placeholder for actual arrival time data
+      field: 'arrivalTime',
+      headerName: 'Arrival Time',
+      flex: 1,
+      renderCell: () => <span>-</span>, // Replace with actual data
     },
   ];
+
+  const rows = orders.map((order) => ({
+    ...order,
+    id: order._id, // DataGrid requires a unique `id` field
+  }));
 
   return (
     <motion.div
@@ -98,21 +126,35 @@ const ViewIndividualOrder = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       style={{ paddingTop: "100px" }}
-      className='layout-shift w-full bg-stone-100 lg:w-[80%]'>
-      <div className='flex ml-[5%] max-w-[250px]'>
-        <Link to={"/Orders"} className='breadcrumb1'>Orders</Link>
-        <Link className='breadcrumb'>View Order</Link>
-      </div>
+  className="layout-shift w-full min-h-screen bg-stone-100 lg:w-[80%] px-6 py-10 mx-auto"
+>
+      <Box maxWidth="lg" mx="auto" px={2}>
+        <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
+          <Link component={RouterLink} to="/L/Shipments" color="inherit">
+            Shipments
+          </Link>
+          <Typography color="text.primary">View {userName}'s Shipments</Typography>
+        </Breadcrumbs>
 
-      <div className='rounded-xl border-[1px] border-stone-300 py-5 w-[95%] ml-auto mt-3'>
-        <Table
-          columns={columns}
-          dataSource={orders}
-          rowKey="_id"
-          pagination={false}  // Disable pagination for simplicity (you can add it back if needed)
-          style={{ background: 'white', borderRadius: '8px' }}
-        />
-      </div>
+        <Box
+          sx={{
+            height: 500,
+            width: '100%',
+            bgcolor: 'white',
+            borderRadius: 2,
+            boxShadow: 2,
+            p: 2,
+          }}
+        >
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[5, 10, 20]}
+            disableSelectionOnClick
+          />
+        </Box>
+      </Box>
     </motion.div>
   );
 };
