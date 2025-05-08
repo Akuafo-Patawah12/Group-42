@@ -6,6 +6,12 @@ import { AlertTriangle }  from 'lucide-react';
 import ButtonLoader from '../../icons/ButtonLoader';
 import { Button, Table, Input, Checkbox } from 'antd';
 import {message} from "antd"
+import {
+  DataGrid,
+
+
+} from '@mui/x-data-grid';
+import { Box, Typography } from '@mui/material';
 
 
 import { SearchOutlined } from '@ant-design/icons';
@@ -212,150 +218,74 @@ const Clients = () => {
     });
   
     const columns = [
+      { field: 'id', headerName: 'ID', width: 90 },
+      { field: '_id', headerName: 'User ID', width: 180 },
       {
-        title: <Checkbox />,
-        dataIndex: 'checkbox',
-        key: 'checkbox',
-        render: () => <Checkbox />,
-        width: 50,
-      },
-      {
-        title: 'User_id',
-        dataIndex: '_id',
-        key: '_id',
-      },
-      {
-        title: 'Email',
-        dataIndex: 'email',
-        key: 'email',
-        ...getColumnSearchProps('email'),
-        render: (text) => (
-          <div
-            style={{
-              cursor: 'pointer',
-              overflowX: 'auto',
-              maxWidth: '80px',
-              fontSize: '15px',
+        field: 'email',
+        headerName: 'Email',
+        flex: 1,
+        minWidth: 200,
+        renderCell: (params) => (
+          <Typography
+          style={{ display: 'flex', alignItems: 'center',height:"100%" }}
+            noWrap
+            sx={{
+              fontSize: '14px',
               color: '#57534e',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
               overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              maxWidth: '160px',
             }}
-            title={text}
+            title={params.value}
           >
-            {text}
-          </div>
+            {params.value}
+          </Typography>
         ),
       },
       {
-        title: 'Name',
-        dataIndex: 'username',
-        key: 'username',
+        field: 'username',
+        headerName: 'Name',
+        width: 150,
       },
       {
-        title: 'Last Active',
-        dataIndex: 'active',
-        key: 'active',
-        render: (active) => (
-          <span style={{ fontSize: '15px', color: '#57534e' }}>
-            {getTimeDifference(active)}
-          </span>
+        field: 'active',
+        headerName: 'Last Active',
+        width: 160,
+        renderCell: (params) => (
+          <Typography fontSize="14px" color="#57534e" style={{ display: 'flex', alignItems: 'center',height:"100%" }}>
+            {getTimeDifference(params.value)}
+          </Typography>
         ),
       },
       {
-        title: 'Permissions',
-        dataIndex: 'account_type',
-        key: 'account_type',
+        field: 'account_type',
+        headerName: 'Permissions',
+        width: 150,
       },
     ];
-  
-    const dataSource = Users.map((user, index) => ({
-      key: index,
+    
+    const rows = Users.map((user, index) => ({
+      id: index + 1,
       ...user,
     }));
     
-    
-  return (
-    <div
-    initial={{ opacity: 0, perspective: 1000, rotateY: -90 ,y:150}}
-    animate={{ opacity: 1, perspective: 1000, rotateY: 0 ,y:0}}
-    exit={{ opacity: 0 ,y:-100}}
-    duration={{duration: 0.3}}
-     style={{paddingTop:"100px"}}
-      className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
-        <div className='relative'>
-            <Button primary onClick={openModal}>Add user</Button>
-            </div>
-
-             {/* Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white w-[300px] rounded-xl shadow-2xl p-6 relative animate-scaleIn">
-            <h2 className="text-lg font-semibold mb-4 text-gray-700">Add New User</h2>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <input
-                type="text"
-                required
-                placeholder="Username"
-                className="border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              />
-              <input
-                type="email"
-                required
-                placeholder="Email"
-                className="border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
-              <input
-                type="password"
-                required
-                placeholder="Password"
-                className="border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              />
-
-              {validation && (
-                <div className="flex items-center gap-2 text-red-500 text-sm">
-                  <AlertTriangle size={18} />
-                  <span>{validation}</span>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={loader}
-                className="mt-2 bg-green-500 hover:bg-green-600 text-white rounded-md py-2 font-medium flex items-center justify-center gap-2"
-              >
-                <span>Add</span>
-                {loader && <ButtonLoader />}
-              </button>
-            </form>
-
-            {/* Close button */}
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-3 text-gray-400 hover:text-gray-600 text-xl"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
-
-        <div className="bg-white w-{95%} shadow-md rounded-lg p-6">
-        <h3 className="text-lg font-bold text-gray-800 mb-4">Your Recent Orders</h3>
-        <Table
-      dataSource={dataSource}
-      columns={columns}
-      scroll={{ x: 'max-content' }}
-      pagination={{ pageSize: 15 }}
-      rowClassName="h-[35px]"
-      bordered
-    />
-    </div>
-    </div>
-  )
+    return (
+      <div style={{paddingTop:"100px",paddingInline:"2.5%"}}
+          className='layout-shift  w-full bg-stone-100 lg:w-[80%] '>
+        
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          checkboxSelection
+          disableRowSelectionOnClick
+          pageSizeOptions={[5, 10, 25, 50]}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 10, page: 0 } },
+          }}
+        />
+      </div>
+    );
 }
 
 export default Clients

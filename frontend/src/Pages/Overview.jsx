@@ -406,7 +406,7 @@ const CloseReport = () => {
 {/* Active Orders */}
 <div>
   <Badge count={active} size="small" offset={[5, -5]}>
-    <span className="border border-purple-200 bg-purple-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
+    <span className="border border-purple-200 bg-gray-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
       <CarOutlined style={style} /> Active Orders
     </span>
   </Badge>
@@ -415,7 +415,7 @@ const CloseReport = () => {
 {/* Total Shipments */}
 <div >
   <Badge count={orders.length} size="small" offset={[5, -5]}>
-    <span className="border border-purple-200 bg-purple-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
+    <span className="border border-purple-200 bg-gray-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
       <ShoppingCartOutlined style={style} /> Total Shipments
     </span>
   </Badge>
@@ -423,7 +423,7 @@ const CloseReport = () => {
 
 {/* Delivered Items */}
 <div>
-  <span className="border border-purple-200 bg-purple-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
+  <span className="border border-purple-200 bg-gray-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
     <ProductOutlined style={style} /> Delivered Items
   </span>
 </div>
@@ -436,7 +436,7 @@ const CloseReport = () => {
 
         <Card className="w-full rounded-xl shadow-md md:w-1/2">
       {/* View Data Section */}
-      <div className="flex items-center justify-between bg-purple-100 border border-purple-200 p-4 rounded-lg">
+      <div className="flex items-center justify-between bg-gray-100 border border-purple-200 p-4 rounded-lg">
         <Button shape="circle" icon={<DatabaseOutlined />} size="large" />
         <Typography.Text className="font-medium">View Data</Typography.Text>
       </div>
@@ -463,7 +463,7 @@ const CloseReport = () => {
 
     <Card  className="w-full rounded-xl shadow-md md:w-1/2">
       {/* View Analytics Section */}
-      <div className="flex items-center justify-between bg-purple-100 border border-purple-200 p-4 rounded-lg">
+      <div className="flex items-center justify-between bg-gray-100 border border-purple-200 p-4 rounded-lg">
         <Button shape="circle" icon={<BarChartOutlined />} size="large" />
         <Typography.Text className="font-medium">Analytics overview</Typography.Text>
       </div>

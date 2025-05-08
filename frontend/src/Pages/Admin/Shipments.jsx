@@ -302,7 +302,8 @@ const Orders = () => {
     width: 120,
     sortable: false,
     renderCell: (params) => (
-      <Box display="flex" gap={1}>
+      <Box display="flex" gap={1} style={{ display: 'flex', gap: 6, alignItems: 'center' ,height:"100%"}}>
+
         <Button onClick={() => openCBMPop(params.row.customer_id, params.row._id)} size="small" variant="outlined" color="secondary">
           <Edit size={16} />
         </Button>
