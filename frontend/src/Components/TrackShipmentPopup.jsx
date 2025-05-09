@@ -78,7 +78,7 @@ const TrackShipmentPopup = ({open,trackRef}) => {
 >
   <div className="flex flex-col gap-4 mt-4">
     <Input
-      placeholder="Enter your Tracking Number (e.g., ILL123456789-SHP)"
+      placeholder="Enter your Tracking Number (e.g., SF123456789-SHP)"
       value={trackingId}
       className="h-[42px] border-gray-300 rounded-md shadow-sm"
       onChange={(e) => setTrackingId(e.target.value)}

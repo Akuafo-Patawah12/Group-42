@@ -169,6 +169,7 @@ const SignUp =async(req,res)=>{
 const forgetPassaword = async (req, res) => {
     try{
     const { email } = req.body;
+    console.log(email)
     const user = await data.findOne({ email });
   
     if (!user) return res.status(404).json({ message: 'User not found' });
@@ -197,7 +198,7 @@ const forgetPassaword = async (req, res) => {
       html: `<a href="${resetLink}">Click here to reset your password</a>`
     });
   
-    res.json({ message: 'Password reset email sent' });
+    res.status(200).json({ message: 'Password reset email sent' });
 
 }catch(error){
     res.status(500).json({message:"failed to send link for reset password"})

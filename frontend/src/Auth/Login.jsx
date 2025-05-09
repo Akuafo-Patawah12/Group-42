@@ -154,8 +154,8 @@ const Login = () => {
       SF Ghana Logistics.
     </Typography.Title>
 
-    <Typography.Text className="font-bold text-gray-600 w-[73%] mx-auto text-center">
-    Streamlining your logistics and marketing needs — welcome to smarter supply chain solutions.
+    <Typography.Text style={{color:"#444"}} className="font-bold text-gray-500 w-[73%] mx-auto text-center">
+    Streamlining your logistics and marketing needs welcome to smarter supply chain solutions.
     </Typography.Text>
 
     <Form.Item
@@ -165,7 +165,7 @@ const Login = () => {
     >
       <Input
         placeholder="Enter email"
-        className="h-[35px]"
+        className="h-[45px]"
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
       />
     </Form.Item>
@@ -180,7 +180,7 @@ const Login = () => {
         iconRender={(visible) =>
           visible ? <EyeInvisibleOutlined /> : <EyeOutlined />
         }
-        className="h-[35px]"
+        className="h-[45px]"
         onChange={(e) =>
           setFormData({ ...formData, password: e.target.value })
         }

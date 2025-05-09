@@ -1,23 +1,25 @@
 import React from 'react'
 import axios from "../api/api"
 import { message, Card, Form, Input, Button, Typography } from 'antd';
+import { toast } from 'react-toastify';
 
 
 const ForgetPassword = () => {
   const { Title, Text } = Typography;
   const [email,setEmail]= React.useState("");
 
-  const handSubmit = async(e)=>{
-    e.preventDefault();
+  const handSubmit = async()=>{
+    
     try{
       await axios.post("/forgetPassword",{email})
       .then(res=>{
-        message.success(
-          "SCM sent a reset link to your email.",
+        toast.success(
+          "SFGL sent a reset link to your email.",
           )
       })
       .catch(err=>{
         console.log(err)
+        toast.error("Failed to send reset link")
       })
     }catch(error){
       console.log(error)
