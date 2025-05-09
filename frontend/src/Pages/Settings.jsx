@@ -258,119 +258,142 @@ const Settings = () => {
 
 <div className="flex flex-col gap-5 justify-between py-5 lg:flex-row">
   {/* Update Username */}
-  <form onSubmit={handleSubmitUsername} className="mb-10 bg-white p-6 rounded-xl shadow">
-    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 mb-4">Update Username</h3>
-    <label style={{marginBlock:"8px"}} className="block text-sm  mb-2 font-medium text-gray-700">Current Username: {username}</label>
+  <form
+    onSubmit={handleSubmitUsername}
+    className="bg-white p-6 rounded-xl border border-gray-200 shadow"
+    style={{ marginBottom: "24px" }}
+  >
+    <h3 className="text-sm font-semibold text-purple-600 mb-4">Update Username</h3>
+    <label style={{marginBottom:"8px"}} className="block text-sm font-medium text-gray-700 mb-2">
+      Current Username: {username}
+    </label>
     <input
       type="text"
       value={newUsername}
       onChange={(e) => setNewUsername(e.target.value)}
       placeholder="Enter new username"
-      style={{marginBlock:"16px"}}
-      className="w-full text-sm px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-purple-400"
+      style={{marginBottom:"16px"}}
+      className="w-full text-sm px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 mb-4"
     />
     <button
       type="submit"
-      className="w-full text-sm py-2 border-2 font-semibold text-purple-800 border-purple-300 bg-purple-200 rounded hover:text-white hover:bg-purple-400  transition"
+      className="w-full text-sm py-2 font-semibold text-purple-700 bg-purple-100 border border-purple-200 rounded hover:bg-purple-300 hover:text-white transition"
     >
       Update Username
     </button>
   </form>
 
   {/* Update Email */}
-  <form onSubmit={requestEmailChange} className="mb-10 bg-white p-6 rounded-xl shadow">
-    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Update Email</h3>
-    <label style={{marginBlock:"8px"}} className="block text-sm  font-medium text-gray-700">Current Email: {email}</label>
+  <form
+    onSubmit={requestEmailChange}
+    className="bg-white p-6 rounded-xl border border-gray-200 shadow"
+    style={{ marginBottom: "24px" }}
+  >
+    <h3 className="text-sm font-semibold text-purple-600 mb-4">Update Email</h3>
+    <label style={{marginBottom:"8px"}} className="block text-xs font-medium text-gray-700 mb-2">
+      Current Email: {email}
+    </label>
     <input
       type="email"
       value={newEmail}
       onChange={(e) => setNewEmail(e.target.value)}
       placeholder="Enter new email"
-      style={{marginBlock:"16px"}}
-      className="w-full text-sm px-4 py-2 text-sm border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-purple-400"
+      style={{marginBottom:"16px"}}
+      className="w-full text-sm px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 mb-4"
     />
     <button
       type="submit"
-      className="w-full text-sm py-2 border-2 font-semibold text-purple-800 border-purple-300 bg-purple-200 rounded hover:text-white hover:bg-purple-400  transition"
+      className="w-full text-sm py-2 font-semibold text-purple-700 bg-purple-100 border border-purple-200 rounded hover:bg-purple-300 hover:text-white transition"
     >
       Update Email
     </button>
   </form>
 
- {/* Update Password */}
-  <form onSubmit={handlePasswordUpdate} className="mb-10 bg-white p-6 rounded-xl shadow">
-    <h3 style={{marginBlock:"10px"}} className="text-sm font-semibold text-purple-700 ">Change Password</h3>
-
+  {/* Update Password */}
+  <form
+    onSubmit={handlePasswordUpdate}
+    className="bg-white p-6 rounded-xl border border-gray-200 shadow"
+    style={{ marginBottom: "24px" }}
+  >
+    <h3 className="text-sm font-semibold text-purple-600 mb-4">Change Password</h3>
     <input
       type="password"
       value={password}
       onChange={(e) => setPassword(e.target.value)}
       placeholder="Current Password"
-      style={{marginBlock:"16px"}}
-      className="w-full text-sm px-4 py-2 border border-gray-300 rounded  focus:outline-none focus:ring-2 focus:ring-purple-400"
+      style={{marginBottom:"16px"}}
+      className="w-full text-sm px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 mb-4"
     />
-
-    <label style={{marginBlock:"8px"}} className="block text-sm  font-medium text-gray-700">New Password</label>
+    <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
     <input
       type="password"
       value={newPassword}
       onChange={(e) => setNewPassword(e.target.value)}
-      placeholder="Current Password"
-      style={{marginBlock:"16px"}}
-      className="w-full text-sm  px-4 py-2 border border-gray-300 rounded  focus:outline-none focus:ring-2 focus:ring-purple-400"
+      placeholder="New Password"
+      style={{marginBottom:"16px"}}
+      className="w-full text-sm px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 mb-4"
     />
-
     <button
       type="submit"
-      className="w-full text-sm py-2 border-2 font-semibold text-purple-800 border-purple-300 bg-purple-200 rounded hover:text-white hover:bg-purple-400  transition"
+      className="w-full text-sm py-2 font-semibold text-purple-700 bg-purple-100 border border-purple-200 rounded hover:bg-purple-300 hover:text-white transition"
     >
       Update Password
     </button>
   </form>
-  </div>
+</div>
 
-  
- 
-
-  
-<div className='flex flex-col py-5 justify-between gap-5 lg:flex-row'>
-  {/* Session Management */}
-  <div style={{marginBlock:"16px"}} className="mb-10 bg-white p-6 rounded-xl shadow">
-    <h3 style={{marginBlock:"16px"}} className="text-sm font-semibold text-purple-700 ">Manage Sessions</h3>
+<div className=" py-5 justify-between   columns-1 grid-gap-2 md:columns-2">
+  {/* Manage Sessions */}
+  <div
+    className="bg-white p-6 rounded-xl border border-gray-200 shadow break-inside-avoid"
+    style={{ marginBottom: "24px" }}
+  >
+    <h3 className="text-sm font-semibold text-purple-600 mb-4">Manage Sessions</h3>
     {sessions.length === 0 ? (
       <p className="text-gray-500 text-sm">No active sessions.</p>
     ) : (
-      <ul style={{marginBlock:"16px"}} className="flex flex-col gap-3 ">
-        {sessions.map((session,index) => (
-          <li key={index} className="bg-purple-50 p-3 flex text-xs font-semibold rounded border border-purple-100">
-            <p className="text-purple-700">{session}</p>
-            <Trash2 size={30} /> 
+      <ul className="flex flex-col gap-3 mb-4">
+        {sessions.map((session, index) => (
+          <li
+            key={index}
+            className="bg-purple-50 px-4 py-3 flex justify-between items-center text-xs font-medium rounded border border-purple-100"
+          >
+            <span className="text-purple-700">{session}</span>
+            <Trash2 size={18} className="text-purple-500 cursor-pointer hover:text-purple-700" />
           </li>
         ))}
       </ul>
     )}
     <button
       onClick={handleLogoutAllSessions}
-      className="w-full text-sm py-2 text-red-500 bg-red-200 border-2 border-red-300  rounded hover:bg-red-500 transition"
+      style={{marginTop:"16px"}}
+      className="w-full text-sm py-2 text-red-600 bg-red-100 border border-red-200 rounded hover:bg-red-500 hover:text-white transition"
     >
       Log out of all sessions
     </button>
   </div>
-  {/* Remove Account */}
-<div className="mb-16 bg-white p-6 rounded-xl shadow border border-red-100">
-  <h3 style={{marginBlock:"16px"}} className=" font-semibold text-red-500 text-sm mb-4">Danger Zone</h3>
-  <p style={{marginBlock:"16px"}} className="text-gray-600 text-sm ">
-    Once you delete your account, there is no going back. Please be certain.
-  </p>
-  <button
-    onClick={handleDeleteAccount}
-    
-    className="w-full text-sm py-2 text-red-500 bg-red-200 border-2 border-red-300 rounded hover:bg-red-700 transition"
+
+  {/* Danger Zone */}
+  <div
+    className="bg-white p-6 rounded-xl border border-red-100 shadow break-inside-avoid"
+    style={{ marginBottom: "24px" }}
   >
-    Delete My Account
-  </button>
+    <h3 className="text-sm font-semibold text-red-500 mb-4">Danger Zone</h3>
+    <p style={{marginBottom:"16px"}} className="text-gray-600 text-sm mb-4">
+      Once you delete your account, there is no going back. Please be certain.
+    </p>
+    <button
+      onClick={handleDeleteAccount}
+      className="w-full text-sm py-2 text-red-600 bg-red-100 border border-red-200 rounded hover:bg-red-500 hover:text-white transition"
+    >
+      Delete My Account
+    </button>
+  </div>
 </div>
-</div>
+
+<footer className="w-full py-4 text-center text-sm text-gray-500 bg-transparent border-t border-gray-200 mt-10">
+  © {new Date().getFullYear()} Group 42. All rights reserved.
+</footer>
 
 </motion.div>
 

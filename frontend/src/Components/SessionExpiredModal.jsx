@@ -23,6 +23,7 @@ const SessionExpiredModal = ({ visible }) => {
       centered
       closable={false}
       onOk={handleOk}
+      
       cancelButtonProps={{ style: { display: "none" } }}
       okText="Login"
       okButtonProps={{
@@ -31,10 +32,10 @@ const SessionExpiredModal = ({ visible }) => {
             color: "#fff",
             border: "none",
             width:"100%",
-            paddingBlock:"5px",
+            paddingBlock:"10px",
             fontWeight:"bold",
             marginInline:"auto",
-            marginTop:"20px",
+            marginTop:"30px",
             outlineOffset:"3px",
             outline:"2px solid var(--purple)"
             }
