@@ -72,11 +72,11 @@ const Services = () => {
 <h2  style={{marginBlock:"50px 20px"}} className="text-3xl md:text-4xl font-semibold text-gray-700 text-center mt-12 mb-10">
   Fast & Affordable <span className="text-purple-600">Services</span> For You.
 </h2>
-<p style={{margin:"20px auto"}} className="font-bold text-center max-w-[350px]">Quick, reliable, and affordable logistics solutions tailored for your business.</p>
+<p style={{margin:"30px auto"}} className="font-bold text-center max-w-[350px]">Quick, reliable, and affordable logistics solutions tailored for your business.</p>
 
 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 md:px-10 max-w-7xl mx-auto">
 
-  <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
+  <div className="bg-white shadow-lg border border-purple-200 rounded-xl p-6 flex flex-col items-center text-center">
     <SeaFreight className="w-10 h-10 mb-4 text-purple-600" />
     <h3 className="text-lg font-semibold text-gray-800 mb-2">Sea Freight</h3>
     <p className="text-sm text-gray-600">
@@ -85,7 +85,7 @@ const Services = () => {
     </p>
   </div>
 
-  <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
+  <div className="bg-white shadow-lg border border-purple-200 rounded-xl p-6 flex flex-col items-center text-center">
     <AirFreightIcon className="w-10 h-10 mb-4 text-purple-600" />
     <h3 className="text-lg font-semibold text-gray-800 mb-2">Air Freight</h3>
     <p className="text-sm text-gray-600">
@@ -96,7 +96,7 @@ const Services = () => {
 
   
 
-  <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
+  <div className="bg-white shadow-lg border border-purple-200 rounded-xl p-6 flex flex-col items-center text-center">
     <ProcurementIcon className="w-10 h-10 mb-4 text-purple-600" />
     <h3 className="text-lg font-semibold text-gray-800 mb-2">Procurement Training</h3>
     <p className="text-sm text-gray-600">
@@ -105,7 +105,7 @@ const Services = () => {
     </p>
   </div>
 
-  <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center">
+  <div className="bg-white shadow-lg border border-purple-200 rounded-xl p-6 flex flex-col items-center text-center">
     <Clearance className="w-5 h-5 mb-4 text-purple-600" />
     <h3  className="text-lg font-semibold text-gray-800 ">Container Clearance</h3>
     <p  className="text-sm text-gray-600">

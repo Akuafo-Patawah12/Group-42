@@ -82,7 +82,7 @@ const SignUp = () => {
     >
       <Input
         placeholder="Company or Individual Name"
-        className="h-[35px]"
+        className="h-[45px]"
         onChange={(e) =>
           setFormData({ ...formData, username: e.target.value })
         }
@@ -98,7 +98,7 @@ const SignUp = () => {
       <Input
         type="email"
         placeholder="Enter email"
-        className="h-[35px]"
+        className="h-[45px]"
         onChange={(e) =>
           setFormData({ ...formData, email: e.target.value })
         }
@@ -113,7 +113,7 @@ const SignUp = () => {
     >
       <Input.Password
         placeholder="Password"
-        className="h-[35px]"
+        className="h-[45px]"
         iconRender={(visible) =>
           visible ? <EyeInvisibleOutlined /> : <EyeOutlined />
         }
@@ -141,8 +141,8 @@ const SignUp = () => {
         htmlType="submit"
         disabled={loader}
         loading={loader}
-        className="h-[35px] w-full bg-[var(--purple)] hover:bg-purple-300 transition duration-300 ease-in-out"
-        style={{background:"var(--purple)"}}
+        className=" w-full bg-[var(--purple)] hover:bg-purple-300 transition duration-300 ease-in-out"
+        style={{background:"var(--purple)",height:"45px"}}
       >
         Sign Up
       </Button>

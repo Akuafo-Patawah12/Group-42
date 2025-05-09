@@ -1,6 +1,6 @@
 # Group 42 (IT Project Work 2025)
 
-This a high performance Logistics and marketing web app developed by, Patawah(parcch),David Nii Darko and Micheal Edem Dei.
+This is a high performance Logistics and marketing web app developed by, Patawah(parcch),Johnson Darko Johnson and Micheal Edem Dei.
 
 # We are open for collaboration and new job opportunities.
 

@@ -93,7 +93,7 @@ const ViewIndividualOrder = () => {
       field: 'quantity',
       headerName: 'Quantity',
       flex: 1,
-      renderCell: () => <span>-</span>, // Replace with actual data
+     
     },
     {
       field: 'Status',
