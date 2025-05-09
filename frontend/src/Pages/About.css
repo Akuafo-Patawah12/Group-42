@@ -1,0 +1,17 @@
+.parent{
+    
+    display: flex;
+    overflow-x: scroll;
+    height: auto;
+    width: 90%;
+    padding-block: 40px;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+}
+
+.child{
+    min-width: 100%;
+    scroll-snap-align: start;
+}
+
+

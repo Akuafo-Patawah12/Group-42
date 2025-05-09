@@ -1,49 +1,44 @@
 const express = require('express');
 const http = require('http');
-const socketIo = require('socket.io');
+const connection = require('./Config/DB_connection');
+const router = require('./Router/Router');
 require('dotenv').config();
-const mysql = require('mysql');
-
+const cookies= require("cookie-parser")
+const cors=require('cors')
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+app.use(express.urlencoded({extended:true}))
+app.use(cookies())
+app.use(express.json());
+const initializeSocket = require('./WebSockets/Socket');
+app.use(cors({
+  origin:["http://localhost:5173","http://localhost:5174"],
+  credentials: true,
+  methods:["POST,GET,PUT,DELETE"], 
+  allowedHeaders: ['Content-Type']
+}))
+app.use("/",router)  //A middleware that returns all API for authentication
+let server; //creating a server instance
 
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST || 'locahost', 
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'turbo',
-  database: process.env.DB_NAME || 'IT_project work',
-  port:3306
-});
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.stack);
-    return;
+
+
+   server = http.createServer(app);  //creating a server using Hyper Text Transfer Protocol
+   initializeSocket(server);  //this function returns io from the Socket file
+
+
+
+const PORT = process.env.PORT || 4000;  //grabbing the port number from .env file 
+
+async function startServer(){
+  try{
+  //  await    //database connection
+    await connection()  /*connection to database you can check DB_Connection file to have a 
+    view of how the connection was created */
+    server.listen(PORT, () => {console.log(`Server is running on port ${PORT}`); });
+    
+  }catch(e){
+    console.log("Server Crashed",e) // when there's an error print Server Crashed
   }
-  console.log('Connected to the database as id', connection.threadId);
-});
-
-connection.query('SELECT * FROM sales ', (error, results, fields) => {
-  if (error) throw error;
-  console.log('The results are: ', results);
-});
-
-// Step 5: Close the connection
-connection.end();
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-  
-});
-
-const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+}
+startServer()  //this function execute if there's no error.
 
