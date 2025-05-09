@@ -103,7 +103,7 @@ const  orderList=(Socket,notificationsNamespace,orderListNamespace,trackingNames
 
     Socket.on("getUserOrder",async(data)=>{
         try{
-            const orders=await Order.find({customer_id:data})
+            const orders=await Order.find({customer_id:data}).populate("shipmentId","qty cbmRate")
            Socket.emit("sendUserOrder",orders)
         }catch(error){
             console.log(error)
