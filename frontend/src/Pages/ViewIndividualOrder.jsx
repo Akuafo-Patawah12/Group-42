@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
 import { io } from 'socket.io-client';
+import moment from 'moment'
 
 import {
   Box,
@@ -48,6 +49,7 @@ const ViewIndividualOrder = () => {
       console.log("user connected");
     });
     socket.on("sendUserOrder", (data) => {
+      console.log(data)
       setOrders(data);
     });
     socket.on('receiveOneOrder', (data) => {
@@ -78,19 +80,35 @@ const ViewIndividualOrder = () => {
         </Link>
       ),
     },
+    
     {
-      field: 'customerName',
-      headerName: 'Client',
+      field: 'cbm',
+      headerName: 'CBM',
       flex: 1,
+      
     },
     {
-      field: 'product',
-      headerName: 'Product',
-      flex: 1,
-      renderCell: () => <span>-</span>, // Replace with actual data
-    },
+  field: 'cbmRate',
+  headerName: 'CBM Rate (USD)',
+  flex: 1,
+  renderCell: (params) => {
+    const cbmRate = params.row.shipmentId?.cbmRate;
+    return cbmRate !== undefined ? "$" + cbmRate : 'N/A';
+  },
+},
+{
+field: 'amount',
+  headerName: 'Amount (USD)',
+  flex: 1,
+  renderCell: (params) => {
+    const cbmRate = params.row.shipmentId?.cbmRate;
+    const cbm = params.row.cbm
+    return cbmRate !== undefined ? "$" + cbmRate * cbm : 'N/A';
+  },
+},
+
     {
-      field: 'quantity',
+      field: 'qty',
       headerName: 'Quantity',
       flex: 1,
      
@@ -108,10 +126,11 @@ const ViewIndividualOrder = () => {
       ),
     },
     {
-      field: 'arrivalTime',
-      headerName: 'Arrival Time',
+      field: 'createdAt',
+      headerName: 'Created At',
       flex: 1,
-      renderCell: () => <span>-</span>, // Replace with actual data
+      width: 160,
+      renderCell: (params) => moment(params.value).format('MMMM D, YYYY') || 'N/A',
     },
   ];
 
@@ -129,12 +148,15 @@ const ViewIndividualOrder = () => {
   className="layout-shift w-full min-h-screen bg-stone-100 lg:w-[80%] px-6 py-10 mx-auto"
 >
       <Box maxWidth="lg" mx="auto" px={2}>
+        <div className='flex justify-between'>
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link component={RouterLink} to="/L/Shipments" color="inherit">
             Shipments
           </Link>
           <Typography color="text.primary">View {userName}'s Shipments</Typography>
         </Breadcrumbs>
+        <div className='size-6 border-3 border-purple-400 flex items-center justify-center text-sm font-semibold rounded-[50%] '>{userName[0]}</div>
+        </div>
 
         <Box
           sx={{

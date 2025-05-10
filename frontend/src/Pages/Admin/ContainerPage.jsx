@@ -575,7 +575,7 @@ const [visible,setVisible] = useState(false)
       title: "Description",
       dataIndex: "description",
       key: "description",
-      ellipsis: true,
+      
     },
   ];
 

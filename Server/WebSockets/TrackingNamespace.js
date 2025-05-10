@@ -14,7 +14,7 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
         try {
             //Inserting new data received from clientside in to orders table
 
-            const order = new Order({customer_id:data.Id, description:data.items,location:data.location, tracking_no:data.tracking_id ,suppliersNumber:parseInt(data.suppliersNumber) });// creating new order
+            const order = new Order({customer_id:data.Id, description:data.description,location:data.location, tracking_no: "SF" + data.tracking_id + "-SHP" ,suppliersNumber:parseInt(data.suppliersNumber) });// creating new order
 
             await order.save();  // saving new order the database
             const customer= await User.findById(order.customer_id) //select _id from the Users table where _id=data.id
@@ -25,7 +25,7 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
                 customerName:customer.username,
                 Status: order.Status,
                 createdAt: order.createdAt,
-                tracking_no: order.tracking_no, 
+                tracking_no:  order.tracking_no , 
                 description: order.description,
             };
             
