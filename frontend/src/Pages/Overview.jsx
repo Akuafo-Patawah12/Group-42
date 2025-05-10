@@ -274,16 +274,21 @@ let active=activeOrders.length
 
  
 
-
+function shortUUID(length = 12) {
+  const uuid = v4().replace(/-/g, '');
+  const base10 = BigInt('0x' + uuid);
+  const base36 = base10.toString(36); // Use base 36 (max allowed)
+  return base36.slice(0, length);
+}
  
  
  
  const handleSubmit = () => {
    
    setCreatingOrder(true)
-   console.log({Id:Id,location,description,suppliersNumber,tracking_id: v4()})
+   console.log({Id:Id,location,description,suppliersNumber,tracking_id: shortUUID()})
    setTimeout(()=>{
-     socket.emit("createOrder",{Id:Id,location,description,suppliersNumber,tracking_id: v4()})
+     socket.emit("createOrder",{Id:Id,location,description,suppliersNumber,tracking_id: shortUUID()})
    },1000)
    
    // Reset form
