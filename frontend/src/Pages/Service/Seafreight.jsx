@@ -138,7 +138,7 @@ export default function SeaFreight() {
         </p>
 
         {/* Tabs */}
-        <section style={{marginInline:"auto"}}  className="flex justify-center items-center gap-4 lg:w-[90%]">
+        <section style={{marginInline:"auto"}}  className="grid grid-cols-1 justify-center items-center gap-4 md:w-[90%] md:grid-cols-2">
         <div className="flex flex-col justify-center w-full gap-3 mb-10">
           {features.map((feature, index) => (
             <button

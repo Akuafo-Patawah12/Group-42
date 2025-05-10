@@ -39,7 +39,7 @@ const ContactPage = () => {
   }
 
   return (
-    <div style={{marginBottom:"50px"}} className="bg-purple-100 ">
+    <div  className="bg-purple-100 pb-10 ">
 
         <div className='relative w-full'>
                <img src="/images/contact.jpg" alt="Contact Us" className="w-full   " />
@@ -48,10 +48,13 @@ const ContactPage = () => {
                 </section>
             </div>
 
-            <div style={{margin:"50px auto"}} className="container  p-6 max-w-[90%] bg-white shadow-xl rounded-2xl lg:max-w-3xl ">
-  <h1 className="text-3xl font-bold text-center text-[var(--purple)] mb-4">
+            <div style={{margin:"50px auto"}} className="container  p-6 max-w-[90%] bg-white shadow-xl border border-purple-300 rounded-2xl lg:max-w-3xl ">
+  <h1 className="text-3xl font-bold text-center text-[var(--purple)] ">
     Contact SFG Logistics
   </h1>
+ 
+    <div style={{marginTop:"10px"}} className="w-full h-[2px] bg-gradient-to-r from-white via-purple-300 to-white"></div>
+
   <p style={{marginBlock:"24px"}} className="text-center font-bold text-gray-600 mb-8">
     Reach out for inquiries or logistics support. We're here to help!
   </p>

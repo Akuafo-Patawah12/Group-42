@@ -1,133 +1,151 @@
 import { DeleteOutlined } from '@ant-design/icons'
-import React,{useState} from 'react'
-
-import { Button,  Table, Tag } from "antd";
-
+import React from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button, Chip } from "@mui/material";
 
 
 const TrackingSub = (props) => {
-
   const columns = [
     {
-      title: "Order ID",
-      dataIndex: "_id",
-      key: "_id",
+      field: "_id",
+      headerName: "Order ID",
+      width: 150,
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      render: () => "Unclassified",
+      field: "description",
+      headerName: "Description",
+      width: 160,
+      renderCell: () => <span>Unclassified</span>,
     },
     {
-      title: 'Loading date',
-      dataIndex: ['shipmentId', 'loadingDate'], // access nested value
-      key: 'loadingDate',
-      render: (text) => (
-        <p>{text ? new Date(text).toLocaleDateString() : 'N/A'}</p>
+      field: "loadingDate",
+      headerName: "Loading Date",
+      width: 150,
+      renderCell: (params) =>
+        params.row?.shipmentId?.loadingDate
+          ? new Date(params.row.shipmentId.loadingDate).toLocaleDateString()
+          : "N/A",
+    },
+    {
+      field: "cbmRate",
+      headerName: "CBM Rate",
+      width: 120,
+      renderCell: (params) =>
+        params.row?.shipmentId?.cbmRate
+          ? "$" + params.row?.shipmentId?.cbmRate
+          : "N/A",
+    },
+    {
+      field: "eta",
+      headerName: "Eta",
+      width: 140,
+      renderCell: (params) =>
+        params.row?.shipmentId?.eta
+          ? new Date(params.row.shipmentId.eta).toLocaleDateString()
+          : "N/A",
+    },
+    {
+      field: "port",
+      headerName: "Port",
+      width: 130,
+      renderCell: (params) =>
+        params.row?.shipmentId?.port || "N/A",
+    },
+    {
+      field: "Status",
+      headerName: "Status",
+      width: 130,
+      renderCell: (params) => (
+        <Chip
+          label={params.value}
+          color={params.value === "Completed" ? "success" : "primary"}
+          size="small"
+        />
       ),
     },
     {
-      title: 'CBM Rate',
-      dataIndex: ['shipmentId', 'cbmRate'], // access nested value
-      key: 'cbmRate',
-      render: (text) => (
-        <p>{text ? "$"+ text : 'N/A'}</p>
-      ),
-    },
-    {
-      title: 'Eta',
-      dataIndex: ['shipmentId', 'eta'], // access nested value
-      key: 'eta',
-      render: (text) => (
-        <p>{text ? new Date(text).toLocaleDateString() : 'N/A'}</p>
-      ),
-    },
-    {
-      title: 'Port',
-      dataIndex: ['shipmentId', 'port'], // access nested value
-      key: 'port',
-      render: (text) => (
-        <p>{text ? text : 'N/A'}</p>
-      ),
-    },
-    {
-      title: "Status",
-      dataIndex: "Status",
-      key: "Status",
-      render: (status) => (
-        <Tag color={status === "Completed" ? "green" : "blue"}>{status}</Tag>
-      ),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_, order) => (
+      field: "actions",
+      headerName: "Actions",
+      width: 240,
+      renderCell: (params) => (
         <>
-          <Button type="primary" style={{ marginRight: 8 ,background:"var(--purple)"}} className='bg-purple-300 text-stone-700' 
-          onClick={() => {
-            props.setSelectedOrder(order)
-            console.log("this order",order)
-            props.handleOpen()
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ mr: 1, backgroundColor: "purple" }}
+            onClick={() => {
+              props.setSelectedOrder(params.row);
+              props.handleOpen();
             }}
-            >
+          >
             View Details
           </Button>
           <Button
-            type="primary"
-            style={{background:"#f87171"}}
-            className="bg-transparent border-0 text-red-500 hover:text-red-700"
-            icon={<DeleteOutlined />}
-            onClick={() => props.deleteOrder(order._id, order.customer_id)}
-          />
+            variant="outlined"
+            color="error"
+            onClick={() =>
+              props.deleteOrder(params.row._id, params.row.customer_id)
+            }
+          >
+            <DeleteOutlined />
+          </Button>
         </>
       ),
     },
   ];
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (selectedKeys) => {
-      setSelectedRowKeys(selectedKeys);
-    },
-  };
   
+
   return (
     <>
-      
       <section
-  style={{ scrollbarWidth: "none", marginInline: "auto", marginTop: "16px",paddingInline:"2.5%" }}
-  className="flex gap-3 w-[95%] items-center overflow-x-auto py-2 px-1 backdrop-blur-sm rounded-xl bg-white/80 shadow-sm"
->
-  <p className="text-sm font-semibold text-gray-700 whitespace-nowrap">Filter activities</p>
+        className="flex gap-3 w-[95%] items-center overflow-x-auto py-2 px-1 backdrop-blur-sm rounded-xl bg-white/80 shadow-sm"
+        style={{ marginInline: "auto", marginTop: "16px", paddingInline: "2.5%" }}
+      >
+        <p className="text-sm font-semibold text-gray-700 whitespace-nowrap">
+          Filter activities
+        </p>
 
-  {["All", "Delivered", "in-Transit", "Pending", "Cancelled"].map((status) => (
-    <button
-      key={status}
-      onClick={() => props.filterOrders(status)}
-      className={`transition-all duration-200 border rounded-full px-4 py-1 text-sm font-medium whitespace-nowrap 
-        ${
-          props.selectedFilter === status
-            ? "bg-purple-600 text-white border-purple-700 shadow-md"
-            : "bg-white text-gray-700 border-gray-300 hover:bg-purple-100"
-        }`}
-    >
-      {status === "in-Transit" ? "In Transit" : status}
-    </button>
-  ))}
-</section>
+        {["All", "Delivered", "in-Transit", "Pending", "Cancelled"].map(
+          (status) => (
+            <button
+              key={status}
+              onClick={() => props.filterOrders(status)}
+              className={`transition-all duration-200 border rounded-full px-4 py-1 text-sm font-medium whitespace-nowrap 
+            ${
+              props.selectedFilter === status
+                ? "bg-purple-600 text-white border-purple-700 shadow-md"
+                : "bg-white text-gray-700 border-gray-300 hover:bg-purple-100"
+            }`}
+            >
+              {status === "in-Transit" ? "In Transit" : status}
+            </button>
+          )
+        )}
+      </section>
 
+      <div
+        className="bg-white w-[95%] shadow-md rounded-lg p-6"
+        style={{ marginInline: "auto", marginTop: "12px" }}
+      >
+        <h3 className="text-lg font-bold text-gray-800 mb-4">
+          Your Recent Orders
+        </h3>
 
-        <div style={{marginInline:"auto",marginTop:"12px"}} className="bg-white w-[95%]  shadow-md rounded-lg p-6 ">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Your Recent Orders</h3>
-        
-      <Table dataSource={props.orders} rowSelection={rowSelection} columns={columns} pagination={{ pageSize: 5 }} rowKey={(record, index) => index}  scroll={{ x: 1200 }}/>
+        <div style={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={props.orders}
+            columns={columns}
+            getRowId={(row) => row._id}
+            pageSize={3}
+            rowsPerPageOptions={[3]}
+            checkboxSelection
+            disableRowSelectionOnClick
+          />
         </div>
+      </div>
+    </>
+  );
+};
 
-      </>
-    
-  )
-}
-
-export default TrackingSub
+export default TrackingSub;

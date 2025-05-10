@@ -80,30 +80,30 @@ const About = () => {
 
 
 
-<div style={{backgroundColor:"var(--purple)"}} className="reviews flex flex-col mb-6 py-[100px] bg-purple-300 md:flex-row justify-between items-start gap-10 bg-white shadow-lg rounded-2xl p-8 mt-10">
+<div style={{backgroundColor:"var(--purple)",fontSize:"14.5px"}} className="reviews flex flex-col mb-6 py-[100px] bg-purple-300 md:flex-row justify-between items-start gap-10 bg-white shadow-lg rounded-2xl p-8 mt-10">
   {/* Why Choose Us */}
-  <div className="flex-1 text-center md:text-left">
+  <div className="flex-1 text-center md:text-left bg-purple-500/40 p-10 rounded-lg  backdrop-blur-md">
     <CheckCircle style={{marginInline:"auto"}} className="mx-auto md:mx-0 text-purple-300 mb-4" size={36} />
     <h3 className="text-2xl font-semibold mb-2 text-center">Why Choose Us</h3>
-    <p className="text-gray-200">
+    <p className="text-gray-200 text-center">
       We combine cutting-edge logistics with integrated marketing solutions to help businesses move fast and grow faster.
     </p>
   </div>
 
   {/* Mission */}
-  <div className="flex-1 text-center md:text-left">
+  <div className="flex-1 text-center bg-purple-500/40 p-10 rounded-lg backdrop-blur-sm md:text-left">
     <Target style={{marginInline:"auto"}} className="mx-auto md:mx-0 text-purple-300 mb-4" size={36} />
     <h3 className="text-2xl font-semibold mb-2 text-center">Our Mission</h3>
-    <p className="text-gray-200">
+    <p className="text-gray-200 text-center">
       To empower global trade through seamless delivery systems and smart branding tools, all in one unified platform.
     </p>
   </div>
 
   {/* Vision */}
-  <div className="flex-1 text-center md:text-left">
+  <div className="flex-1 text-center bg-purple-500/40 p-10 rounded-lg  backdrop-blur-sm md:text-left">
     <Eye style={{marginInline:"auto"}} className="mx-auto md:mx-0 text-purple-300 mb-4" size={36} />
     <h3 className="text-2xl font-semibold mb-2 text-center">Our Vision</h3>
-    <p className="text-gray-200">
+    <p className="text-gray-200 text-center">
       To become the leading digital logistics and marketing hub, accelerating the growth of businesses across borders.
     </p>
   </div>

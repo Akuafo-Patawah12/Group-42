@@ -21,7 +21,7 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
 
 
   return (
-    <header className='w-full bg-white sticky top-0 z-60 h-[80px]  items-center flex justify-between' >
+    <header className='w-full bg-white sticky top-0 z-60 h-[80px]  items-center flex justify-between px-[0.5%]' >
             <Link to="/" className='flex items-center font-bold text-xl'><img src="/images/sfgl_logo.jpg" alt='logo' className='w-14 '/><div className='content'><p>SFGL</p><p>SFGL</p></div></Link>
              
     
@@ -63,7 +63,7 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
           
 
           <div className='flex gap-2 h-full items-center'>
-         <button onClick={()=> setIsOpen(prev=> !prev)} className="h-[40px] block bg-purple-200 bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 border-2 border-purple-400 " style={{color:"#222",borderRadius:"10px",paddingInline:"8px",fontSize:"14px",fontWeight:"500"}}>Track shipments</button>
+         <button onClick={()=> setIsOpen(prev=> !prev)} className="h-[40px] block bg-purple-200 bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 border-2 border-purple-400 " style={{color:"#222",borderRadius:"10px",paddingInline:"8px",fontSize:"14px",fontWeight:"500",whiteSpace:"nowrap"}}>Track shipments</button>
 
          <div className="flex items-center justify-center md:hidden lg:hidden">
   <button

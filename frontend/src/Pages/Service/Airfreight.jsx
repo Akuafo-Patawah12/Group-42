@@ -89,7 +89,7 @@ const AirFreight = () => {
   ];
 
   return (
-    <div className="bg-purple-100 min-h-screen pb-12  ">
+    <div  className="bg-purple-100 min-h-screen pb-12   ">
        
       {/* Hero Section */}
       <section className="hero relative  text-white ">
@@ -238,7 +238,7 @@ const AirFreight = () => {
       
 
       {/* Introduction Section */}
-      <section style={{marginInline:"auto"}} className="py-20  w-fit">
+      <section style={{marginInline:"auto"}} className="py-10  w-fit">
       <div className="max-w-5xl mx-auto text-center px-4">
         <h2 style={{marginBlock:"16px"}} className="text-3xl font-bold text-gray-800 mb-4">
           Why Choose Our Air Freight Services?
@@ -250,8 +250,9 @@ const AirFreight = () => {
         </p>
 
         {/* Tabs */}
-        <section style={{marginInline:"auto"}}  className="flex justify-center items-center gap-4 lg:w-[90%]">
-        <div className="flex flex-col justify-center w-full gap-3 mb-10">
+        <section style={{marginInline:"auto"}}  className="grid justify-center items-center w-full gap-4 grid-cols-1 md:grid-cols-2 md:w-[90%]"
+>
+        <div className="flex flex-col justify-center w-full gap-3 mb-10 ">
           {features.map((feature, index) => (
             <button
               key={index}
@@ -268,7 +269,7 @@ const AirFreight = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="bg-white rounded-xl shadow-lg max-w-3xl mx-auto p-8 transition-all duration-500">
+        <div className="bg-white rounded-xl shadow-lg max-w-3xl mx-auto p-8 transition-all duration-500 ">
           <div
             style={{marginInline:"auto"}}
             className={`w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-6 text-3xl ${features[activeTab].color}`}
@@ -285,14 +286,14 @@ const AirFreight = () => {
       
     </section>
       {/* Testimonials Section */}
-      <div style={{marginInline:"auto"}} className="flex w-[90%]">
-      <section className="mb-24 px-4 w-[90%]">
-        <div className="flex flex-col max-w-5xl mx-auto text-center">
-          <h2 style={{marginBottom:"10px"}} className="text-3xl font-bold text-gray-800 mb-10">
+      <div style={{marginInline:"auto"}} className="flex w-[90%] flex-col md:flex-row ">
+      <section className="mb-24  w-full md:px-4">
+        <div className="flex flex-col  max-w-5xl mx-auto text-center">
+          <h2 style={{marginBottom:"10px"}} className="text-3xl font-bold text-gray-800 ">
             What Our Clients Say
           </h2>
 
-          <div className="grid grid-cols-1 gap-8">
+          <div style={{marginBottom:"30px"}} className="grid grid-cols-1 gap-8">
             {[
               {
                 quote:
@@ -309,7 +310,7 @@ const AirFreight = () => {
             ].map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-white shadow-md rounded-2xl p-6 text-left relative hover:shadow-lg transition duration-300"
+                className="bg-white shadow-md w-full rounded-2xl border border-purple-300 p-6 text-left relative hover:shadow-lg transition duration-300"
               >
                 <Quote
                   size={32}

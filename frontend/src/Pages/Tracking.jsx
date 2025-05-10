@@ -465,7 +465,7 @@ function handTrack(){
         })}
       </div>
 
-      <div className="text-sm text-gray-500 mt-6 border-t pt-4">
+      <div style={{marginTop:"10px"}} className="text-sm text-gray-500 mt-6 border-t pt-4">
         <strong>Note:</strong> Port stay durations are estimated. Delays may occur due to weather,
         customs, or operational factors.
       </div>
