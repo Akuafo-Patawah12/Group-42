@@ -16,7 +16,7 @@ const About = () => {
     
   return (
     <div>
-      <div className="grid grid-cols-1 bg-white md:grid-cols-2 gap-6 p-8 border-2 border-purple-300 rounded-2xl mt-10 max-w-7xl mx-auto bg-white shadow-md">
+      <div  className="grid grid-cols-1 bg-white md:grid-cols-2 gap-6 p-8 border-2 border-purple-300 rounded-2xl mt-10 w-full mx-auto bg-white shadow-md">
   {/* Text Section */}
   <section className="flex flex-col justify-center gap-4">
     <h1 className="text-3xl md:text-4xl font-bold text-purple-800">

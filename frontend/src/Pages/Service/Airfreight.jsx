@@ -113,7 +113,7 @@ const AirFreight = () => {
   </div>
 </div>
 
-        <div className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
+        <div style={{marginInline:"auto"}} className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
           {/* Left Text */}
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
@@ -133,7 +133,7 @@ const AirFreight = () => {
           {/* Right Image & Calculator */}
           <div className="space-y-6">
             
-            <section className="max-w-4xl mx-auto px-4 py-16">
+            <section style={{marginInline:"auto"}} className="max-w-4xl border-3 rounded-lg border-purple-200 px-4 py-16">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
         Air Freight Cost Calculator
       </h2>
@@ -212,7 +212,7 @@ const AirFreight = () => {
 
       {/* Rate Cards Section */}
       <section className=" py-20 px-6" id="rates">
-        <div className="max-w-6xl mx-auto text-center">
+        <div style={{marginInline:"auto"}} className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-purple-600">Air Freight Rates</h2>
           <p style={{marginBlock:"20px"}} className="text-gray-600 font-medium ">
             Choose the option that suits your shipping needs. Transparent pricing. No hidden fees.
@@ -239,7 +239,7 @@ const AirFreight = () => {
 
       {/* Introduction Section */}
       <section style={{marginInline:"auto"}} className="py-10  w-fit">
-      <div className="max-w-5xl mx-auto text-center px-4">
+      <div style={{marginInline:"auto"}} className="max-w-5xl mx-auto text-center px-4">
         <h2 style={{marginBlock:"16px"}} className="text-3xl font-bold text-gray-800 mb-4">
           Why Choose Our Air Freight Services?
         </h2>

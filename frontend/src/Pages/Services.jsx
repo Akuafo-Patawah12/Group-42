@@ -7,7 +7,7 @@ import "./Services.css"
 import  ProcurementIcon from "../icons/Procurement"
 
 import  Clearance from "../icons/Clearance"
-import  Door2door from "../icons/Door2door"
+
 import { color } from 'framer-motion'
 import SeaFreight from '../icons/SeaFreight.jsx'
 import AirFreightIcon from '../icons/AirFreight.jsx'
@@ -74,7 +74,7 @@ const Services = () => {
 </h2>
 <p style={{margin:"30px auto"}} className="font-bold text-center max-w-[350px]">Quick, reliable, and affordable logistics solutions tailored for your business.</p>
 
-<section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 md:px-10 max-w-7xl mx-auto">
+<section style={{marginInline:"auto"}} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 md:px-10 max-w-7xl mx-auto">
 
   <div className="bg-white shadow-lg border border-purple-200 rounded-xl p-6 flex flex-col items-center text-center">
     <SeaFreight className="w-10 h-10 mb-4 text-purple-600" />
