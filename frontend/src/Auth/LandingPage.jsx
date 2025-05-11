@@ -288,6 +288,77 @@ const LandingPage = () => {
       }
     }
   };
+
+
+  const words = ['Logistics', 'Marketing'];
+  const words1 = ['Marketing','Logistics'];
+const TYPING_SPEED = 120;
+const DELETING_SPEED = 400;
+const PAUSE_TIME = 2000;
+
+function TypingSwap() {
+  const [index, setIndex] = useState(0);
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentWord = words[index];
+    let timer;
+
+    if (isDeleting) {
+      timer = setTimeout(() => {
+        setText((prev) => prev.slice(0, -1));
+        if (text === '') {
+          setIsDeleting(false);
+          setIndex((prev) => (prev + 1) % words.length);
+        }
+      }, DELETING_SPEED);
+    } else {
+      timer = setTimeout(() => {
+        setText(currentWord.slice(0, text.length + 1));
+        if (text === currentWord) {
+          setTimeout(() => setIsDeleting(true), PAUSE_TIME);
+        }
+      }, TYPING_SPEED);
+    }
+
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, index]);
+
+  return <span className="text-purple-600">{text}</span>;
+}
+
+function TypingSwap1() {
+  const [index, setIndex] = useState(0);
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentWord = words1[index];
+    let timer;
+
+    if (isDeleting) {
+      timer = setTimeout(() => {
+        setText((prev) => prev.slice(0, -1));
+        if (text === '') {
+          setIsDeleting(false);
+          setIndex((prev) => (prev + 1) % words1.length);
+        }
+      }, DELETING_SPEED);
+    } else {
+      timer = setTimeout(() => {
+        setText(currentWord.slice(0, text.length + 1));
+        if (text === currentWord) {
+          setTimeout(() => setIsDeleting(true), PAUSE_TIME);
+        }
+      }, TYPING_SPEED);
+    }
+
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, index]);
+
+  return <span className="text-purple-600">{text}</span>;
+}
  
   return(
     <div className="pb-12  px-2  ">
@@ -296,10 +367,15 @@ const LandingPage = () => {
   {/* First image: spans 2 columns */}
 
   <div className="col-span-2 bg-gray-100 py-4 rounded-3xl flex flex-col item-center row-span-2  w-full">
-    <h1 style={{marginBlock:"24px"}} className="text-2xl text-center  md:text-3xl font-bold text-gray-800 mb-6 leading-tight">
-         Smart <span className="text-purple-600">Logistics</span> &<br />
-         Strategic <span className="text-purple-600">Marketing</span> Solutions
-    </h1>
+    <h1
+  style={{ marginBlock: '24px' }}
+  className="text-2xl text-center md:text-3xl font-bold text-gray-800 mb-6 leading-tight"
+>
+  Smart <TypingSwap /> &<br />
+  Strategic <TypingSwap1 /> Solutions
+</h1>
+
+
     <p style={{margin:"0 auto",textAlign:"center"}} className=" font-bold text-stone-700 text-sm w-4/5 ">
     Seamlessly connect products with people. We simplify global logistics while elevating your brand through strategic marketing—helping you move smarter and grow faster.
     </p>
@@ -358,7 +434,7 @@ const LandingPage = () => {
           </h1>
           <p className="text-gray-600 text-md mb-6">
             Shun Feng Ghana Logistics provide seamless, reliable, and scalable logistics solutions tailored to your business needs.
-            Whether it's freight forwarding, warehousing, or last-mile delivery — we're here to make your supply chain smarter and faster.
+            Whether it's freight forwarding, warehousing, or last-mile delivery we're here to make your supply chain smarter and faster.
           </p>
           <div className="flex items-center gap-4 py-6">
       {/* Avatars */}
@@ -384,18 +460,18 @@ const LandingPage = () => {
     <div className='liquid'></div></Link></button>
         </div>
 
-        <div  className="barchart flex-1 h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
+        <div  className="barchart flex-1 h-64 w-full" >
+          <ResponsiveContainer width="100%" height={220}>
             <BarChart data={shipments}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" stroke="#8884d8" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="Shipments" fill="var(--purple)" radius={[4, 4, 0, 0]} barSize={20}/>
+              <Bar dataKey="Shipments" fill="var(--purple)" radius={[8, 8, 0, 0]} barSize={18}/>
             </BarChart>
           </ResponsiveContainer>
           <div style={{display:"flex",alignItems:"center",gap:"2", marginTop: '10px',marginInline:"auto",width:"fit-content", fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
-           <section className="size-3 bg-purple-400"></section><p>Delivered Shipments</p>
+           <section className="size-3 bg-purple-400"></section><p style={{marginLeft:"10px"}}>Delivered Shipments</p>
       </div>
         </div>
       </div>
@@ -588,7 +664,7 @@ const LandingPage = () => {
         <div className="flex gap-5 flex-col p-7 md:flex-row">
           <section className="w-full md:w-1/2 p-8 bg-white rounded-lg shadow-md">
   <h1 className="text-4xl text-center font-bold text-gray-900 mb-4">
-    34k+ <br /> Satisfied Customers
+    34k+ <br /> <span className="text-purple-700">Satisfied</span> Customers
   </h1>
   <p style={{marginBlock:"20px"}} className="text-gray-700 ">
     Our commitment to quality and customer service has helped us to serve over 34,000 customers worldwide.

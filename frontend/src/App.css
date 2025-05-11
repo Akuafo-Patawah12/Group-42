@@ -24,6 +24,7 @@ body,
 .app {
   height: 100%;
   width: 100%;
+  font-size: 14.5px;
   @apply bg-white;
   @apply text-gray-900;
 }
@@ -34,7 +35,7 @@ body,
   }
   
 body{
-  font-family: "Montserrat", serif;
+  font-family: "poppings", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   box-sizing: border-box;

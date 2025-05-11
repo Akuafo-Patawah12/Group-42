@@ -89,7 +89,7 @@ const AirFreight = () => {
   ];
 
   return (
-    <div className="bg-purple-100 min-h-screen pb-12  ">
+    <div  className="bg-purple-100 min-h-screen pb-12   ">
        
       {/* Hero Section */}
       <section className="hero relative  text-white ">
@@ -113,7 +113,7 @@ const AirFreight = () => {
   </div>
 </div>
 
-        <div className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
+        <div style={{marginInline:"auto"}} className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
           {/* Left Text */}
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
@@ -133,7 +133,7 @@ const AirFreight = () => {
           {/* Right Image & Calculator */}
           <div className="space-y-6">
             
-            <section className="max-w-4xl mx-auto px-4 py-16">
+            <section style={{marginInline:"auto"}} className="max-w-4xl border-3 rounded-lg border-purple-200 px-4 py-16">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
         Air Freight Cost Calculator
       </h2>
@@ -212,7 +212,7 @@ const AirFreight = () => {
 
       {/* Rate Cards Section */}
       <section className=" py-20 px-6" id="rates">
-        <div className="max-w-6xl mx-auto text-center">
+        <div style={{marginInline:"auto"}} className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-purple-600">Air Freight Rates</h2>
           <p style={{marginBlock:"20px"}} className="text-gray-600 font-medium ">
             Choose the option that suits your shipping needs. Transparent pricing. No hidden fees.
@@ -238,8 +238,8 @@ const AirFreight = () => {
       
 
       {/* Introduction Section */}
-      <section style={{marginInline:"auto"}} className="py-20  w-fit">
-      <div className="max-w-5xl mx-auto text-center px-4">
+      <section style={{marginInline:"auto"}} className="py-10  w-fit">
+      <div style={{marginInline:"auto"}} className="max-w-5xl mx-auto text-center px-4">
         <h2 style={{marginBlock:"16px"}} className="text-3xl font-bold text-gray-800 mb-4">
           Why Choose Our Air Freight Services?
         </h2>
@@ -250,8 +250,9 @@ const AirFreight = () => {
         </p>
 
         {/* Tabs */}
-        <section style={{marginInline:"auto"}}  className="flex justify-center items-center gap-4 lg:w-[90%]">
-        <div className="flex flex-col justify-center w-full gap-3 mb-10">
+        <section style={{marginInline:"auto"}}  className="grid justify-center items-center w-full gap-4 grid-cols-1 md:grid-cols-2 md:w-[90%]"
+>
+        <div className="flex flex-col justify-center w-full gap-3 mb-10 ">
           {features.map((feature, index) => (
             <button
               key={index}
@@ -268,7 +269,7 @@ const AirFreight = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="bg-white rounded-xl shadow-lg max-w-3xl mx-auto p-8 transition-all duration-500">
+        <div className="bg-white rounded-xl shadow-lg max-w-3xl mx-auto p-8 transition-all duration-500 ">
           <div
             style={{marginInline:"auto"}}
             className={`w-16 h-16 mx-auto flex items-center justify-center rounded-full mb-6 text-3xl ${features[activeTab].color}`}
@@ -285,14 +286,14 @@ const AirFreight = () => {
       
     </section>
       {/* Testimonials Section */}
-      <div style={{marginInline:"auto"}} className="flex w-[90%]">
-      <section className="mb-24 px-4 w-[90%]">
-        <div className="flex flex-col max-w-5xl mx-auto text-center">
-          <h2 style={{marginBottom:"10px"}} className="text-3xl font-bold text-gray-800 mb-10">
+      <div style={{marginInline:"auto"}} className="flex w-[90%] flex-col md:flex-row ">
+      <section className="mb-24  w-full md:px-4">
+        <div className="flex flex-col  max-w-5xl mx-auto text-center">
+          <h2 style={{marginBottom:"10px"}} className="text-3xl font-bold text-gray-800 ">
             What Our Clients Say
           </h2>
 
-          <div className="grid grid-cols-1 gap-8">
+          <div style={{marginBottom:"30px"}} className="grid grid-cols-1 gap-8">
             {[
               {
                 quote:
@@ -309,7 +310,7 @@ const AirFreight = () => {
             ].map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-white shadow-md rounded-2xl p-6 text-left relative hover:shadow-lg transition duration-300"
+                className="bg-white shadow-md w-full rounded-2xl border border-purple-300 p-6 text-left relative hover:shadow-lg transition duration-300"
               >
                 <Quote
                   size={32}
