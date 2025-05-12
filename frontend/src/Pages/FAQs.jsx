@@ -2,21 +2,13 @@ import React, { useState } from "react";
 
 const FAQPage = () => {
   const faqs = [
-    {
-      question: "What services does Andy Logistics offer?",
-      answer:
-        "Andy Logistics specializes in sea freight, air freight, warehousing, and supply chain management services tailored to your needs.",
-    },
+    
     {
       question: "How can I track my shipment?",
       answer:
         "You can track your shipment using the 'Track Shipment' feature on our website. Simply enter your tracking ID to get real-time updates.",
     },
-    {
-      question: "What is the estimated delivery time for shipments?",
-      answer:
-        "Delivery times depend on the destination and type of service chosen. For more accurate estimates, contact our support team or check your shipment details.",
-    },
+    
     {
       question: "How do I contact customer support?",
       answer:
@@ -27,6 +19,22 @@ const FAQPage = () => {
       answer:
         "Yes, we offer international shipping services across multiple destinations worldwide.",
     },
+    {
+    question: "How do I ship goods from China to Ghana?",
+    answer: "Shipping from China to Ghana is simple with SF Ghana Logistics! We offer air freight for fast delivery and sea freight for cost-effective bulk shipping. Contact us for a quote today!"
+    },
+    {
+    question: "What shipping methods do you offer?",
+    answer: "We offer a range of services including sea freight, air freight , RMB  exchange services, door-to-door delivery, container booking and clearance, and  free procurement and sourcing training."
+    },
+    {
+    question: "How much does it cost to ship from China to Ghana?",
+    answer: "The cost depends on the shipment size, weight, and method. Reach out to us for a free quote!"
+    },
+    {
+    question: "What is the estimated shipping time from China to Ghana?",
+    answer: "The shipping time depends on the method used. Sea freight typically takes 25-40 days, while air freight is much faster, averaging 5-10 days. Factors like customs clearance and seasonal demand can also affect delivery times."
+    }
   ];
 
   const [activeIndex, setActiveIndex] = useState(null);

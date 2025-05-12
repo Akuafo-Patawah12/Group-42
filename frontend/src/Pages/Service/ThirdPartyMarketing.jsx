@@ -46,7 +46,7 @@ export default function ThirdPartyMarketing() {
       </section>
 
       {/* Features */}
-      <section className="py-16 px-6 max-w-6xl mx-auto">
+      <section style={{marginInline:"auto"}} className="py-16 px-6 max-w-6xl mx-auto">
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           {[
@@ -77,7 +77,7 @@ export default function ThirdPartyMarketing() {
 
       {/* Categories */}
       <section className="py-20 px-6 bg-purple-50">
-        <div style={{marginBlock:"48px"}} className="max-w-6xl mx-auto text-center mb-12">
+        <div style={{margin:"48px auto"}} className="max-w-6xl mx-auto text-center mb-12">
           <h2 className="text-3xl font-bold">Popular Categories</h2>
           <p style={{marginBlock:".5rem"}} className="text-gray-600 font-medium">
             Explore categories and find suppliers that match your needs.

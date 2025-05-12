@@ -12,11 +12,11 @@ const GalleryPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6">
-      <div className="max-w-7xl mx-auto">
+      <div style={{marginInline:"auto"}} className="max-w-7xl mx-auto">
         <h1 style={{marginBlock:"15px"}} className="text-4xl font-bold text-center text-purple-600 mb-8">
           Gallery
         </h1>
-        <p sty le={{marginBlock:"0 20px"}} className="text-gray-600 text-center mb-12">
+        <p style={{marginBlock:"30px"}} className="text-gray-600 text-center ">
           Explore the visuals of SF Ghana Logistics operations, showcasing our
           expertise in transportation, warehousing, and supply chain management.
         </p>
