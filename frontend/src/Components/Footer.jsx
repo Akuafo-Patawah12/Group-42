@@ -39,9 +39,8 @@ const Footer=()=>{
                     <h3 className="text-md font-medium text-gray-100">Services</h3>
                     <Link to={"/Services/AirFreight"}  >Air Freight</Link>
                     <Link to={"/Services/Seafreight"}  >Sea Freight</Link>
-                    <Link to={"/Services/Door2door"}  >Door to door delivery</Link>
-                    <Link to={"/Services/Groupage"}  >Groupage</Link>
                     <Link to={"/Services/Procurement"}  >Free Procurement</Link>
+                    <Link to={"/Services/Marketing"}  >Shop with us</Link>
                     </div>
                 </section>
                 <section className="flex flex-col  gap-2">

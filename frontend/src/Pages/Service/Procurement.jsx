@@ -87,7 +87,7 @@ export default function Procurement() {
 
       {/* How It Works Section */}
       <section className="py-20 px-6 md:px-20 bg-white">
-        <div className="max-w-5xl mx-auto text-center">
+        <div style={{marginInline:"auto"}} className="max-w-5xl mx-auto text-center">
           <h2 style={{marginBottom:"20px"}} className="text-4xl font-bold mb-10 text-gray-800">How Our Procurement Works</h2>
           <section className="flex flex-col gap-4 lg:flex-row">
           <img src="/images/procurement.jpg" alt="procurement_img" className="w-1/2 h-auto rounded-2xl"/>

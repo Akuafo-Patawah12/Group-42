@@ -95,7 +95,7 @@ export default function SeaFreight() {
 
       {/* CBM Rate Info */}
       <section className="relative bg-gradient-to-br from-purple-100 to-purple-200 rounded-b-[10%] py-20 px-6 md:px-20">
-        <div className=" max-w-5xl mx-auto text-center">
+        <div style={{marginInline:"auto"}} className=" max-w-5xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-purple-900 mb-6">
             Sea Freight Solutions
           </h2>
@@ -129,7 +129,7 @@ export default function SeaFreight() {
 
       {/* Why Choose Us */}
       <section style={{marginInline:"auto"}} className="py-20 bg-gray-50 w-fit">
-      <div className="max-w-5xl mx-auto text-center px-4">
+      <div  className="max-w-5xl mx-auto text-center px-4">
         <h2 style={{marginBlock:"16px"}} className="text-3xl font-bold text-gray-800 mb-4">
           Why Choose Our Air Freight Services?
         </h2>
@@ -175,9 +175,9 @@ export default function SeaFreight() {
 
       {/* Stats Section */}
       <section className="bg-purple-600 text-white py-20">
-        <div className="max-w-6xl mx-auto text-center px-4">
-          <h2 className="text-3xl font-bold mb-12">
-            Trusted by Clients Worldwide
+        <div style={{marginInline:"auto"}} className="max-w-6xl mx-auto text-center px-4">
+          <h2 style={{marginBottom:"20px"}} className="text-3xl font-bold mb-12">
+            Trusted by Clients Across Ghana
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[

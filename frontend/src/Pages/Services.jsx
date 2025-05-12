@@ -44,7 +44,7 @@ const Services = () => {
 
   {/* Image 4 */}
   <img
-    src="../images/Procurement.jpg"
+    src="../images/accessories.jpg"
     alt="Image 4"
     className="absolute object-cover bottom-0 right-0 w-[30%] h-[49%] bg-amber-900"
   />
@@ -65,7 +65,7 @@ const Services = () => {
 
   {/* Overlay */}
   <div className="absolute z-30 w-full h-full bg-black/50 flex items-center justify-center">
-    <a href="/" className="text-white font-bold text-xl">Home /</a><span className="text-purple-600 font-bold text-xl">Services</span>
+    <a href="/" className="text-white font-bold text-xl">Home /</a><span style={{marginLeft:"5px"}} className="text-purple-600 font-bold text-xl">Services</span>
   </div>
 </section>
 
@@ -118,9 +118,9 @@ const Services = () => {
 </section>
 
 {/* Image & Marketplace section */}
-<div style={{marginTop:"80px"}} className="flex flex-col lg:flex-row justify-between items-center gap-8 mt-20 px-4 md:px-10 max-w-7xl mx-auto">
+<div style={{marginTop:"80px",marginInline:"auto"}} className="flex flex-col lg:flex-row justify-between items-center gap-8 mt-20 px-4 md:px-10 max-w-7xl mx-auto">
   <div className="w-full lg:w-1/2">
-    <img src="../images/3d-render-freight-container-forklift.jpg" alt="Freight container" className="w-full rounded-xl shadow-md" />
+    <img src="../images/3d-render-freight-container-forklift.jpg" alt="Freight container" className="w-full " />
   </div>
   <div className="w-full lg:w-1/2">
     <img src="../images/online-purchase-payment-commerce-concept-transformed.jpeg" alt="e-commerce" className="w-full rounded-xl shadow-md mb-4" />
