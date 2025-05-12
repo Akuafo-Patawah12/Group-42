@@ -66,7 +66,7 @@ function Tracking(Socket,orderListNamespace,notificationsNamespace,users){
             //find all Orders with this particular customer's id
             const orders = await Order.find({ customer_id: id })
             .populate('customer_id','fullname')         // Replace with actual field name referencing User
-            .populate('shipmentId','eta loadingDate route port cbmRate ');
+            .populate('shipmentId','eta loadingDate route port country cbmRate ');
             
              Socket.emit("getOrders",orders) // sending orders of all user to myself
         }catch(error){

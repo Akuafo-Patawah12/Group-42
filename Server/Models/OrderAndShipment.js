@@ -38,6 +38,7 @@ const shipmentSchema= new Schema({
   eta: { type: Date, required: true },
   status:{type:String, enum:["Pending","In Transit", "Delivered"],default:"Pending..."},
   route: { type: String, required: true },     // Route description (e.g., "Shanghai -> New York")
+  country: { type: String, required: true },
   port: { type: String, required: true },      // Port of destination
   cbmRate: { type: Number, required: true },   // Cost per CBM (Cubic Meter)
   assignedOrders: [

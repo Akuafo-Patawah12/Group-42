@@ -25,7 +25,7 @@ const Overview = () => {
   const [visible,setVisible] = useState(false)
   const locationPath = useLocation();
   const navigate = useNavigate()
-  const[orders,setOrders]=useState([]) //the array that stores alll the specific clients orders
+  const[shipments,setShipments]=useState([]) //the array that stores alll the specific clients orders
   const socket = useMemo(() =>io("http://localhost:4000/Tracking",{
     transports: ['websocket'],
   }),[])
@@ -60,18 +60,18 @@ const Overview = () => {
     });
     socket.on("receive",(data)=>{
       setCreatingOrder(false)
-      setOrders(prev=>[data,...prev])
+      setShipments(prev=>[data,...prev])
       console.log("order data",data)
     })
 
     socket.on("getOrders",(data)=>{
-      setOrders(data)
+     setShipments(data)
       console.log("order data",data)
    })
    
    socket.on("update_shipment",(data)=>{
     console.log(data)
-      setOrders(prev=>
+      setShipments(prev=>
          prev.map((order)=> 
            order._id===data._id ? 
               {
@@ -95,7 +95,7 @@ const Overview = () => {
         
         // Wait for the transition to complete before updating state
         setTimeout(() => {
-        setOrders(prevOrders=>{
+        setShipments(prevOrders=>{
 
           // remove the deleted order from the orders array
           const orderReturned= prevOrders.filter(order=> order._id !==data )
@@ -108,7 +108,7 @@ const Overview = () => {
    socket.on("orderDeleted",(data)=>{
     console.log(data)
     toast.success("Shipment deleted")
-    setOrders(prevOrders=>{
+    setShipments(prevOrders=>{
 
       // remove the deleted order from the orders array
       const orderReturned= prevOrders.filter(order=> order._id !==data )
@@ -119,7 +119,7 @@ const Overview = () => {
    
   socket.on("StatusUpdate",(data)=>{
     console.log(data)
-    setOrders(prevOrders=>{
+    setShipments(prevOrders=>{
 
       const orderReturned = prevOrders.map(order => 
         order._id === data.order_id 
@@ -160,7 +160,7 @@ const Overview = () => {
         socket.off('disconnect');
               
     }
-},[socket,orders])
+},[socket,shipments])
 
 
 const [selectedFilter, setSelectedFilter] = useState("All");
@@ -168,19 +168,19 @@ const [filteredOrders, setFilteredOrders] = useState([]);
 
 // Function to filter orders based on status
 useEffect(() => {
-  if (orders.length > 0) {
-    setFilteredOrders(orders);
-    setData(processData(orders)); // Ensure data is set initially
+  if (shipments.length > 0) {
+    setFilteredOrders(shipments);
+    setData(processData(shipments)); // Ensure data is set initially
   }
-}, [orders]); // Runs when `orders` is updated
+}, [shipments]); // Runs when `orders` is updated
 
 const filterOrders = (status) => {
   setSelectedFilter(status);
 
   if (status === "All") {
-    setFilteredOrders(orders);
+    setFilteredOrders(shipments);
   } else {
-    const orderItem = orders.filter(order => 
+    const orderItem = shipments.filter(order => 
       order.Status && order.Status.toLowerCase() === status.toLowerCase()
     );
     setFilteredOrders(orderItem);
@@ -199,23 +199,23 @@ const [pendingOrders, setPendingOrders]= useState([])
 useEffect(()=>{
    
      
-        const activeOrder= orders.filter(order => order.Status==="in-Transit")
+        const activeOrder= shipments.filter(order => order.Status==="in-Transit")
         setActiveOrders(activeOrder)
 
-        const pendingOrder= orders.filter(order => order.Status==="Pending")
+        const pendingOrder= shipments.filter(order => order.Status==="Pending")
         setPendingOrders(pendingOrder)
    
-},[orders])
+},[shipments])
 
 
 function pending(){
-  const pendingOrders = orders.filter((order) => order.Status === "Pending");
-    setOrders(pendingOrders);
+  const pendingOrders = shipments.filter((order) => order.Status === "Pending");
+    setShipments(pendingOrders);
 }
 
 function transit(){
-  const pendingOrders = orders.filter((order) => order.Status === "in-Transit");
-    setOrders(pendingOrders);
+  const pendingOrders = shipments.filter((order) => order.Status === "in-Transit");
+    setShipments(pendingOrders);
 }
 
 
@@ -306,10 +306,10 @@ function shortUUID(length = 12) {
    
    
    
- const processData = (orders) => {
+ const processData = (shipments) => {
   const monthlyOrders = {};
 
-  orders.forEach((order) => {
+  shipments.forEach((order) => {
     const date = new Date(order.createdAt);
     const monthYear = `${date.toLocaleString("default", { month: "short" })} ${date.getFullYear()}`; // e.g., "Jan 2024"
 
@@ -321,7 +321,7 @@ function shortUUID(length = 12) {
 
   return Object.keys(monthlyOrders).map((month) => ({
     month,
-    orders: monthlyOrders[month],
+    shipments: monthlyOrders[month],
   }));
 };
 
@@ -329,10 +329,10 @@ function shortUUID(length = 12) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-  if (orders && orders.length > 0) {
-    setData(processData(orders));
+  if (shipments && shipments.length > 0) {
+    setData(processData(shipments));
   }
-}, [orders]);
+}, [shipments]);
 
    
    
@@ -412,14 +412,14 @@ const CloseReport = () => {
 <div>
   <Badge count={active} size="small" offset={[5, -5]}>
     <span className="border border-purple-200 bg-gray-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
-      <CarOutlined style={style} /> Active Orders
+      <CarOutlined style={style} /> Active Shipments
     </span>
   </Badge>
 </div>
 
 {/* Total Shipments */}
 <div >
-  <Badge count={orders.length} size="small" offset={[5, -5]}>
+  <Badge count={shipments.length} size="small" offset={[5, -5]}>
     <span className="border border-purple-200 bg-gray-100 px-3 py-3 rounded-lg flex flex-col items-center justify-center gap-2 font-medium text-sm md:flex-row text-center">
       <ShoppingCartOutlined style={style} /> Total Shipments
     </span>
@@ -476,13 +476,13 @@ const CloseReport = () => {
      
 
      
-      {orders.length===0 ?<div style={{marginTop:"10px"}}><Empty styles={{ image:{ height: 50 } }} description="No shipment" /> </div>:
+      {shipments.length===0 ?<div style={{marginTop:"10px"}}><Empty styles={{ image:{ height: 50 } }} description="No shipment" /> </div>:
       <ResponsiveContainer width="100%" height={190}>
     <BarChart data={data}>
       <XAxis dataKey="month" />
       <YAxis allowDecimals={false} />
       <Tooltip  />
-      <Bar dataKey="orders" fill="#c084fc" barSize={20} />
+      <Bar dataKey="shipments" fill="#c084fc" barSize={18} radius={[8, 8, 0, 0]} />
     </BarChart>
   </ResponsiveContainer>}
         

@@ -34,9 +34,11 @@ export default function ThirdPartyMarketing() {
           <p style={{marginBlock:"40px"}} className="text-lg text-gray-600 mb-8">
             Discover trusted suppliers and connect directly—no middlemen, no transaction fees.
           </p>
+          <a href="https://www.alibaba.com/premium/whol_sale.html?src=sem_ggl&field=UG&from=sem_ggl&cmpgn=20788357858&adgrp=155162709825&fditm=&tgt=kwd-323717692554&locintrst=&locphyscl=9067654&mtchtyp=b&ntwrk=g&device=c&dvcmdl=&creative=681336558137&plcmnt=&plcmntcat=&aceid=&position=&gad_source=1&gad_campaignid=20788357858&gbraid=0AAAAAD8m77o-927sZ2fy0tMxFAUmcA0MD&gclid=CjwKCAjwuIbBBhBvEiwAsNypvderDhY_eWGGPKfmx5s-ynsvK_YcxyZhe8XuWLB80p1Z0FsKLDxOxRoC4MAQAvD_BwE" target="_blank">
           <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full font-medium transition">
             Browse Suppliers
           </button>
+          </a>
         </div>
 
 
