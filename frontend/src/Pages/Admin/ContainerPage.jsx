@@ -74,13 +74,69 @@ const [visible,setVisible] = useState(false)
 
   
 
-  const routes = {
-      Guangzhou_Route_1: ["Guangzhou Port", "Colombo Port", "Port of Aden", "Port of Alexandria", "Port of Algiers", "Port of Freetown", "Tema Port"], 
-      Yiwu_Route_1: ["Ningbo – Zhoushan Port, Yiwu", "Jeddah Islamic Port", "Port Said (Suez Canal)", "Port of Tripoli", "Port of Tangier Med", "Port of Conakry", "Tema Port"],
-      Guangzhou_Route_2: ["Guangzhou Port", "Colombo Port", "Port of Tunis", "Port of Nouakchott", "Port of Bissau", "Port of Abidjan", "Tema Port"],
-      Guangzhou_Route_3: ["Guangzhou Port", "Port of Aden", "Port of Alexandria", "Port of Tangier Med", "Port of Dakar", "Port of Monrovia", "Tema Port"],
-      Yiwu_Route_2: ["Ningbo – Zhoushan Port, Yiwu", "Colombo Port", "Suez Port (Port Tawfiq)", "Port of Algiers", "Port of Las Palmas", "Port of Banjul", "Tema Port"],
-    };
+  const routes = [
+  {
+    name: "Guangzhou_Route_1",
+    ports: [
+      { name: "Guangzhou Port", country: "China" },
+      { name: "Colombo Port", country: "Sri Lanka" },
+      { name: "Port of Aden", country: "Yemen" },
+      { name: "Port of Alexandria", country: "Egypt" },
+      { name: "Port of Algiers", country: "Algeria" },
+      { name: "Port of Freetown", country: "Sierra Leone" },
+      { name: "Tema Port", country: "Ghana" }
+    ]
+  },
+  {
+    name: "Yiwu_Route_1",
+    ports: [
+      { name: "Ningbo – Zhoushan Port, Yiwu", country: "China" },
+      { name: "Jeddah Islamic Port", country: "Saudi Arabia" },
+      { name: "Port Said (Suez Canal)", country: "Egypt" },
+      { name: "Port of Tripoli", country: "Libya" },
+      { name: "Port of Tangier Med", country: "Morocco" },
+      { name: "Port of Conakry", country: "Guinea" },
+      { name: "Tema Port", country: "Ghana" }
+    ]
+  },
+  {
+    name: "Guangzhou_Route_2",
+    ports: [
+      { name: "Guangzhou Port", country: "China" },
+      { name: "Colombo Port", country: "Sri Lanka" },
+      { name: "Port of Tunis", country: "Tunisia" },
+      { name: "Port of Nouakchott", country: "Mauritania" },
+      { name: "Port of Bissau", country: "Guinea-Bissau" },
+      { name: "Port of Abidjan", country: "Côte d'Ivoire" },
+      { name: "Tema Port", country: "Ghana" }
+    ]
+  },
+  {
+    name: "Guangzhou_Route_3",
+    ports: [
+      { name: "Guangzhou Port", country: "China" },
+      { name: "Port of Aden", country: "Yemen" },
+      { name: "Port of Alexandria", country: "Egypt" },
+      { name: "Port of Tangier Med", country: "Morocco" },
+      { name: "Port of Dakar", country: "Senegal" },
+      { name: "Port of Monrovia", country: "Liberia" },
+      { name: "Tema Port", country: "Ghana" }
+    ]
+  },
+  {
+    name: "Yiwu_Route_2",
+    ports: [
+      { name: "Ningbo – Zhoushan Port, Yiwu", country: "China" },
+      { name: "Colombo Port", country: "Sri Lanka" },
+      { name: "Suez Port (Port Tawfiq)", country: "Egypt" },
+      { name: "Port of Algiers", country: "Algeria" },
+      { name: "Port of Las Palmas", country: "Spain" },
+      { name: "Port of Banjul", country: "The Gambia" },
+      { name: "Tema Port", country: "Ghana" }
+    ]
+  }
+];
+
   
     const statusOptions = ["All","Pending", "In Transit", "Delivered"]; 
     
@@ -89,6 +145,7 @@ const [visible,setVisible] = useState(false)
     const [permission,setPermission] = useState(false)
      const [selectedRoute, setSelectedRoute] = useState(null);
      const [selectedCountry, setSelectedCountry] = useState(null);
+     const [selectedPort, setSelectedPort] = useState(null); // New state
     const [shipmentStatus, setShipmentStatus] = useState(null);
     const[cbmRate,setCbmRate] = useState(null)
     const[containerNumber,setContainerNumber] = useState()
@@ -319,22 +376,22 @@ const [visible,setVisible] = useState(false)
     // Emit the data to the server
     
     socket.emit("createContainer", {
-      
-      containerNumber:containerNumber,
-      loadingDate: loadingDate,
-      eta:eta,
-      cbmRate: parseFloat(cbmRate),
-      route: selectedRoute,
-      port: selectedCountry,
-      status: shipmentStatus,
-    },(response)=>{
-      if (response.status === "error") {
-        toast.error(response.message);
-      } else{
-        toast.success(response.message)
-      }
-         
-      })
+  containerNumber,
+  loadingDate,
+  eta,
+  cbmRate: parseFloat(cbmRate),
+  route: selectedRoute,
+  port: selectedPort, // ✅ Now sending port name
+  country: selectedCountry,
+  status: shipmentStatus,
+}, (response) => {
+  if (response.status === "error") {
+    toast.error(response.message);
+  } else {
+    toast.success(response.message);
+  }
+});
+
     
 
     setIsEdit(false);
@@ -703,35 +760,67 @@ const [visible,setVisible] = useState(false)
 
     <Form.Item label="Select Route" required>
       <Select
+  style={{ width: "100%", height: "40px", marginTop: "5px" }}
+  placeholder="Select Route"
+  value={selectedRoute}
+  onChange={handleRouteChange}
+>
+  {routes.map((route) => (
+    <Option key={route.name} value={route.name}>
+      {route.name}
+    </Option>
+  ))}
+</Select>
+</Form.Item>
+
+{selectedRoute && (
+  <>
+    <Form.Item label={`Select Country in ${selectedRoute}`} required>
+      <Select
         style={{ width: "100%" }}
-        placeholder="Select Route"
-        value={selectedRoute}
-        onChange={handleRouteChange}
+        placeholder="Select Country"
+        value={selectedCountry}
+        onChange={(country) => {
+          setSelectedCountry(country);
+          setSelectedPort(null); // Reset port on country change
+        }}
       >
-        {Object.keys(routes).map((route) => (
-          <Select.Option key={route} value={route}>
-            Route {route}
+        {[...new Set(
+          routes
+            .find((route) => route.name === selectedRoute)
+            ?.ports.map((port) => port.country)
+        )].map((country) => (
+          <Select.Option key={country} value={country}>
+            {country}
           </Select.Option>
         ))}
       </Select>
     </Form.Item>
 
-    {selectedRoute && (
-      <Form.Item label={`Select Port in Route ${selectedRoute}`} required>
+    {selectedCountry && (
+      <Form.Item label={`Select Port in ${selectedCountry}`} required>
         <Select
           style={{ width: "100%" }}
           placeholder="Select Port"
-          value={selectedCountry}
-          onChange={setSelectedCountry}
+          value={selectedPort}
+          onChange={setSelectedPort}
         >
-          {routes[selectedRoute].map((country) => (
-            <Select.Option key={country} value={country}>
-              {country}
-            </Select.Option>
-          ))}
+          {routes
+            .find((route) => route.name === selectedRoute)
+            ?.ports.filter((port) => port.country === selectedCountry)
+            .map((port) => (
+              <Select.Option key={port.name} value={port.name}>
+                {port.name}
+              </Select.Option>
+            ))}
         </Select>
       </Form.Item>
     )}
+    
+      
+      </>
+    )}
+    
 
     <Form.Item label="Update Status" required>
       <Select
@@ -778,42 +867,66 @@ const [visible,setVisible] = useState(false)
      <Form layout="vertical"> 
       <div style={{ marginBottom: "16px" }}>
       <Text strong>Select Route:</Text>
+     <Select
+  style={{ width: "100%", height: "40px", marginTop: "5px" }}
+  placeholder="Select Route"
+  value={selectedRoute}
+  onChange={handleRouteChange}
+>
+  {routes.map((route) => (
+    <Option key={route.name} value={route.name}>
+      {route.name}
+    </Option>
+  ))}
+</Select>
+
+{selectedRoute && (
+  <>
+    <Form.Item label={`Select Country in ${selectedRoute}`} required>
       <Select
-        style={{ width: "100%", height: "40px", marginTop: "5px" }}
-        placeholder="Select Route"
-        value={selectedRoute}
-        onChange={handleRouteChange}
+        style={{ width: "100%" }}
+        placeholder="Select Country"
+        value={selectedCountry}
+        onChange={(country) => {
+          setSelectedCountry(country);
+          setSelectedPort(null); // Reset port on country change
+        }}
       >
-        {Object.keys(routes).map((route) => (
-          <Option key={route} value={route}>
-             {route}
-          </Option>
+        {[...new Set(
+          routes
+            .find((route) => route.name === selectedRoute)
+            ?.ports.map((port) => port.country)
+        )].map((country) => (
+          <Select.Option key={country} value={country}>
+            {country}
+          </Select.Option>
         ))}
       </Select>
-    </div>
-        
+    </Form.Item>
 
+    {selectedCountry && (
+      <Form.Item label={`Select Port in ${selectedCountry}`} required>
+        <Select
+          style={{ width: "100%" }}
+          placeholder="Select Port"
+          value={selectedPort}
+          onChange={setSelectedPort}
+        >
+          {routes
+            .find((route) => route.name === selectedRoute)
+            ?.ports.filter((port) => port.country === selectedCountry)
+            .map((port) => (
+              <Select.Option key={port.name} value={port.name}>
+                {port.name}
+              </Select.Option>
+            ))}
+        </Select>
+      </Form.Item>
+    )}
+  </>
+)}
 
-        {/* Select Country (Only if Route is selected) */}
-        {selectedRoute && (
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontWeight: "600", display: "block", marginBottom: "5px" }}>
-              Select Country in Route {selectedRoute}:
-            </label>
-            <Select
-              style={{ width: "100%",height:"40px" }}
-              onChange={(country) => setSelectedCountry(country)}
-              placeholder="Select Country"
-              value={selectedCountry}
-            >
-              {routes[selectedRoute].map((country) => (
-                <Select.Option key={country} value={country}>
-                  {country}
-                </Select.Option>
-              ))}
-            </Select>
-          </div>
-        )}
+</div>
 
         {/* Select Shipment Status (Applies to all selected shipments) */}
         <div style={{ marginBottom: "15px" }}>

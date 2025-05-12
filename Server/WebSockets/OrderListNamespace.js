@@ -208,6 +208,7 @@ await Order.updateMany(
           customerName: '$userDetails.username',
           containerNumber: '$shipmentDetails.containerNumber',
           route: '$shipmentDetails.route',
+          country: '$shipmentDetails.country',
           port: '$shipmentDetails.port',
           eta: '$shipmentDetails.eta',
           cbmRate: '$shipmentDetails.cbmRate',

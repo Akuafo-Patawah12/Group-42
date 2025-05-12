@@ -1,9 +1,21 @@
 import { useState } from "react";
 import "./LogisticsReport.css";
-import { Modal, Button, Descriptions, Typography, Spin } from "antd";
-import { Copy, Check } from "lucide-react"; // Lucide icons
+import {
+  Dialog,
+  DialogContent,
+  Typography,
+  Box,
+  DialogTitle,
+  IconButton,
+  Grid,
+  CircularProgress,
+  Button,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import {X, Check, Copy } from "lucide-react"; // or use MUI icons
 
-const { Title } = Typography;
+
 
 const LogisticsReport = ({ order, onClose, visible, loading3 }) => {
   const [copied, setCopied] = useState(false);
@@ -21,114 +33,164 @@ const LogisticsReport = ({ order, onClose, visible, loading3 }) => {
   if (!order) return null;
 
   return (
-    <Modal
-      open={visible}
-      onCancel={onClose}
-      footer={null}
-      width={520}
-      centered
-      bodyStyle={{
-        borderRadius: "12px",
-        padding: "20px",
-        background: "#f9f5ff",
-        boxShadow: "0 8px 24px rgba(159, 122, 234, 0.1)",
+    <Dialog
+  open={visible}
+  onClose={onClose}
+  fullWidth
+  maxWidth="sm"
+  PaperProps={{
+    sx: {
+      borderRadius: "12px",
+      backgroundColor: "#f9f5ff",
+      boxShadow: "0 8px 24px rgba(159, 122, 234, 0.1)",
+      maxHeight: "85vh",
+      display: "flex",
+      flexDirection: "column",
+    },
+  }}
+>
+  {/* Fixed Header */}
+  <DialogTitle
+    sx={{
+      px: 3,
+      py: 2,
+      position: "sticky",
+      top: 0,
+      backgroundColor: "#f9f5ff",
+      borderBottom: "1px solid #ede9fe",
+      zIndex: 2,
+      textAlign: "center",
+    }}
+  >
+    <Typography variant="h6" fontWeight={700} color="#6b46c1">
+      Shipment Details
+    </Typography>
+    <IconButton
+      onClick={onClose}
+      size="small"
+      sx={{
+        position: "absolute",
+        right: 16,
+        top: 16,
+        color: "#6b46c1",
       }}
     >
-      <Title
-        level={3}
-        style={{
-          textAlign: "center",
-          color: "#6b46c1",
-          fontWeight: 700,
-          marginBottom: "24px",
-        }}
-      >
-        Shipment Details
-      </Title>
+      <X size={20} />
+    </IconButton>
+  </DialogTitle>
 
-      {loading3 ? (
-        <div style={{ textAlign: "center", padding: "20px 0" }}>
-          <Spin size="large" />
-          <p style={{ marginTop: "10px", color: "#6b46c1" }}>
-            Loading shipment details...
-          </p>
-        </div>
-      ) : (
-        <>
-          <Descriptions
-            bordered
-            column={1}
-            size="small"
-            contentStyle={{ backgroundColor: "#f3e8ff" }}
-            labelStyle={{
-              fontWeight: 600,
-              backgroundColor: "#ede9fe",
-              color: "#6b46c1",
-            }}
-          >
-            <Descriptions.Item label="Tracking No:">
-              <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                {order.tracking_no || "N/A"}
-                <span
-                  style={{
+  {/* Scrollable Content */}
+  <DialogContent sx={{ px: 3, py: 2, overflowY: "auto" }}>
+    {loading3 ? (
+      <Box textAlign="center" py={4}>
+        <CircularProgress size={32} sx={{ color: "#6b46c1" }} />
+        <Typography mt={2} color="#6b46c1">
+          Loading shipment details...
+        </Typography>
+      </Box>
+    ) : (
+      <>
+        {/* Descriptions style */}
+        <Grid container spacing={1} style={{display:"flex", flexDirection:"column",paddingTop:"10px"}}>
+          {[
+            {
+              label: "Tracking No:",
+              value: order.tracking_no || "N/A",
+              isCopy: true,
+            },
+            { label: "Status:", value: order.Status || "Pending" },
+            { label: "CBM", value: order.cbm || "N/A" },
+            { label: "Port", value: order?.shipmentId?.port || "N/A" },
+            { label: "Country:", value: order?.shipmentId?.country || "N/A" },
+            { label: "Quantity:", value: order.qty || "Unknown" },
+            {
+              label: "Total Amount:",
+              value:
+                order.cbm && order.shipmentId?.cbmRate
+                  ? `$${(Number(order.cbm) * Number(order.shipmentId.cbmRate)).toFixed(2)}`
+                  : "N/A",
+            },
+            {
+              label: "Updated At:",
+              value: new Date(order.updatedAt).toLocaleString(),
+            },
+          ].map((item, index) => (
+            <Grid item xs={12} key={index} >
+              <Box
+                className="border-l-2 border-purple-400"
+                sx={{
+                  display: "flex",
+                 
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: "#ede9fe",
+                  color: "#444",
+                  fontWeight: 600,
+                  borderRadius: 1,
+                  p: 1.5,
+                }}
+              >
+                <Typography >{item.label}</Typography>
+                <Box
+                  sx={{
+                    backgroundColor: "#f3e8ff",
+                    px: 2,
+                    py: 0.5,
+                    borderRadius: 1,
                     display: "flex",
                     alignItems: "center",
-                    cursor: "pointer",
-                    color: copied ? "green" : "#6b46c1",
-                    whiteSpace: "nowrap",
+                    gap: 1,
                   }}
-                  onClick={handleCopy}
                 >
-                  {copied ? <Check size={18} /> : <Copy size={18} />}
-                  <span style={{ marginLeft: "2px", fontSize: "12px" }}>
-                    {copied ? "Copied" : ""}
-                  </span>
-                </span>
-              </span>
-            </Descriptions.Item>
+                  {item.isCopy ? (
+                    <Box
+                      onClick={handleCopy}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        color: copied ? "green" : "#6b46c1",
+                      }}
+                    >
+                      <Typography variant="body2">{item.value}</Typography>
+                      {copied ? <Check size={18} /> : <Copy size={18} />}
+                      <Typography variant="caption" ml={0.5}>
+                        {copied ? "Copied" : ""}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Typography variant="body2">{item.value}</Typography>
+                  )}
+                </Box>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
 
-            <Descriptions.Item label="Status:">
-              {order.Status || "Pending"}
-            </Descriptions.Item>
-            <Descriptions.Item label="CBM">
-              {order.cbm || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Port">
-              {order?.shipmentId?.port || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Route:">
-              {order?.shipmentId?.route || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Quantity:">
-              {order.qty || "Unknown"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Total Amount:">
-              {order.cbm ? `$${order.cbm * order.shipmentId?.cbmRate}` : "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Updated At:">
-              {new Date(order.updatedAt).toLocaleString()}
-            </Descriptions.Item>
-          </Descriptions>
+        {/* Footer Button */}
+        <Box textAlign="right" mt={4}>
+          <Button
+            onClick={onClose}
+            variant="contained"
+            size="large"
+            sx={{
+              borderRadius: "8px",
+              background: "linear-gradient(to right, #9f7aea, #d6bcfa)",
+              boxShadow: "0 4px 14px rgba(159, 122, 234, 0.4)",
+              color: "#fff",
+              fontWeight: 600,
+              px: 4,
+              textTransform: "none",
+            }}
+          >
+            Close
+          </Button>
+        </Box>
+      </>
+    )}
+  </DialogContent>
+</Dialog>
 
-          <div style={{ textAlign: "right", marginTop: "24px" }}>
-            <Button
-              onClick={onClose}
-              size="large"
-              style={{
-                borderRadius: "8px",
-                background: "linear-gradient(to right, #9f7aea, #d6bcfa)",
-                border: "none",
-                color: "white",
-                fontWeight: 600,
-                boxShadow: "0 4px 14px rgba(159, 122, 234, 0.4)",
-              }}
-            >
-              Close
-            </Button>
-          </div>
-        </>
-      )}
-    </Modal>
   );
 };
 

@@ -89,7 +89,7 @@ const shipping= async(Socket,notificationsNamespace,trackingNamespace,orderListN
 
       Socket.on("createContainer", async (data, callback) => {
         try {
-          const {  containerNumber,loadingDate, status, port, route, eta, cbmRate } = data;
+          const {  containerNumber,loadingDate, status, port, country, route, eta, cbmRate } = data;
           console.log({  containerNumber,loadingDate, status, port, route, eta, cbmRate });
       
           if ( !containerNumber || !containerNumber || !loadingDate || !status || !port || !route || !eta || !cbmRate) {
@@ -109,6 +109,7 @@ const shipping= async(Socket,notificationsNamespace,trackingNamespace,orderListN
             loadingDate,
             status,
             port,
+            country,
             route,
             cbmRate,
             eta,

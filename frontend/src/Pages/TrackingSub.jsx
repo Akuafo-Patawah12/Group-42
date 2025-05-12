@@ -45,6 +45,13 @@ const TrackingSub = (props) => {
           : "N/A",
     },
     {
+      field: "country",
+      headerName: "Country",
+      width: 130,
+      renderCell: (params) =>
+        params.row?.shipmentId?.country || "N/A",
+    },
+    {
       field: "port",
       headerName: "Port",
       width: 130,
@@ -129,7 +136,7 @@ const TrackingSub = (props) => {
         style={{ marginInline: "auto", marginTop: "12px" }}
       >
         <h3 className="text-lg font-bold text-gray-800 mb-4">
-          Your Recent Orders
+          Your Recent Shipments
         </h3>
 
         <div style={{ height: 400, width: "100%" }}>
