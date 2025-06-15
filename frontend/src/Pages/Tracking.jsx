@@ -2,7 +2,7 @@ import React,{useState,useMemo,useEffect,useRef} from 'react'
 import {useSearchParams,useNavigate} from "react-router-dom"
 import "./Tracking.css"
 import io from "socket.io-client"
-import { message,Empty,Modal,Spin } from "antd"
+import { Empty,Modal,Spin } from "antd"
 import {toast} from "react-toastify"
 import { Package,MapPin, Clock,Hourglass,Timer } from 'lucide-react';
 import {route1,route2,route3,route4,route5} from "../Data/RouteData"
@@ -28,7 +28,7 @@ const Mapbox = () => {
   const [route,setRoute] = useState("")
   const [country , setCountry] = useState("")
   const [lineGeoJSON, setLineGeoJSON] = useState(null);
-  const [isModalOpen,setIsModalOpen]= useState(false)
+  const [setIsModalOpen]= useState(false)
   const [isMoreInfo, setIsMoreInfo] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activePortIndex, setActivePortIndex] = useState(null);

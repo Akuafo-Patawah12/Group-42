@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useMemo,useRef } from "react";
+import React, { useState, useEffect,useMemo } from "react";
 import { Layout,Form,Modal,Input,DatePicker, Table, Card, Row, Col,Empty, Tag, Space, Button,Select ,Typography,Spin} from "antd";
 import { Chip, IconButton, Tooltip,Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -41,11 +41,11 @@ const ContainerPage = () => {
           
           socket2.emit('getUnreadNotifications', decode?.id);
        })
-      },[socket2])
+      },[socket2,decode?.id])
 
   const [containers, setContainers] = useState([]);
   const [filteredContainers, setFilteredContainers] = useState(containers);
-  const [loading, setLoading] = useState(true);
+  
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [modal_open, set_modal_open] = useState(false);
@@ -70,7 +70,7 @@ const [visible,setVisible] = useState(false)
       socket.emit("get_all_container");
 
     
-  },[]);
+  },[socket,socket1]);
 
   
 
@@ -140,9 +140,9 @@ const [visible,setVisible] = useState(false)
   
     const statusOptions = ["All","Pending", "In Transit", "Delivered"]; 
     
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    
     const [searchTerm, setSearchTerm] = useState("");
-    const [permission,setPermission] = useState(false)
+    
      const [selectedRoute, setSelectedRoute] = useState(null);
      const [selectedCountry, setSelectedCountry] = useState(null);
      const [selectedPort, setSelectedPort] = useState(null); // New state
@@ -154,28 +154,13 @@ const [visible,setVisible] = useState(false)
     const [eta,setEta] = useState()
     const[isEdit,setIsEdit]= useState(false)
     const [loadingDate,setLoadingDate] = useState()
-    const [creatingOrder,setCreatingOrder]= useState(false);
+    
    
-    const [orderInfo,setOrderInfo] = useState(
-      {
-        fullname:"",
-        email:"",
-        container_id:""
-      }
-    )
+    
 
-    const [items, setItems] = useState([
-      { description:"Unclassified", trackingNo: "",cbm:"",ctn:""}
-  ]);
+   
 
-  const handleInputChange = (index, field, event) => {
-    const { value } = event.target;
-    setItems((prevItems) =>
-      prevItems.map((item, i) =>
-        i === index ? { ...item, [field]: value } : item
-      )
-    );
-  };
+  
   
     
   useEffect(() => {
@@ -189,11 +174,11 @@ const [visible,setVisible] = useState(false)
         } else {
           setError(response.message);
         }
-        setLoading(false);
+        
       });
   
   
-  }, []); // No dependencies needed
+  }, [socket,error]); // No dependencies needed
 
     useEffect(() => {
         // Fetch initial container list
@@ -229,9 +214,9 @@ const [visible,setVisible] = useState(false)
     
 
     socket.on("receive",(data)=>{
-      setCreatingOrder(false)
       
-      message.success("New order")
+      
+      toast.success("New order")
       console.log("order data",data)
     })
   
@@ -279,31 +264,31 @@ const [visible,setVisible] = useState(false)
     socket.on("ordersByShipment", ({ shipmentId, orders }) => {
       if (shipmentId === selectedShipmentId) {
         setShipmentOrders(orders);
-        setIsModalOpen(true);
+        
       }
     });
   
     return () => socket.off("ordersByShipment");
-  }, [selectedShipmentId]);
+  }, [selectedShipmentId,socket]);
 
   useEffect(() => {
     socket1.on("connect",()=>{
         console.log("connected to container page")
     })
     socket1.on("receive",(data)=>{
-      setCreatingOrder(false)
       
-      message.success("New order")
+      
+      toast.success("New order")
       console.log("order data",data)
     })
 
     socket1.on("newContainerAdded",(data)=>{
-      message.success("new container added")
+      toast.success("new container added")
       setContainers(prev => [data,...prev])
     })
 
     socket1.on("orderRemovedFromContainer", ({ orderId } ) => {
-      message.success("1 shipment removed from container"); 
+      toast.success("1 shipment removed from container"); 
       setContainers(prevContainers =>
         prevContainers.map(container => ({
           ...container,
@@ -313,7 +298,7 @@ const [visible,setVisible] = useState(false)
     });
 
     socket1.on("updatedShipment", (data)=>{
-      message.success("Shipment updated")
+      toast.success("Shipment updated")
       setContainers(prev =>
         prev.map(item =>{
             const updated = data.find(list =>  list._id === item._id)
@@ -324,7 +309,7 @@ const [visible,setVisible] = useState(false)
     })
 
     socket1.on("new",(data)=>{
-      message.success("New shipment added")
+      toast.success("New shipment added")
       setContainers((prev) => 
         prev.map((container) => {
           const updatedShipment = data.find((newItem) => newItem._id === container._id);
@@ -381,7 +366,7 @@ const [visible,setVisible] = useState(false)
   eta,
   cbmRate: parseFloat(cbmRate),
   route: selectedRoute,
-  port: selectedPort, // ✅ Now sending port name
+  port: selectedPort, 
   country: selectedCountry,
   status: shipmentStatus,
 }, (response) => {
@@ -406,7 +391,7 @@ const [visible,setVisible] = useState(false)
     const editShipment =()=>{
 
       if ( !selectedCountry || !shipmentStatus ) {
-        message("All fields are required");
+        toast.warning("All fields are required");
         return;
       }
       console.log("Sending update:", {

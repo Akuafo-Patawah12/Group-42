@@ -1,4 +1,4 @@
-import React,{lazy,useState,useRef,useEffect} from 'react'
+import React,{lazy,useState} from 'react'
 import {Routes,Route} from 'react-router-dom'
 import '../App.css';
 
@@ -40,23 +40,9 @@ const General = () => {
             const [isOpen, setIsOpen] = useState(false);
     
     
-            const trackRef= useRef(null)
             
-            useEffect(()=>{   //this function allows u to close the popup menu by clicking outside of it.
-              let closePop =(event)=>{
-                
-    
-                if(trackRef.current && !trackRef.current.contains(event.target)){
-                  setIsOpen(false);
-                }
-                   /**This function is executed when you click outside the pop up menu in event.js to close it */
-              }
-              document.addEventListener("mousedown",closePop);
-              return()=>{
-                document.removeEventListener("mousedown",closePop)
-                /**This function is executed when you click outside the sidebar to close it in ToggleSideBar.jsx */
-              }
-            },[]);
+            
+            
             
             const[popUp2,setPopUp2]= useState(false)
             function pop2(){
@@ -66,7 +52,7 @@ const General = () => {
   return (
     <div>
         <Header popDetails={[pop1,pop2,popUp1,setPopUp1,popUp2,setPopUp2]}  rotate={[isRotate,setIsRotate]} setIsOpen={setIsOpen}/>
-    <TrackShipmentPopup open={[setIsOpen,isOpen]} trackRef={trackRef}/>
+    <TrackShipmentPopup open={[setIsOpen,isOpen]} />
     <Sidebar2 popUp2={popUp2} setPopUp1={setPopUp2}/>
          <Routes>
          <Route path='/' element={<React.Suspense fallback={<AuthLoader/>}>

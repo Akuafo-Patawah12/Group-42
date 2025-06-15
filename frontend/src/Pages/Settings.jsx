@@ -1,7 +1,7 @@
 import React,{useState,useMemo,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import {motion } from "framer-motion"
-import { jwtDecode } from 'jwt-decode'
+
 import axios from "../api/api";
 import {toast} from "react-toastify" 
 import {Trash2} from "lucide-react"
@@ -12,15 +12,7 @@ const Settings = () => {
   }),[])
   const navigate= useNavigate()
 
-  const accesstoken = localStorage.getItem('accesstoken');
-  let decode = null;
-
-  try {
-    if (accesstoken) decode = jwtDecode(accesstoken);
-  } catch (err) {
-    console.error("Invalid token:", err);
-    decode = null;
-  }
+ 
   useEffect(()=>{
     socket.on('connect',()=>{
         console.log("Connected to server")
@@ -57,7 +49,7 @@ const Settings = () => {
 
   
   const [notifyEnabled, setNotifyEnabled] = useState(true);
-  const [loading, setLoading] = useState(true);
+ 
 
 
   useEffect(() => {
@@ -71,9 +63,7 @@ const Settings = () => {
       } catch (error) {
         console.error("Error fetching user data:", error);
         alert("Failed to fetch user data.");
-      } finally {
-        setLoading(false); // make sure to do this
-      }
+      } 
     };
 
     getUser();
@@ -87,9 +77,8 @@ const Settings = () => {
         setNotifyEnabled(res.data.allowNotifications);
       } catch (err) {
         toast.error('Failed to load preferences');
-      } finally {
-        setLoading(false);
-      }
+        console.error("Error fetching notification preference:", err);
+      } 
     };
 
     fetchPreference();
@@ -120,12 +109,13 @@ const Settings = () => {
   const handleSubmitUsername = async (e) => {
     e.preventDefault();
    
-    setError('');
+    
 
     try {
       const res = await axios.post('/change-username', { newUsername }, { withCredentials: true });
-      toast.message("Username updated successfully");
+      toast.message(res.data.message);
       setNewUsername('');
+
     } catch (err) {
       toast.error(err.response?.data?.message || 'Something went wrong');
     }
@@ -138,7 +128,7 @@ const Settings = () => {
       toast.warning('All fields are required');
       return;
     }
-    setError('');
+    
 
     try {
       const res = await axios.post(
@@ -175,7 +165,7 @@ const Settings = () => {
 
 
 
-  const [error, setError] = useState('');
+  
 
   // Extract token outside useEffect
   const urlParams = new URLSearchParams(window.location.search);
@@ -191,7 +181,7 @@ const Settings = () => {
         toast.success("Verified");
         }
       } catch (err) {
-        setError(err.response?.data?.message || 'Verification failed');
+        console.log(err.response?.data?.message || 'Verification failed');
       }
     };
 

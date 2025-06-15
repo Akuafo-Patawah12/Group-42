@@ -3,13 +3,11 @@ import {
  
  
   LogoutOutlined,
-  PullRequestOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
+
 } from "@ant-design/icons";
 import { Package,LayoutDashboard, Truck,User, Settings } from 'lucide-react';
 
-import { useNavigate, NavLink,useLocation } from "react-router-dom";
+import {  NavLink,useLocation } from "react-router-dom";
 import { Layout, Menu, Button, Tooltip } from "antd";
 import axios from "axios";
 import   useLogout  from  "../Hooks/Logout"
@@ -18,7 +16,7 @@ const { Sider } = Layout;
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate();
+  
   const location = useLocation()
 
   const logout = useLogout()

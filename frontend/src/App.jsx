@@ -1,5 +1,5 @@
 
-import React,{lazy,useState,useRef,useEffect} from 'react'
+
 import {Routes,Route} from 'react-router-dom'
 import './App.css';
 

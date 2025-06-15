@@ -1,5 +1,5 @@
 import { SendOutlined } from '@ant-design/icons'
-import React,{useState,useEffect} from 'react'
+
 import { PlusCircle, X } from "lucide-react";
 
 const OrderMessagePopup = (props) => {

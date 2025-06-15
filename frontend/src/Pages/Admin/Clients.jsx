@@ -1,11 +1,7 @@
-import React,{useState,useEffect,useMemo,useRef} from 'react'
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import {useState,useEffect,useMemo} from 'react'
+
 import { io } from 'socket.io-client';
-import { AlertTriangle }  from 'lucide-react';
-import ButtonLoader from '../../icons/ButtonLoader';
-import { Button, Table, Input, Checkbox } from 'antd';
-import {message} from "antd"
+
 import {
   DataGrid,
 
@@ -43,15 +39,15 @@ const Clients = () => {
           socket1.off("Active")
           socket1.off("disconnect")
       }
-      },[])
+      },[socket1,socket])
 
       useEffect(()=>{
         socket.emit("joinRoom")
-      },[])
+      },[socket])
 
     useEffect(()=>{
         socket.emit("getAllUsers")
-    },[])
+    },[socket])
     
 
     const[Users,setUsers] =useState([])
@@ -85,47 +81,13 @@ const Clients = () => {
             socket.off("All_users")
             socket.off("disconnect")
         }
-    },[socket])
+    },[socket,hasFetched])
 
     
     
 
-    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
-  const [loader, setLoader] = useState(false);
-  const [validation, setValidation] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
 
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoader(true);
-    try {
-      const res = await axios.post('http://localhost:5000/SignUp', { formData });
-      if (res.data.message === 'exist') {
-        setValidation('Email already exists');
-        setLoader(false);
-      } else {
-        setValidation('');
-        message.success('Sign up successfully');
-        setLoader(false);
-        navigate('/Login');
-      }
-    } catch (err) {
-      setLoader(false);
-      message.error('Oops, system down');
-      console.error(err);
-    }
-  };
-
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => {
-    setIsOpen(false);
-    setValidation('');
-    setFormData({ username: '', email: '', password: '' });
-  };
-
-
+  
    
      
        
@@ -161,61 +123,7 @@ const Clients = () => {
       }
     };
     
-    const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
-    const searchInput = useRef(null);
-  
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-      confirm();
-      setSearchText(selectedKeys[0]);
-      setSearchedColumn(dataIndex);
-    };
-  
-    const handleReset = (clearFilters, confirm) => {
-      clearFilters();
-      setSearchText('');
-      confirm(); // resets the table to show all rows
-    };
-  
-    const getColumnSearchProps = (dataIndex) => ({
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
-          <Input
-            ref={searchInput}
-            placeholder={`Search ${dataIndex}`}
-            value={selectedKeys[0]}
-            onChange={(e) => {
-              const value = e.target.value;
-              setSelectedKeys(value ? [value] : []);
-              if (!value) {
-                handleReset(clearFilters, confirm);
-              }
-            }}
-            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            style={{ marginBottom: 8, display: 'block' }}
-          />
-          <div className="flex gap-2">
-            <button
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              className="bg-blue-500 text-white px-2 py-1 rounded text-sm"
-            >
-              Search
-            </button>
-            <button
-              onClick={() => handleReset(clearFilters, confirm)}
-              className="bg-gray-300 px-2 py-1 rounded text-sm"
-            >
-              Reset
-            </button>
-          </div>
-        </div>
-      ),
-      filterIcon: (filtered) => (
-        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-      ),
-      onFilter: (value, record) =>
-        record[dataIndex]?.toString().toLowerCase().includes(value.toLowerCase()),
-    });
+   
   
     const columns = [
       { field: 'id', headerName: 'ID', width: 90 },

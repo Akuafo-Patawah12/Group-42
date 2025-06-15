@@ -8,9 +8,9 @@ const Header = ({popDetails,setIsOpen,rotate}) => {
 
     const [pop1,pop2,popUp1,setPopUp1,popUp2,setPopUp2] = popDetails
     const [isRotate,setIsRotate]= rotate
-    const[popNav,setPopNav]= useState(false) 
+   
     const[height,setHeight]= useState(false)
-    function toggleHeight({setIsOpen}){
+    function toggleHeight(){
        setHeight(!height)
     }
 

@@ -4,9 +4,9 @@ import { Modal, Input, Button, Typography, Alert, Space } from "antd";
 import {Package} from "lucide-react"
 import axios from "axios";
 import { toast } from "react-toastify"; 
-const { Title, Text } = Typography;
 
-const TrackShipmentPopup = ({open,trackRef}) => {
+
+const TrackShipmentPopup = ({open}) => {
     const [setIsOpen,isOpen] = open
     const navigate = useNavigate()
   

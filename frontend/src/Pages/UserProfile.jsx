@@ -34,7 +34,8 @@ const UserProfile = () => {
     };
 
     fetchData();
-  }, [accesstoken]);
+  }, [accesstoken,decode.id]);
+  // Set axios to send cookies with requests
 
 
   axios.defaults.withCredentials=true

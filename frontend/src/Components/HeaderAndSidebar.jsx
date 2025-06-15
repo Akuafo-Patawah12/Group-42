@@ -47,7 +47,7 @@ export default function Header({open,setOpen,toggleDrawer}) {
        socket.off("notify")
        socket.off("disconnect")
      }
-  },[])
+  },[socket,decode?.id])
  
   return (
      <header className={`header fixed  h-[60px] w-full float-none top-0 z-[44] flex justify-between border-b-[1px] items-center  border-stone-300 bg-white  `}>

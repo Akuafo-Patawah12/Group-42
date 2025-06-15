@@ -10,8 +10,7 @@ import {
   Grid,
   CircularProgress,
   Button,
-  useMediaQuery,
-  useTheme,
+ 
 } from "@mui/material";
 import {X, Check, Copy } from "lucide-react"; // or use MUI icons
 

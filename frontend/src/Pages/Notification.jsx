@@ -5,7 +5,7 @@ export default function Notification(){
 
     const[notification,setNotification]= useState([])
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+   
     useEffect(()=>{
         socket.on('connect',()=>{
             console.log("Connected to server")
@@ -38,8 +38,6 @@ export default function Notification(){
                 <div className="flex justify-center items-center h-20">
                 <div className="w-8 h-8 border-4 border-purple-500 border-dashed rounded-full animate-spin"></div>
                 </div>
-            ) : error ? (
-                <div className="text-center text-red-500">{error}</div>
             ) : (
             <>
             {notification.map((item,index)=>(

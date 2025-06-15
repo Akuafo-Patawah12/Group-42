@@ -15,7 +15,7 @@ const Shipment = () => {
  const [shipments,setShipment] = useState([])
   useEffect(()=>{
     socket.emit("allShipment")
-  },[])
+  },[socket])
   const navigate= useNavigate()
   useEffect(()=>{
     socket.on('connect',()=>{
@@ -54,7 +54,7 @@ const Shipment = () => {
         socket.off('disconnect');
               
     }
-},[socket,navigate,shipments])
+});
 
 const fetchData = async (newData)=>{
   

@@ -8,16 +8,13 @@ import  ProcurementIcon from "../icons/Procurement"
 
 import  Clearance from "../icons/Clearance"
 
-import { color } from 'framer-motion'
+
 import SeaFreight from '../icons/SeaFreight.jsx'
 import AirFreightIcon from '../icons/AirFreight.jsx'
 const Services = () => {
 
 
-    const h3={fontSize:"1rem",fontWeight:"500",lineHeight:"2rem",marginInline:"auto",width:"fit-content"}
-    const seemore={textDecoration:"underline",color:"var(--purple)"}
-
-    const svg={marginInline:"auto"}
+   
   return (
     <div>
         <section className="relative bg-gradient-to-r from-white via-stone-300 to-white w-full h-[400px] overflow-hidden">

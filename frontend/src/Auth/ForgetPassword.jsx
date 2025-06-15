@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from "../api/api"
-import { message, Card, Form, Input, Button, Typography } from 'antd';
+import {  Card, Form, Input, Button, Typography } from 'antd';
 import { toast } from 'react-toastify';
 
 
@@ -13,6 +13,7 @@ const ForgetPassword = () => {
     try{
       await axios.post("/forgetPassword",{email})
       .then(res=>{
+        console.log(res)
         toast.success(
           "SFGL sent a reset link to your email.",
           )

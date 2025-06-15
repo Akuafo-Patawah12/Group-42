@@ -88,7 +88,7 @@ console.log(category)
     return () => {
       socket.off("categoryProducts");
     };
-  }, []);
+  }, [socket, searchParams]); // Added socket to dependencies
   
   if (error) return <p>Error: {error}</p>;
   if (Error) return <p>Error: {Error}</p>;

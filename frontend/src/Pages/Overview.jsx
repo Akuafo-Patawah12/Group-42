@@ -1,4 +1,4 @@
-import React,{useState,useMemo,useEffect} from 'react'
+import {useState,useMemo,useEffect} from 'react'
 import {motion} from "framer-motion"
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
@@ -32,7 +32,7 @@ const Overview = () => {
 
   useEffect(()=>{
     socket.connect();
-  },[])
+  },[socket])
      
  const[Id,setId]= useState("") //id extracted from access token
  const [creatingOrder,setCreatingOrder]= useState(false);
@@ -362,11 +362,7 @@ const CloseReport = () => {
  
 
  
-   const [activeIndex, setActiveIndex] = useState(null);
- 
-   const toggleDimensions = (index) => {
-     setActiveIndex(activeIndex === index ? null : index); // Toggle visibility
-   };
+   
 
   return (
     <motion.div

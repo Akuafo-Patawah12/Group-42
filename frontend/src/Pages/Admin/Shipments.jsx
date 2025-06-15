@@ -5,16 +5,6 @@ import { Button,Form, Modal,message,Popconfirm,Layout,Card} from 'antd';
 import { motion } from 'framer-motion';
 import {
   Box,
-  
- 
- 
- 
- 
- 
-  
-  
- 
-  
   Dialog,
   DialogActions,
   DialogContent,
@@ -78,7 +68,7 @@ const Orders = () => {
     socket.emit('joinRoom', { id: decode.id });
     socket.emit("verify-token");
     socket.emit('clientOrders');
-  },[])
+  },[socket, decode.id]);
 
   useEffect(() => {
     
@@ -233,12 +223,7 @@ const Orders = () => {
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (selectedKeys) => {
-      setSelectedRowKeys(selectedKeys);
-    },
-  };
+  
 
   const handleSelectionChange = (selectionModel) => {
     const ids = Array.from(selectionModel.ids); // Convert Set to Array
@@ -345,13 +330,7 @@ const Orders = () => {
   };
   
   
-  const handleAssignToContainer = () => {
-    // Example - assign to group logic
-    Modal.info({
-      title: "Assigning to group...",
-      content: `Assigning ${selectedRowKeys.length} orders.`,
-    });
-  };
+  
   
   const [formData, setFormData] = useState({ containerNumber: '' });
   const [form] = Form.useForm();
