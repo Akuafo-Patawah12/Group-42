@@ -50,14 +50,14 @@ export default function Procurement() {
       </section>
 
       {/* Benefits Section */}
-      <h2 style={{margin:"40px auto"}} className="text-2xl w-fit md:text-3xl font-bold text-yellow-700 mb-10">Why Choose Our Procurement Service?</h2>
-      <section className="py-20 px-6 flex gap-4 w-full md:px-20 bg-purple-50">
+      <h2 style={{margin:"40px auto"}} className="text-2xl w-fit px-3 md:text-3xl font-bold text-yellow-700 mb-10">Why Choose Our Procurement Service?</h2>
+      <section className="py-20 px-6 flex flex-col gap-4 w-full md:px-20 bg-purple-50 md:flex-row">
       <div className="flex flex-col justify-center w-full gap-3 mb-10">
           {features.map((feature, index) => (
             <button
               key={index}
               onClick={() => setActiveTab(index)}
-              className={`px-5 py-3 rounded-full font-medium text-sm transition-all duration-300 ${
+              className={`px-5 py-3 rounded-full font-medium text-md transition-all duration-300 ${
                 index === activeTab
                   ? "bg-purple-600 text-white shadow"
                   : "bg-white text-gray-600 border border-gray-300 hover:bg-blue-50"
@@ -87,11 +87,11 @@ export default function Procurement() {
 
       {/* How It Works Section */}
       <section className="py-20 px-6 md:px-20 bg-white">
-        <div style={{marginInline:"auto"}} className="max-w-5xl mx-auto text-center">
+        <div style={{marginInline:"auto"}} className="w-full mx-auto text-center">
           <h2 style={{marginBottom:"20px"}} className="text-4xl font-bold mb-10 text-gray-800">How Our Procurement Works</h2>
-          <section className="flex flex-col gap-4 lg:flex-row">
-          <img src="/images/procurement.jpg" alt="procurement_img" className="w-1/2 h-auto rounded-2xl"/>
-          <div className="grid grid-cols-1 w-1/2 items-center place-items-center  gap- 3 text-left">
+          <section className="flex w-full flex-col gap-4 lg:flex-row">
+          <img src="/images/procurement.jpg" alt="procurement_img" className="w-full h-auto rounded-2xl md:w-1/2"/>
+          <div className="grid grid-cols-1 w-full items-center place-items-center  gap- 3 text-left md:w-1/2">
             
               <motion.div
                 
