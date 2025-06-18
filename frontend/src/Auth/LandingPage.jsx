@@ -425,7 +425,7 @@ function TypingSwap1() {
           <h1 style={{marginBottom:"1rem"}} className="text-2xl md:text-3xl font-bold text-gray-800 leading-tight mb-6">
             Looking for a Trusted Partner in Logistics?
           </h1>
-          <p className="text-gray-600 text-lg mb-7">
+          <p className="text-gray-600 text-md mb-7 md:text-lg">
             SF Ghana Logistics provide seamless, reliable, and scalable logistics solutions tailored to your business needs.
             Whether it's freight forwarding, warehousing, or last-mile delivery we're here to make your supply chain smarter and faster.
           </p>
@@ -617,7 +617,9 @@ function TypingSwap1() {
       <h2 className="text-lg font-semibold mb-4">Our Affordable Logistics Rates</h2>
       <TrendingUp />
       </div>
+      <section className="w-full overflow-auto">
       <Table columns={columns} dataSource={data} pagination={false} />
+      </section>
     </div>
 
        <div className=" py-16 px-6 md:px-20 bg-purple-100">
