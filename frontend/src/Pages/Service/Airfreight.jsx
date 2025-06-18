@@ -97,19 +97,19 @@ const AirFreight = () => {
   <div className="w-full p-6 border-t-3 border-purple-500 bg-white flex flex-col items-center rounded-l-xl">
     <MapPin/>
     <span className="text-sm font-medium text-yellow-400">Origin</span>
-    <span className="text-sm text-center font-medium  lg:text-lg font-semibold">Guangzhou,<br/>China</span>
+    <span className="text-sm text-center font-medium  lg:text-lg lg:font-semibold">Guangzhou,<br/>China</span>
   </div>
   
-  <div className="w-full p-6 border-b-3  border-purple-500 bg-white flex flex-col items-center">
+  <div className="w-full p-4 border-b-3  border-purple-500 bg-white flex flex-col items-center">
     <CircleDot/>
     <span className="text-sm font-medium text-yellow-400">Destination</span>
-    <span className="text-sm text-center font-medium  lg:text-lg font-semibold">Kotoka Port,<br/>Ghana</span>
+    <span className="text-sm text-center font-medium  lg:text-lg lg:font-semibold">Kotoka Port,<br/>Ghana</span>
   </div>
   
   <div className="w-full p-6 border-t-3 border-purple-500 bg-white flex flex-col items-center rounded-r-xl">
     <MapPin/>
     <span className="text-sm font-medium text-yellow-400">Alternative</span>
-    <span className="text-sm text-center font-medium  lg:text-lg font-semibold">Yiwu,<br/>China</span>
+    <span className="text-sm text-center font-medium  lg:text-lg lg:font-semibold">Yiwu,<br/>China</span>
   </div>
 </div>
 
@@ -117,7 +117,7 @@ const AirFreight = () => {
           {/* Left Text */}
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Reliable & Fast <span className="text-yellow-300">Air Freight</span> Services
+              Reliable & Fast <span className="text-yellow-400">Air Freight</span> Services
             </h1>
             <p style={{marginBlock:"24px"}} className="text-lg mb-6 text-blue-100">
               Ship your cargo worldwide with our top-tier air logistics solutions. Guaranteed speed, safety, and satisfaction.
@@ -133,7 +133,7 @@ const AirFreight = () => {
           {/* Right Image & Calculator */}
           <div className="space-y-6">
             
-            <section style={{marginInline:"auto"}} className="max-w-4xl border-3 rounded-lg border-purple-200 px-4 py-16">
+            <section style={{marginInline:"auto"}} className="w-full border-3 rounded-lg border-purple-200 px-4 py-16">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
         Air Freight Cost Calculator
       </h2>

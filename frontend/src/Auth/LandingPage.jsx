@@ -372,7 +372,7 @@ function TypingSwap1() {
     <p style={{margin:"0 auto",textAlign:"left"}} className=" font-bold text-stone-700 text-sm w-4/5 md:text-lg">
     Seamlessly connect products with people. We simplify global logistics while elevating your brand through strategic marketing, helping you move smarter and grow faster.
     </p>
-    <button style={{margin:"20px auto"}} onClick={handleGetQuoteClick}  className="bg-purple-600 text-purple-200 text-lg font-medium py-3 px-4 rounded-3xl ">{loading ? "loading..." : "Get a Quote"}</button>
+    <button style={{margin:"20px auto"}} onClick={handleGetQuoteClick}  className="bg-purple-600 text-purple-200 text-md font-medium py-3 px-4 rounded-3xl md:text-md ">{loading ? "loading..." : "Get a Quote"}</button>
     <img style={{margin:"20px auto",}} src="/images/ad.svg" alt="hero image" className="   w-[90%]  md:w-[80%] "></img>
   </div>
 
@@ -384,7 +384,7 @@ function TypingSwap1() {
       {[Plane, Ship, Truck, Store].map((Icon, index) => (
         <div
           key={index}
-          className="flex items-center justify-center w-13 h-13 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-800 transition-shadow shadow-md hover:shadow-lg cursor-pointer"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-800 transition-shadow shadow-md hover:shadow-lg cursor-pointer"
         >
           <Icon className="h-6 w-6" />
         </div>
