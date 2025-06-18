@@ -1,9 +1,7 @@
-import React from "react"
+
 import "./Footer.css"
 import { Link } from "react-router-dom"
 import {
-  LinkedinOutlined,
-  TwitterOutlined,
   FacebookOutlined,
   InstagramOutlined,
   YoutubeOutlined,
@@ -49,7 +47,7 @@ const Footer=()=>{
                     <Link  >Get a quote</Link>
                     <Link   to={"/More/FAQs"}>FAQs</Link>
                     <Link   to={"/More/Privacy_&_Policy"}>Privacy Policy</Link>
-                    <Link   to={"/More/Privacy_&_Policy"}>Terms of use</Link>
+                    
                     </div>
                 </section>
             </main>

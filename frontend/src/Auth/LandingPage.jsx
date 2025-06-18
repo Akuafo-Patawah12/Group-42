@@ -453,7 +453,7 @@ function TypingSwap1() {
     <div className='liquid'></div></Link></button>
         </div>
 
-        <div  className="barchart  h-64 w-full" >
+        <div  className="barchart  h-70 w-full md:w-1/2" >
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={shipments}>
               <CartesianGrid strokeDasharray="3 3" />
