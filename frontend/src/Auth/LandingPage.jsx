@@ -362,18 +362,18 @@ function TypingSwap1() {
   <div className="col-span-2 bg-gray-100 py-4 rounded-3xl flex flex-col item-center row-span-2  w-full">
     <h1
   style={{ marginBlock: '24px',marginInline:"auto" }}
-  className="text-3xl text-left w-4/5  md:text-3xl font-bold text-gray-800 mb-6 leading-tight"
+  className="text-3xl text-left w-4/5  md:text-3xl font-bold text-gray-800 leading-tight"
 >
   Smart <TypingSwap /> &<br />
   Strategic <TypingSwap1 /> Solutions
 </h1>
 
 
-    <p style={{margin:"0 auto",textAlign:"left"}} className=" font-bold text-stone-700 text-lg w-4/5 ">
+    <p style={{margin:"0 auto",textAlign:"left"}} className=" font-bold text-stone-700 text-sm w-4/5 md:text-lg">
     Seamlessly connect products with people. We simplify global logistics while elevating your brand through strategic marketing, helping you move smarter and grow faster.
     </p>
     <button style={{margin:"20px auto"}} onClick={handleGetQuoteClick}  className="bg-purple-600 text-purple-200 text-lg font-medium py-3 px-4 rounded-3xl ">{loading ? "loading..." : "Get a Quote"}</button>
-    <div style={{margin:"20px auto"}} className="bg-[url('/images/ad.svg')] bg-contain bg-no-repeat w-[80%] h-[300px]"></div>
+    <img style={{margin:"20px auto",}} src="/images/ad.svg" alt="hero image" className="   w-[90%]  md:w-[80%] "></img>
   </div>
 
 
@@ -419,7 +419,7 @@ function TypingSwap1() {
 
 
     <div className="flex flex-col">
-      <section className="w-full bg-white py-16 px-6 md:px-20">
+      <section className="w-full bg-white py-16 px-4 md:px-20">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="flex-1">
           <h1 style={{marginBottom:"1rem"}} className="text-2xl md:text-3xl font-bold text-gray-800 leading-tight mb-6">
@@ -453,7 +453,7 @@ function TypingSwap1() {
     <div className='liquid'></div></Link></button>
         </div>
 
-        <div  className="barchart flex-1 h-64 w-full" >
+        <div  className="barchart  h-64 w-full" >
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={shipments}>
               <CartesianGrid strokeDasharray="3 3" />
