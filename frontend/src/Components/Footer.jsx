@@ -53,7 +53,7 @@ const Footer=()=>{
             </main>
 
             <div className="mt-8 border-t-2 py-4 flex justify-between w-[95%] mx-auto" style={{marginInline:"auto"}}>
-                <p className="text-sm font-medium text-gray-300">© {new Date().getFullYear()} | SFG Logistics.</p>
+                <p className="text-sm font-medium text-gray-300">© {new Date().getFullYear()} | SFGL.</p>
                 <nav className="text-gray-300">
                      <Link className="pr-2 text-sm">Terms & Conditions</Link>
                     <Link to={"/About_us"} className="px-2 border-l-2 border-stone-500 text-sm">About</Link>
