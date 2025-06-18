@@ -133,13 +133,13 @@ const AirFreight = () => {
           {/* Right Image & Calculator */}
           <div >
             
-            <section style={{marginInline:"auto"}} className="w-[95%] border-3 rounded-lg border-purple-200 px-[5%] py-16">
+            <section style={{marginInline:"auto"}} className="w-full border-3 rounded-lg border-purple-200 px-[5%] py-16">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
         Air Freight Cost Calculator
       </h2>
 
       {/* Tab Buttons */}
-      <div style={{margin:"30px 0"}} className="flex justify-center gap-4 mb-10">
+      <div style={{margin:"30px 0"}} className="flex flex-wrap justify-center gap-4 mb-10">
         {Object.keys(rateMap).map((key) => (
           <button
             key={key}

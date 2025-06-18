@@ -69,11 +69,11 @@ export default function SeaFreight() {
   return (
     <div className="bg-white text-gray-800">
       {/* Hero Section */}
-      <section className="relative  text-white">
+      <section className="relative  text-white py-6 md:py-0">
         <img src="/images/seafreight_hero_pic.jpg"  alt="sea_hero" className="w-full h-auto "/>
-        <div className="absolute flex items-center justify-center inset-0 bg-black/30" >
+        <div className="absolute flex items-center justify-center py-6 inset-0 bg-black/30" >
         <motion.div
-          className="relative z-10 max-w-4xl text-center px-6 py-6"
+          className="relative z-10 max-w-4xl text-center px-6 "
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}

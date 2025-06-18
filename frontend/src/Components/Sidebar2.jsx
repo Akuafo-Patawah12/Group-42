@@ -81,7 +81,7 @@ const Sidebar2 = ({ popUp2 }) => {
                 <Menu.SubMenu
                   key="services"
                   icon={<BoxIcon style={icons} />}
-                  title="Services"
+                  title={<Link to="/Services">Services</Link>}
                   onTitleClick={() => toggleSection('services')}
                 >
                   {openSection.includes('services') && (
