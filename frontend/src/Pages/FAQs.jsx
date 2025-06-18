@@ -12,7 +12,7 @@ const FAQPage = () => {
     {
       question: "How do I contact customer support?",
       answer:
-        "You can reach our customer support team via email at support@andylogistics.com or by calling +1 (123) 456-7890.",
+        "You can reach our customer support team via email at sfghanalogistics@gmail.com or by calling +233201623251.",
     },
     {
       question: "Do you offer international shipping?",

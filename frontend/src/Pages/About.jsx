@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 import {
   LinkedinOutlined,
@@ -16,7 +16,7 @@ const About = () => {
     
   return (
     <div>
-      <div  className="grid grid-cols-1 bg-white md:grid-cols-2 gap-6 p-8 border-2 border-purple-300 rounded-2xl mt-10 w-full mx-auto bg-white shadow-md">
+      <div  className="grid grid-cols-1 bg-white md:grid-cols-2 gap-6 p-8 border-2 border-purple-300 rounded-2xl mt-10 w-full mx-auto  shadow-md">
   {/* Text Section */}
   <section className="flex flex-col justify-center gap-4">
     <h1 className="text-3xl md:text-4xl font-bold text-purple-800">
@@ -80,7 +80,7 @@ const About = () => {
 
 
 
-<div style={{backgroundColor:"var(--purple)",fontSize:"14.5px"}} className="reviews flex flex-col mb-6 py-[100px] bg-purple-300 md:flex-row justify-between items-start gap-10 bg-white shadow-lg rounded-2xl p-8 mt-10">
+<div style={{backgroundColor:"var(--purple)",fontSize:"14.5px"}} className="reviews flex flex-col mb-6 py-[100px] bg-purple-300 md:flex-row justify-between items-start gap-10  shadow-lg rounded-2xl p-8 mt-10">
   {/* Why Choose Us */}
   <div className="flex-1 text-center md:text-left bg-purple-500/40 p-10 rounded-lg  backdrop-blur-md">
     <CheckCircle style={{marginInline:"auto"}} className="mx-auto md:mx-0 text-purple-300 mb-4" size={36} />

@@ -74,11 +74,11 @@ const ContactPage = () => {
             placeholder="Enter your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--purple)] text-sm"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--purple)] text-sm"
           />
         </div>
         <div>
-          <label style={{marginBlock:"4px"}} className="block text-sm font-medium text-gray-700 mb-1">
+          <label style={{marginBlock:"10px"}} className="block text-sm font-medium text-gray-700 mb-1">
             Email
           </label>
           <input
@@ -86,11 +86,11 @@ const ContactPage = () => {
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--purple)] text-sm"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--purple)] text-sm"
           />
         </div>
         <div>
-          <label style={{marginBlock:"4px"}} className="block text-sm font-medium text-gray-700 mb-1">
+          <label style={{marginBlock:"10px"}} className="block text-sm font-medium text-gray-700 mb-1">
             Message
           </label>
           <textarea
@@ -103,7 +103,8 @@ const ContactPage = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-[var(--purple)] text-white py-2 rounded-lg hover:bg-purple-700 transition text-sm font-semibold"
+          style={{marginTop:"10px"}}
+          className="w-full bg-[var(--purple)] text-white py-3 rounded-lg hover:bg-purple-700 transition text-sm font-semibold"
         >
           Send Message
         </button>
@@ -117,19 +118,19 @@ const ContactPage = () => {
         Prefer direct contact? Reach us with the info below:
       </p>
       <ul className="space-y-4 text-sm text-gray-700">
-        <li className="flex items-center gap-3">
+        <li style={{marginTop:"5px"}} className="flex items-center gap-3">
           <span className="p-2 rounded-full bg-gray-100 text-[var(--purple)]">
             <Phone size={18} />
           </span>
           <span>020 811 6360 / 053 948 0433</span>
         </li>
-        <li className="flex items-center gap-3">
+        <li style={{marginTop:"5px"}} className="flex items-center gap-3">
           <span className="p-2 rounded-full bg-gray-100 text-[var(--purple)]">
             <Mail size={18} />
           </span>
           <span>sfghanalogistics24@gmail.com</span>
         </li>
-        <li className="flex items-center gap-3">
+        <li style={{marginTop:"5px"}} className="flex items-center gap-3">
           <span className="p-2 rounded-full bg-gray-100 text-[var(--purple)]">
             <MapPin size={18} />
           </span>
