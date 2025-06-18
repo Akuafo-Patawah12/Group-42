@@ -356,47 +356,47 @@ function TypingSwap1() {
   return(
     <div className="pb-12  px-2  ">
 
-<div className="grid grid-cols-2   grid-rows-2 gap-4 md:grid-cols-3">
+<div className="grid grid-cols-2    gap-4 md:grid-cols-3">
   {/* First image: spans 2 columns */}
 
   <div className="col-span-2 bg-gray-100 py-4 rounded-3xl flex flex-col item-center row-span-2  w-full">
     <h1
-  style={{ marginBlock: '24px' }}
-  className="text-2xl text-center md:text-3xl font-bold text-gray-800 mb-6 leading-tight"
+  style={{ marginBlock: '24px',marginInline:"auto" }}
+  className="text-3xl text-left w-4/5  md:text-3xl font-bold text-gray-800 mb-6 leading-tight"
 >
   Smart <TypingSwap /> &<br />
   Strategic <TypingSwap1 /> Solutions
 </h1>
 
 
-    <p style={{margin:"0 auto",textAlign:"center"}} className=" font-bold text-stone-700 text-sm w-4/5 ">
-    Seamlessly connect products with people. We simplify global logistics while elevating your brand through strategic marketing—helping you move smarter and grow faster.
+    <p style={{margin:"0 auto",textAlign:"left"}} className=" font-bold text-stone-700 text-lg w-4/5 ">
+    Seamlessly connect products with people. We simplify global logistics while elevating your brand through strategic marketing, helping you move smarter and grow faster.
     </p>
-    <button style={{margin:"20px auto"}} onClick={handleGetQuoteClick}  className="bg-purple-500 text-purple-200 text-sm font-medium p-3 rounded-3xl ">{loading ? "loading..." : "Get a Quote"}</button>
+    <button style={{margin:"20px auto"}} onClick={handleGetQuoteClick}  className="bg-purple-600 text-purple-200 text-lg font-medium py-3 px-4 rounded-3xl ">{loading ? "loading..." : "Get a Quote"}</button>
     <div style={{margin:"20px auto"}} className="bg-[url('/images/ad.svg')] bg-contain bg-no-repeat w-[80%] h-[300px]"></div>
   </div>
 
 
-  <div className="w-full flex flex-col items-center gap-5 justify-center col-span-1 row-span-1 bg-purple-200 rounded-2xl">
-   <h3 className="font-bold">Whatever the load we carry it.</h3>
+  <div className="w-full flex flex-col items-center gap-5 py-6 justify-center col-span-2 row-span-1 bg-purple-200 rounded-2xl md:col-span-1 md:py-3 ">
+   <h3 className="font-bold text-xl">Whatever the load we carry it.</h3>
    <div className="bg-[url('/images/logistics_push.svg')] bg-contain bg-no-repeat h-[100px] w-[200px]"></div>
    <div className="flex flex-wrap justify-center gap-6 ">
       {[Plane, Ship, Truck, Store].map((Icon, index) => (
         <div
           key={index}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-800 transition-shadow shadow-md hover:shadow-lg cursor-pointer"
+          className="flex items-center justify-center w-13 h-13 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-800 transition-shadow shadow-md hover:shadow-lg cursor-pointer"
         >
-          <Icon className="h-4 w-4" />
+          <Icon className="h-6 w-6" />
         </div>
       ))}
     </div>
   </div>
 
-  <div className="w-full col-span-1 row-span-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white relative overflow-hidden shadow-lg hover:shadow-xl transition">
+  <div className="w-full col-span-2 row-span-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white relative overflow-hidden shadow-lg hover:shadow-xl transition md:col-span-1">
   <div className="flex flex-col gap-2 justify-between h-full">
     <div>
       <h3 className="text-xl font-bold mb-2">Book Your Freight Services</h3>
-      <p className="text-sm opacity-90">
+      <p className="text-md opacity-90">
         Simplify your logistics. Schedule sea, air, or land freight in just a few clicks.
       </p>
     </div>
@@ -422,11 +422,11 @@ function TypingSwap1() {
       <section className="w-full bg-white py-16 px-6 md:px-20">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="flex-1">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 leading-tight mb-6">
+          <h1 style={{marginBottom:"1rem"}} className="text-2xl md:text-3xl font-bold text-gray-800 leading-tight mb-6">
             Looking for a Trusted Partner in Logistics?
           </h1>
-          <p className="text-gray-600 text-md mb-6">
-            Shun Feng Ghana Logistics provide seamless, reliable, and scalable logistics solutions tailored to your business needs.
+          <p className="text-gray-600 text-lg mb-7">
+            SF Ghana Logistics provide seamless, reliable, and scalable logistics solutions tailored to your business needs.
             Whether it's freight forwarding, warehousing, or last-mile delivery we're here to make your supply chain smarter and faster.
           </p>
           <div className="flex items-center gap-4 py-6">
@@ -509,7 +509,7 @@ function TypingSwap1() {
     <img
       src="/images/digital_marketing.jpg"
       loading="lazy"
-      alt="Marketing"
+      alt="Marketing image"
       className="w-full max-w-full mx-auto rounded-xl shadow-2xl mb-6"
     />
     <h2 style={{marginBlock:"20px"}} className="text-2xl font-bold text-center mb-4">Boost Your Brand While We Move Your Cargo</h2>
@@ -534,7 +534,7 @@ function TypingSwap1() {
         <div key={i} className="flex flex-col items-center">
           {icon}
           <h3 className="font-semibold text-lg mb-1">{title}</h3>
-          <p className="text-gray-600 text-sm text-center">{desc}</p>
+          <p className="text-gray-800 font-medium text-md text-center">{desc}</p>
         </div>
       ))}
     </div>

@@ -19,7 +19,7 @@ import { Form, Input, Button } from "antd";
 const Mapbox = () => {
 
   const parent= useRef(null)
-  const socket = useMemo(() =>io("http://localhost:4000/Tracking",{
+  const socket = useMemo(() =>io("ws://localhost:4000/Tracking",{
     transports: ["websocket","polling"],
     withCredentials: true,
   secure: true
