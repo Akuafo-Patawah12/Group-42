@@ -88,9 +88,9 @@ const TrackShipmentPopup = ({open}) => {
       <span className="text-purple-600 text-xl">
         <i className="ri-check-double-line" />
       </span>
-      <div className="text-sm text-gray-700">
+      <div className="text-md text-gray-700">
         You received your Tracking Number right after requesting a quote.
-        <div className="mt-1 text-xs text-gray-500">
+        <div className="mt-1 text-sm text-gray-500">
           Forgot it? Check your <strong>Quote Confirmation</strong> screen or the <strong>Recent Quotes</strong> tab in your dashboard.
         </div>
       </div>

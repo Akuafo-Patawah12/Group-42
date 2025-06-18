@@ -131,9 +131,9 @@ const AirFreight = () => {
           </div>
 
           {/* Right Image & Calculator */}
-          <div className="space-y-6">
+          <div >
             
-            <section style={{marginInline:"auto"}} className="w-full border-3 rounded-lg border-purple-200 px-4 py-16">
+            <section style={{marginInline:"auto"}} className="w-[95%] border-3 rounded-lg border-purple-200 px-[5%] py-16">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
         Air Freight Cost Calculator
       </h2>
