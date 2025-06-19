@@ -722,10 +722,10 @@ function TypingSwap1() {
           {trustData.map((item, index) => (
             
               <motion.div key={index} custom={index} variants={fadeIn} initial="hidden" animate="visible">
-            <div className={` shadow-md rounded-2xl p-3 ${index!==1 ? "bg-white border border-purple-100":"bg-purple-500"}`}>
+            <div className={` shadow-md rounded-2xl p-3 ${index!==1 ? "bg-white border border-purple-100":"bg-purple-500 text-yellow-100"}`}>
               <div className="w-full flex gap-3 items-center">
                 <p className="text-3xl p-2 rounded-full bg-stone-200 mr-4">{item.icon}</p>
-                <h2 level={4} className="mb-0 text-md text-stone-700 font-bold">{item.title}</h2>
+                <h2 level={4} className={`mb-0 text-md text-stone-700 ${index!==1 ? "" :"text-yellow-300"} font-bold`}>{item.title}</h2>
               </div>
             </div>
           </motion.div>
