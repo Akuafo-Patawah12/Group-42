@@ -20,7 +20,7 @@ A modern web application designed to streamline logistics operations and enhance
 **Frontend:**
 - React
 - Axios
-- CSS / Tailwind CSS / Ant Design (optional)
+- CSS / Tailwind CSS / Ant Design / Mui
 
 **Backend:**
 - Node.js
@@ -50,7 +50,7 @@ A modern web application designed to streamline logistics operations and enhance
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
 Runs the frontend on: [http://localhost:3000](http://localhost:3000)
@@ -62,29 +62,13 @@ Runs the frontend on: [http://localhost:3000](http://localhost:3000)
 ```bash
 cd server
 npm install
-npm run dev
+npm start
 ```
 
 Runs the backend on: [http://localhost:5000](http://localhost:5000)
 
 ---
 
-## 📁 Folder Structure
-
-```
-root/
-├── client/           # React frontend
-│   ├── src/
-│   └── public/
-├── server/           # Node.js backend
-│   ├── controllers/
-│   ├── routes/
-│   ├── models/
-│   ├── sockets/
-│   └── server.js
-```
-
----
 
 ## 📬 Real-time Events (Socket.IO)
 
@@ -92,7 +76,7 @@ root/
 |--------------------|----------------------------------|
 | `orderCreated`     | Broadcast new order to admins    |
 | `shipmentUpdated`  | Real-time shipment progress      |
-| `notification`     | Trigger alerts for key events    |
+| `notify`     | Trigger alerts for key events    |
 | `marketingEvent`   | Live updates on campaign status  |
 
 ---
@@ -114,9 +98,11 @@ root/
 
 ---
 
-## 🧑‍💻 Author
+## 🧑‍💻 Authors
 
-**Andrew Patawah**
+**Andrew Aquafo Patawah**
+**David Nii Darko**
+**Micheal Dei Edem**
 
 ---
 
