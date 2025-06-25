@@ -98,13 +98,47 @@ Runs the backend on: [http://localhost:5000](http://localhost:5000)
 
 ---
 
-## 🧑‍💻 Authors
+# 👥 Project Authors
 
-**Andrew Aquafo Patawah**
-**David Nii Darko**
-**Micheal Dei Edem**
+Meet the talented individuals behind this logistics and marketing web application.
 
 ---
+
+## 🧑‍💻 Andrew Aquafo Patawah
+
+- 💼 **Role**: Full-Stack Developer
+- 🔗 **GitHub**: [@Akuafo-Patawah12](https://github.com/Akuafo-Patawah12)
+
+> Andrew is a dedicated developer passionate about building scalable web solutions and real-time systems using JavaScript technologies.
+
+---
+
+## 🧑‍💻 David Nii Darko
+
+- 💼 **Role**: Backend Developer
+- ⚙️ **Expertise**: Node.js, Express, API Security, JWT, Database Design
+
+
+> David specializes in backend architecture, crafting efficient APIs, and ensuring robust security and data management in web applications.
+
+---
+
+## 🧑‍💻 Micheal Dei Edem
+
+- 💼 **Role**: UI/UX & Frontend Developer
+- ⚙️ **Expertise**: React, UI Design, CSS, Ant Design
+
+
+> Micheal focuses on creating intuitive user interfaces and seamless frontend experiences with a keen eye for design and accessibility.
+
+---
+
+## 🤝 Collaboration
+
+Together, we combined our strengths to deliver a modern, real-time logistics and marketing platform that’s scalable, user-friendly, and performance-driven.
+
+---
+
 
 ## 📄 License
 
